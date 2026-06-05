@@ -11,8 +11,6 @@
 .mnp-header .mnp-header-wrapper {
   display: flex;
   flex-direction: column;
-  max-width: 1400px;
-  margin: 0 auto;
 }
 
 /* Scrolled state: hide utility row, show sticky main nav with solid bg */
@@ -34,6 +32,9 @@
   border-bottom: 1px solid #fff;
   min-height: 71px;
   box-sizing: border-box;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .mnp-header .mnp-header-logo {
@@ -94,6 +95,9 @@
   background: rgb(0 0 0 / 11%);
   min-height: 80px;
   box-sizing: border-box;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .mnp-header .mnp-header-nav ul {
