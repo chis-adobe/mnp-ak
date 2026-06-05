@@ -13,6 +13,20 @@
   flex-direction: column;
 }
 
+/* Static header (office pages) - not fixed, takes up space */
+.mnp-header.mnp-header-static {
+  position: relative;
+  background: var(--color-mnp-dark-teal);
+}
+
+.mnp-header.mnp-header-static .mnp-header-top {
+  background: transparent;
+}
+
+.mnp-header.mnp-header-static .mnp-header-main {
+  background: transparent;
+}
+
 /* Scrolled state: hide utility row, show sticky main nav with solid bg */
 .mnp-header.is-scrolled .mnp-header-top {
   display: none;

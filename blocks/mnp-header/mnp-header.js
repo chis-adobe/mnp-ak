@@ -31,6 +31,11 @@ function buildFlyout(row) {
 }
 
 export default async function init(el) {
+  const headerStyle = document.querySelector('meta[name="header-style"]')?.content;
+  if (headerStyle === 'static') {
+    el.classList.add('mnp-header-static');
+  }
+
   const rows = [...el.querySelectorAll(':scope > div')];
   el.innerHTML = '';
 
