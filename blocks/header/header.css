@@ -8,6 +8,11 @@ header {
   background: transparent;
 }
 
+header:has(.mnp-header-static) {
+  position: relative;
+  background: var(--color-mnp-dark-teal);
+}
+
 header .header-content {
   display: block;
 }

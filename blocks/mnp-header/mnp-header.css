@@ -11,9 +11,20 @@
 .mnp-header .mnp-header-wrapper {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
-/* Static header (office pages) - not fixed, takes up space */
+/* Child wrapper constrains content width */
+.mnp-header .child-wrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Static header (office pages) - not fixed, pushes content down */
 .mnp-header.mnp-header-static {
   position: relative;
   background: var(--color-mnp-dark-teal);
@@ -36,19 +47,14 @@
   background: var(--color-mnp-dark-teal);
 }
 
-/* Row 1: Top bar - logo + utility nav */
+/* Row 1: Top bar - full width bg */
 .mnp-header .mnp-header-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 24px;
+  width: 100%;
   background: rgb(0 0 0 / 11%);
   border-bottom: 1px solid #fff;
+  padding: 20px 24px;
   min-height: 71px;
   box-sizing: border-box;
-  max-width: 1400px;
-  margin: 0 auto;
-  width: 100%;
 }
 
 .mnp-header .mnp-header-logo {
@@ -100,18 +106,13 @@
   opacity: 0.7;
 }
 
-/* Row 2: Main nav */
+/* Row 2: Main nav - full width bg */
 .mnp-header .mnp-header-main {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
+  width: 100%;
   background: rgb(0 0 0 / 11%);
+  padding: 0 16px;
   min-height: 80px;
   box-sizing: border-box;
-  max-width: 1400px;
-  margin: 0 auto;
-  width: 100%;
 }
 
 .mnp-header .mnp-header-nav ul {
@@ -146,7 +147,7 @@
   opacity: 0.7;
 }
 
-/* Flyout panel */
+/* Flyout panel - full width */
 .mnp-header .mnp-header-flyout {
   display: none;
   position: absolute;
@@ -272,12 +273,20 @@
   .mnp-header .mnp-header-flyout {
     left: 0;
     right: 0;
+    position: fixed;
+    top: auto;
   }
 
   .mnp-header .mnp-header-flyout-columns {
     grid-template-columns: repeat(3, 1fr);
     gap: 24px;
-    max-width: 1200px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .mnp-header .mnp-header-flyout h3 {
+    max-width: 1400px;
+    margin: 0 auto;
   }
 }
 
@@ -286,9 +295,5 @@
   .mnp-header .mnp-header-main {
     padding-left: 40px;
     padding-right: 40px;
-  }
-
-  .mnp-header .mnp-header-flyout {
-    min-width: 600px;
   }
 }
