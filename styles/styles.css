@@ -222,7 +222,7 @@ body {
   font-family: var(--font-family);
   font-size: var(--body-font-size-m);
   line-height: var(--body-line-height);
-  padding: var(--header-height) 0 0;
+  padding: 0;
 
   &.session {
     font-family: var(--font-family);
