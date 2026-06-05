@@ -141,14 +141,11 @@ export default async function init(el) {
   });
 
   // Scroll behavior: hide utility nav, show sticky main nav with solid bg
-  let lastScroll = 0;
   window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY;
-    if (scrollY > 80) {
+    if (window.scrollY > 80) {
       el.classList.add('is-scrolled');
     } else {
       el.classList.remove('is-scrolled');
     }
-    lastScroll = scrollY;
   });
 }
