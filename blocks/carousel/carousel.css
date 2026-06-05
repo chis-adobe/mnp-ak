@@ -46,7 +46,7 @@
   z-index: 1;
   max-width: var(--grid-container-width);
   margin: 0 auto;
-  padding: var(--spacing-xxl) var(--spacing-l);
+  padding: 180px var(--spacing-l) var(--spacing-xxl);
   color: var(--color-mnp-white);
   display: flex;
   flex-direction: column;

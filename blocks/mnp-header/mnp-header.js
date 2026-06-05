@@ -45,7 +45,7 @@ export default async function init(el) {
   logo.href = '/';
   logo.className = 'mnp-header-logo';
   logo.setAttribute('aria-label', 'MNP Home');
-  logo.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 81.66 26.43"><path fill="#fff" d="M0,26.19V.24H5.71l7.44,15.41L20.62.24h5.71V26.19H21.21V8.94L14.34,22.76h-2.4L5,8.94V26.19Z"/><path fill="#fff" d="M30.43,26.19V.24h5.13L47.24,17V.24h5.13V26.19H47.24L35.56,9.47V26.19Z"/><path fill="#fff" d="M56.27,26.19V.24H66.53a10.08,10.08,0,0,1,7,2.4,8.18,8.18,0,0,1,2.68,6.39A8.18,8.18,0,0,1,73.5,15.42a10.08,10.08,0,0,1-7,2.4H61.39V26.19Zm5.12-13.1h4.8a5,5,0,0,0,3.47-1.12,4,4,0,0,0,1.25-3.1,4,4,0,0,0-1.25-3.1,5,5,0,0,0-3.47-1.12h-4.8Z"/></svg>`;
+  logo.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 81.66 26.43"><path fill="#fff" d="M0,26.19V.24H5.71l7.44,15.41L20.62.24h5.71V26.19H21.21V8.94L14.34,22.76h-2.4L5,8.94V26.19Z"/><path fill="#fff" d="M30.43,26.19V.24h5.13L47.24,17V.24h5.13V26.19H47.24L35.56,9.47V26.19Z"/><path fill="#fff" d="M56.27,26.19V.24H66.53a10.08,10.08,0,0,1,7,2.4,8.18,8.18,0,0,1,2.68,6.39A8.18,8.18,0,0,1,73.5,15.42a10.08,10.08,0,0,1-7,2.4H61.39V26.19Zm5.12-13.1h4.8a5,5,0,0,0,3.47-1.12,4,4,0,0,0,1.25-3.1,4,4,0,0,0-1.25-3.1,5,5,0,0,0-3.47-1.12h-4.8Z"/></svg>';
 
   // Find utility nav row (first row with simple links)
   const utilityNav = document.createElement('nav');
@@ -138,5 +138,17 @@ export default async function init(el) {
         open.querySelector('a')?.setAttribute('aria-expanded', 'false');
       });
     }
+  });
+
+  // Scroll behavior: hide utility nav, show sticky main nav with solid bg
+  let lastScroll = 0;
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    if (scrollY > 80) {
+      el.classList.add('is-scrolled');
+    } else {
+      el.classList.remove('is-scrolled');
+    }
+    lastScroll = scrollY;
   });
 }

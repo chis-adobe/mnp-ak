@@ -5,11 +5,23 @@
   right: 0;
   z-index: 1000;
   background: transparent;
+  transition: transform 0.3s ease;
 }
 
 .mnp-header .mnp-header-wrapper {
   display: flex;
   flex-direction: column;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Scrolled state: hide utility row, show sticky main nav with solid bg */
+.mnp-header.is-scrolled .mnp-header-top {
+  display: none;
+}
+
+.mnp-header.is-scrolled .mnp-header-main {
+  background: var(--color-mnp-dark-teal);
 }
 
 /* Row 1: Top bar - logo + utility nav */
