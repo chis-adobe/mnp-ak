@@ -1,0 +1,95 @@
+.offices-list {
+  max-width: var(--grid-container-width);
+  margin: var(--spacing-xxl) auto;
+}
+
+.offices-list .offices-list-alpha {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: var(--spacing-xl);
+  padding-bottom: var(--spacing-m);
+  border-bottom: 1px solid var(--color-mnp-border);
+}
+
+.offices-list .offices-list-alpha button {
+  background: none;
+  border: 1px solid var(--color-mnp-border);
+  color: var(--color-mnp-heading-teal);
+  font-size: 14px;
+  font-weight: 600;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.offices-list .offices-list-alpha button:hover {
+  background: var(--color-mnp-light-gray);
+}
+
+.offices-list .offices-list-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-m);
+}
+
+.offices-list .offices-list-letter {
+  font-family: var(--font-family-heading);
+  font-size: var(--heading-font-size-xl);
+  font-weight: 700;
+  color: var(--color-mnp-heading-teal);
+  padding: var(--spacing-m) 0;
+  border-bottom: 2px solid var(--color-mnp-accent);
+  margin-top: var(--spacing-l);
+  grid-column: 1 / -1;
+}
+
+.offices-list .offices-list-card {
+  padding: var(--spacing-m);
+  border: 1px solid var(--color-mnp-border);
+  transition: box-shadow 0.2s;
+}
+
+.offices-list .offices-list-card:hover {
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+}
+
+.offices-list .offices-list-card h3 {
+  font-size: var(--heading-font-size-l);
+  margin: 0 0 var(--spacing-xs);
+}
+
+.offices-list .offices-list-card h3 a {
+  color: var(--color-mnp-heading-teal);
+  text-decoration: none;
+}
+
+.offices-list .offices-list-card h3 a:hover {
+  text-decoration: underline;
+}
+
+.offices-list .offices-list-card-desc {
+  font-size: var(--body-font-size-s);
+  color: var(--color-mnp-body-text);
+  margin: 0 0 var(--spacing-s);
+}
+
+.offices-list .offices-list-card-link a {
+  color: var(--color-mnp-accent);
+  font-weight: 600;
+  text-decoration: none;
+  font-size: var(--body-font-size-s);
+}
+
+@media (width >= 900px) {
+  .offices-list .offices-list-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width >= 1200px) {
+  .offices-list .offices-list-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
