@@ -23,7 +23,7 @@ indices:
           match(attribute(el, "content"), "https:\/\/[^/]+(/.*)")
   offices:
     include:
-      - /offices/**
+      - /offices/
     target: /offices/query-index.json
     properties:
       title:
