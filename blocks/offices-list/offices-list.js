@@ -1,8 +1,8 @@
 async function fetchOfficePages() {
-  const resp = await fetch('/offices/query-index.json');
+  const resp = await fetch('/query-index.json');
   if (!resp.ok) return [];
   const json = await resp.json();
-  return json.data || [];
+  return (json.data || []).filter((page) => page.path.startsWith('/offices/'));
 }
 
 function renderOfficeCard(office) {
