@@ -23,17 +23,17 @@ indices:
           match(attribute(el, "content"), "https:\/\/[^/]+(/.*)")
   offices:
     include:
-      - /offices/
+      - /offices/**
     target: /offices/query-index.json
     properties:
       title:
-        select: head > meta[property="og:title"]
+        select: main h1:first-of-type
         value: |
-          attribute(el, "content")
+          textContent(el)
       description:
-        select: head > meta[name="description"]
+        select: main p:first-of-type
         value: |
-          attribute(el, "content")
+          textContent(el)
       lastModified:
         select: none
         value: |
