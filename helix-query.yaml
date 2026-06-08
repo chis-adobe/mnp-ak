@@ -26,14 +26,30 @@ indices:
       - /offices/**
     target: /offices/query-index.json
     properties:
-      title:
-        select: main h1:first-of-type
+      city:
+        select: head > meta[name="city"]
         value: |
-          textContent(el)
-      description:
-        select: main p:first-of-type
+          attribute(el, "content")
+      address:
+        select: head > meta[name="address"]
         value: |
-          textContent(el)
+          attribute(el, "content")
+      province:
+        select: head > meta[name="province"]
+        value: |
+          attribute(el, "content")
+      postalCode:
+        select: head > meta[name="postal-code"]
+        value: |
+          attribute(el, "content")
+      phone:
+        select: head > meta[name="phone"]
+        value: |
+          attribute(el, "content")
+      fax:
+        select: head > meta[name="fax"]
+        value: |
+          attribute(el, "content")
       lastModified:
         select: none
         value: |

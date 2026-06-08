@@ -1,6 +1,7 @@
 .offices-list {
   max-width: var(--grid-container-width);
   margin: var(--spacing-xxl) auto;
+  padding: 0 var(--spacing-l);
 }
 
 .offices-list .offices-list-alpha {
@@ -46,40 +47,76 @@
 }
 
 .offices-list .offices-list-card {
-  padding: var(--spacing-m);
+  padding: var(--spacing-l);
   border: 1px solid var(--color-mnp-border);
-  transition: box-shadow 0.2s;
+  border-top: 3px solid var(--color-mnp-border);
 }
 
-.offices-list .offices-list-card:hover {
-  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
-}
-
-.offices-list .offices-list-card h3 {
+.offices-list .offices-list-card-city {
   font-size: var(--heading-font-size-l);
-  margin: 0 0 var(--spacing-xs);
+  font-weight: 700;
+  color: var(--color-mnp-heading-teal);
+  margin: 0 0 var(--spacing-m);
 }
 
-.offices-list .offices-list-card h3 a {
+.offices-list .offices-list-card-address {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-s);
+  margin-bottom: var(--spacing-m);
+  font-size: var(--body-font-size-m);
+  color: var(--color-mnp-body-text);
+  line-height: 1.5;
+}
+
+.offices-list .offices-list-card-icon {
+  flex-shrink: 0;
   color: var(--color-mnp-heading-teal);
+  display: flex;
+  align-items: center;
+}
+
+.offices-list .offices-list-card-pin {
+  margin-top: 2px;
+}
+
+.offices-list .offices-list-card-contact {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-m);
+  padding-top: var(--spacing-m);
+  border-top: 1px solid var(--color-mnp-border);
+}
+
+.offices-list .offices-list-card-contact-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--body-font-size-m);
+  color: var(--color-mnp-body-text);
+}
+
+.offices-list .offices-list-card-contact-row a {
+  color: var(--color-mnp-body-text);
   text-decoration: none;
 }
 
-.offices-list .offices-list-card h3 a:hover {
+.offices-list .offices-list-card-contact-row a:hover {
   text-decoration: underline;
 }
 
-.offices-list .offices-list-card-desc {
-  font-size: var(--body-font-size-s);
-  color: var(--color-mnp-body-text);
-  margin: 0 0 var(--spacing-s);
+.offices-list .offices-list-card-details {
+  margin-left: auto;
+  color: var(--color-mnp-heading-teal);
+  font-weight: 600;
+  font-size: var(--body-font-size-m);
+  text-decoration: none;
+  white-space: nowrap;
 }
 
-.offices-list .offices-list-card-link a {
-  color: var(--color-mnp-accent);
-  font-weight: 600;
-  text-decoration: none;
-  font-size: var(--body-font-size-s);
+.offices-list .offices-list-card-details:hover {
+  text-decoration: underline;
 }
 
 @media (width >= 900px) {
