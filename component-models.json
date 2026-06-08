@@ -3,8 +3,8 @@
     "id": "mini-hero",
     "fields": [
       {
-        "component": "container",
-        "name": "mini-hero",
+        "component": "text",
+        "name": "classes",
         "label": "Mini Hero",
         "valueType": "string",
         "description": "This block generates its content dynamically from page metadata. No editing required."
@@ -15,8 +15,8 @@
     "id": "breadcrumb",
     "fields": [
       {
-        "component": "container",
-        "name": "breadcrumb",
+        "component": "text",
+        "name": "classes",
         "label": "Breadcrumb",
         "valueType": "string",
         "description": "This block generates breadcrumb navigation dynamically from page hierarchy. No editing required."
@@ -28,9 +28,10 @@
     "fields": [
       {
         "component": "richtext",
-        "name": "content",
+        "name": "description",
         "label": "Office Description",
-        "valueType": "string"
+        "valueType": "string",
+        "selector": "div > div > div"
       }
     ]
   },
@@ -39,9 +40,10 @@
     "fields": [
       {
         "component": "richtext",
-        "name": "content",
+        "name": "links",
         "label": "Service Links",
-        "valueType": "string"
+        "valueType": "string",
+        "selector": "div > div > div"
       }
     ]
   },
@@ -52,13 +54,22 @@
         "component": "reference",
         "name": "image",
         "label": "Photo",
-        "valueType": "string"
+        "valueType": "string",
+        "selector": "div > div:nth-child(1) > div:nth-child(1)"
       },
       {
         "component": "richtext",
-        "name": "content",
-        "label": "Contact Details",
-        "valueType": "string"
+        "name": "info",
+        "label": "Contact Info",
+        "valueType": "string",
+        "selector": "div > div:nth-child(1) > div:nth-child(2)"
+      },
+      {
+        "component": "richtext",
+        "name": "bio",
+        "label": "Bio",
+        "valueType": "string",
+        "selector": "div > div:nth-child(1) > div:nth-child(3)"
       }
     ]
   },
@@ -67,9 +78,10 @@
     "fields": [
       {
         "component": "richtext",
-        "name": "content",
+        "name": "form",
         "label": "Form Configuration",
-        "valueType": "string"
+        "valueType": "string",
+        "selector": "div > div > div"
       }
     ]
   },
@@ -78,9 +90,10 @@
     "fields": [
       {
         "component": "richtext",
-        "name": "content",
-        "label": "Insights Content",
-        "valueType": "string"
+        "name": "cards",
+        "label": "Insights Cards",
+        "valueType": "string",
+        "selector": "div > div > div"
       }
     ]
   },
@@ -91,13 +104,15 @@
         "component": "reference",
         "name": "image",
         "label": "Background Image",
-        "valueType": "string"
+        "valueType": "string",
+        "selector": "div > div:nth-child(1) > div:nth-child(1)"
       },
       {
         "component": "richtext",
         "name": "content",
         "label": "Hero Content",
-        "valueType": "string"
+        "valueType": "string",
+        "selector": "div > div:nth-child(1) > div:nth-child(2)"
       }
     ]
   },
@@ -108,7 +123,8 @@
         "component": "richtext",
         "name": "content",
         "label": "Accordion Content",
-        "valueType": "string"
+        "valueType": "string",
+        "selector": "div > div > div"
       }
     ]
   },
@@ -119,7 +135,8 @@
         "component": "richtext",
         "name": "content",
         "label": "Column Content",
-        "valueType": "string"
+        "valueType": "string",
+        "selector": "div > div > div"
       }
     ]
   },
@@ -130,13 +147,15 @@
         "component": "reference",
         "name": "image",
         "label": "Image",
-        "valueType": "string"
+        "valueType": "string",
+        "selector": "div > div:nth-child(1) > div:nth-child(1)"
       },
       {
         "component": "richtext",
         "name": "content",
         "label": "Card Content",
-        "valueType": "string"
+        "valueType": "string",
+        "selector": "div > div:nth-child(1) > div:nth-child(2)"
       }
     ]
   },
@@ -147,7 +166,8 @@
         "component": "richtext",
         "name": "content",
         "label": "Slide Content",
-        "valueType": "string"
+        "valueType": "string",
+        "selector": "div > div > div"
       }
     ]
   },
@@ -158,7 +178,8 @@
         "component": "richtext",
         "name": "content",
         "label": "CTA Content",
-        "valueType": "string"
+        "valueType": "string",
+        "selector": "div > div > div"
       }
     ]
   },
@@ -169,13 +190,15 @@
         "component": "reference",
         "name": "image",
         "label": "Image",
-        "valueType": "string"
+        "valueType": "string",
+        "selector": "div > div:nth-child(1) > div:nth-child(1)"
       },
       {
         "component": "richtext",
         "name": "content",
         "label": "Banner Content",
-        "valueType": "string"
+        "valueType": "string",
+        "selector": "div > div:nth-child(1) > div:nth-child(2)"
       }
     ]
   },
@@ -183,8 +206,8 @@
     "id": "offices-list",
     "fields": [
       {
-        "component": "container",
-        "name": "offices-list",
+        "component": "text",
+        "name": "classes",
         "label": "Offices List",
         "valueType": "string",
         "description": "This block dynamically lists all offices from the query index. No editing required."
@@ -198,7 +221,8 @@
         "component": "richtext",
         "name": "content",
         "label": "Table Content",
-        "valueType": "string"
+        "valueType": "string",
+        "selector": "div > div > div"
       }
     ]
   },
