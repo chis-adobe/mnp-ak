@@ -1,6 +1,6 @@
-const PIN_ICON = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/></svg>`;
-const PHONE_ICON = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.15 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>`;
-const FAX_ICON = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z" fill="none" stroke="white" stroke-width="1.5"/></svg>`;
+const PIN_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/></svg>';
+const PHONE_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.15 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>';
+const FAX_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z" fill="none" stroke="white" stroke-width="1.5"/></svg>';
 
 async function fetchOffices() {
   const resp = await fetch('/offices/query-index.json?limit=500');
@@ -57,18 +57,15 @@ export default async function init(el) {
     return;
   }
 
-  offices.sort((a, b) => {
-    const nameA = a.city || a.path;
-    const nameB = b.city || b.path;
-    return nameA.localeCompare(nameB);
-  });
+  function getCityName(o) {
+    return o.city || o.path.split('/').pop().replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  }
+
+  offices.sort((a, b) => getCityName(a).localeCompare(getCityName(b)));
 
   const alphabetNav = document.createElement('div');
   alphabetNav.className = 'offices-list-alpha';
-  const letters = [...new Set(offices.map((o) => {
-    const name = o.city || o.path.split('/').pop();
-    return name.charAt(0).toUpperCase();
-  }))].sort();
+  const letters = [...new Set(offices.map((o) => getCityName(o).charAt(0).toUpperCase()))].sort();
 
   letters.forEach((letter) => {
     const btn = document.createElement('button');
@@ -87,8 +84,7 @@ export default async function init(el) {
 
   let currentLetter = '';
   offices.forEach((office) => {
-    const name = office.city || office.path.split('/').pop().replace(/-/g, ' ');
-    const firstLetter = name.charAt(0).toUpperCase();
+    const firstLetter = getCityName(office).charAt(0).toUpperCase();
     if (firstLetter !== currentLetter) {
       currentLetter = firstLetter;
       const letterMarker = document.createElement('div');
