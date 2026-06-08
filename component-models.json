@@ -1,0 +1,192 @@
+[
+  {
+    "id": "mini-hero",
+    "fields": []
+  },
+  {
+    "id": "breadcrumb",
+    "fields": []
+  },
+  {
+    "id": "office-info",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "content",
+        "label": "Office Information",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "services-links",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "content",
+        "label": "Service Links",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "contact-card",
+    "fields": [
+      {
+        "component": "reference",
+        "name": "image",
+        "label": "Photo",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "content",
+        "label": "Contact Details",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "contact-form",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "content",
+        "label": "Form Configuration",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "insights-cards",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "content",
+        "label": "Insights Content",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "hero",
+    "fields": [
+      {
+        "component": "reference",
+        "name": "image",
+        "label": "Background Image",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "content",
+        "label": "Hero Content",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "accordion",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "content",
+        "label": "Accordion Content",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "columns",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "content",
+        "label": "Column Content",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "card",
+    "fields": [
+      {
+        "component": "reference",
+        "name": "image",
+        "label": "Image",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "content",
+        "label": "Card Content",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "carousel",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "content",
+        "label": "Slide Content",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "cta-banner",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "content",
+        "label": "CTA Content",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "feature-banner",
+    "fields": [
+      {
+        "component": "reference",
+        "name": "image",
+        "label": "Image",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "content",
+        "label": "Banner Content",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "offices-list",
+    "fields": []
+  },
+  {
+    "id": "table",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "content",
+        "label": "Table Content",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "section",
+    "fields": [
+      {
+        "component": "text",
+        "name": "style",
+        "label": "Style",
+        "valueType": "string"
+      }
+    ]
+  }
+]

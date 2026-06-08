@@ -1,0 +1,233 @@
+{
+  "groups": [
+    {
+      "title": "Content Blocks",
+      "id": "content",
+      "components": [
+        {
+          "title": "Hero",
+          "id": "hero",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block",
+                "template": {}
+              }
+            }
+          },
+          "model": "hero"
+        },
+        {
+          "title": "Mini Hero",
+          "id": "mini-hero",
+          "description": "Dynamically generates title from page city metadata. No authored content needed.",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block",
+                "template": {}
+              }
+            }
+          },
+          "model": "mini-hero"
+        },
+        {
+          "title": "Breadcrumb",
+          "id": "breadcrumb",
+          "description": "Dynamically generates breadcrumb navigation from page hierarchy. No authored content needed.",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block",
+                "template": {}
+              }
+            }
+          },
+          "model": "breadcrumb"
+        },
+        {
+          "title": "Columns",
+          "id": "columns",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block",
+                "template": {}
+              }
+            }
+          },
+          "model": "columns"
+        },
+        {
+          "title": "Card",
+          "id": "card",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block",
+                "template": {}
+              }
+            }
+          },
+          "model": "card"
+        },
+        {
+          "title": "Accordion",
+          "id": "accordion",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block",
+                "template": {}
+              }
+            }
+          },
+          "model": "accordion"
+        },
+        {
+          "title": "Carousel",
+          "id": "carousel",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block",
+                "template": {}
+              }
+            }
+          },
+          "model": "carousel"
+        },
+        {
+          "title": "Table",
+          "id": "table",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block",
+                "template": {}
+              }
+            }
+          },
+          "model": "table"
+        }
+      ]
+    },
+    {
+      "title": "Office Blocks",
+      "id": "office",
+      "components": [
+        {
+          "title": "Office Info",
+          "id": "office-info",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block",
+                "template": {}
+              }
+            }
+          },
+          "model": "office-info"
+        },
+        {
+          "title": "Services Links",
+          "id": "services-links",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block",
+                "template": {}
+              }
+            }
+          },
+          "model": "services-links"
+        },
+        {
+          "title": "Contact Card",
+          "id": "contact-card",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block",
+                "template": {}
+              }
+            }
+          },
+          "model": "contact-card"
+        },
+        {
+          "title": "Contact Form",
+          "id": "contact-form",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block",
+                "template": {}
+              }
+            }
+          },
+          "model": "contact-form"
+        },
+        {
+          "title": "Insights Cards",
+          "id": "insights-cards",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block",
+                "template": {}
+              }
+            }
+          },
+          "model": "insights-cards"
+        },
+        {
+          "title": "Offices List",
+          "id": "offices-list",
+          "description": "Dynamically lists all offices from the query index. No authored content needed.",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block",
+                "template": {}
+              }
+            }
+          },
+          "model": "offices-list"
+        }
+      ]
+    },
+    {
+      "title": "Marketing Blocks",
+      "id": "marketing",
+      "components": [
+        {
+          "title": "CTA Banner",
+          "id": "cta-banner",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block",
+                "template": {}
+              }
+            }
+          },
+          "model": "cta-banner"
+        },
+        {
+          "title": "Feature Banner",
+          "id": "feature-banner",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block",
+                "template": {}
+              }
+            }
+          },
+          "model": "feature-banner"
+        }
+      ]
+    }
+  ]
+}

@@ -11,43 +11,9 @@
 .mini-hero .mini-hero-title {
   color: var(--color-mnp-white);
   font-size: var(--heading-font-size-xxl);
-  margin: 0 0 var(--spacing-m);
+  margin: 0;
 }
 
 .mini-hero .mini-hero-title strong {
   font-weight: 700;
-}
-
-.mini-hero .mini-hero-breadcrumb {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  gap: var(--spacing-s);
-  flex-wrap: wrap;
-}
-
-.mini-hero .mini-hero-breadcrumb li {
-  margin: 0;
-  font-size: var(--body-font-size-s);
-  color: rgb(255 255 255 / 70%);
-}
-
-.mini-hero .mini-hero-breadcrumb li::after {
-  content: '›';
-  margin-left: var(--spacing-s);
-}
-
-.mini-hero .mini-hero-breadcrumb li:last-child::after {
-  content: '';
-}
-
-.mini-hero .mini-hero-breadcrumb a {
-  color: rgb(255 255 255 / 80%);
-  text-decoration: none;
-}
-
-.mini-hero .mini-hero-breadcrumb a:hover {
-  color: var(--color-mnp-white);
-  text-decoration: underline;
 }
