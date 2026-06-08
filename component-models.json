@@ -2,7 +2,7 @@
   {
     "id": "hero",
     "fields": [
-      { "component": "reference", "valueType": "string", "name": "image", "label": "Image" },
+      { "component": "reference", "valueType": "string", "name": "image", "label": "Image", "multi": false },
       { "component": "richtext", "valueType": "string", "name": "text", "label": "Text" }
     ]
   },
@@ -45,7 +45,7 @@
   {
     "id": "card",
     "fields": [
-      { "component": "reference", "valueType": "string", "name": "image", "label": "Image" },
+      { "component": "reference", "valueType": "string", "name": "image", "label": "Image", "multi": false },
       { "component": "richtext", "valueType": "string", "name": "text", "label": "Text" }
     ]
   },
@@ -56,7 +56,7 @@
   {
     "id": "carousel-slide",
     "fields": [
-      { "component": "reference", "valueType": "string", "name": "image", "label": "Image" },
+      { "component": "reference", "valueType": "string", "name": "image", "label": "Image", "multi": false },
       { "component": "richtext", "valueType": "string", "name": "text", "label": "Text" }
     ]
   },
@@ -79,7 +79,7 @@
   {
     "id": "contact-card",
     "fields": [
-      { "component": "reference", "valueType": "string", "name": "image", "label": "Photo" },
+      { "component": "reference", "valueType": "string", "name": "image", "label": "Photo", "multi": false },
       { "component": "richtext", "valueType": "string", "name": "info", "label": "Contact Info" },
       { "component": "richtext", "valueType": "string", "name": "bio", "label": "Bio" }
     ]
@@ -98,7 +98,7 @@
   {
     "id": "insights-cards-item",
     "fields": [
-      { "component": "reference", "valueType": "string", "name": "image", "label": "Image" },
+      { "component": "reference", "valueType": "string", "name": "image", "label": "Image", "multi": false },
       { "component": "richtext", "valueType": "string", "name": "text", "label": "Text" }
     ]
   },
@@ -117,7 +117,7 @@
   {
     "id": "feature-banner",
     "fields": [
-      { "component": "reference", "valueType": "string", "name": "image", "label": "Image" },
+      { "component": "reference", "valueType": "string", "name": "image", "label": "Image", "multi": false },
       { "component": "richtext", "valueType": "string", "name": "text", "label": "Banner Content" }
     ]
   },
