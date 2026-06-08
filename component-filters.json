@@ -1,0 +1,23 @@
+[
+  {
+    "id": "section",
+    "components": [
+      "mini-hero",
+      "breadcrumb",
+      "hero",
+      "office-info",
+      "services-links",
+      "contact-card",
+      "contact-form",
+      "insights-cards",
+      "accordion",
+      "columns",
+      "card",
+      "carousel",
+      "cta-banner",
+      "feature-banner",
+      "offices-list",
+      "table"
+    ]
+  }
+]
