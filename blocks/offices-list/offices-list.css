@@ -81,10 +81,10 @@
 }
 
 .offices-list .offices-list-card-contact {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--spacing-xs) var(--spacing-m);
   align-items: center;
-  flex-wrap: wrap;
-  gap: var(--spacing-m);
   padding-top: var(--spacing-m);
   border-top: 1px solid var(--color-mnp-border);
 }
@@ -107,7 +107,9 @@
 }
 
 .offices-list .offices-list-card-details {
-  margin-left: auto;
+  grid-column: 2;
+  grid-row: 1 / -1;
+  align-self: center;
   color: var(--color-mnp-heading-teal);
   font-weight: 600;
   font-size: var(--body-font-size-m);
