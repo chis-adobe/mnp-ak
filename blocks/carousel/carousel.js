@@ -51,7 +51,10 @@ export default async function init(el) {
   const isUE = /\.(stage-ue|ue)\.da\.live$/.test(window.location.hostname);
   if (!isUE) {
     const timer = setInterval(() => {
-      if (el.dataset.ueActive) { clearInterval(timer); return; }
+      if (el.dataset.ueActive) {
+        clearInterval(timer);
+        return;
+      }
       showSlide(current + 1);
     }, 6000);
   }
