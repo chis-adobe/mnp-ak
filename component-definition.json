@@ -7,108 +7,149 @@
         {
           "title": "Hero",
           "id": "hero",
+          "model": "hero",
           "plugins": {
             "da": {
-              "page": {
-                "resourceType": "core/franklin/components/block",
-                "template": {}
-              }
+              "name": "hero",
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                { "name": "image", "selector": "div:nth-child(1)" },
+                { "name": "text", "selector": "div:nth-child(2)" }
+              ]
             }
-          },
-          "model": "hero"
+          }
         },
         {
           "title": "Mini Hero",
           "id": "mini-hero",
           "description": "Dynamically generates title from page city metadata. No authored content needed.",
+          "model": "mini-hero",
           "plugins": {
             "da": {
-              "page": {
-                "resourceType": "core/franklin/components/block",
-                "template": {}
-              }
+              "name": "mini-hero",
+              "rows": 0,
+              "columns": 0
             }
-          },
-          "model": "mini-hero"
+          }
         },
         {
           "title": "Breadcrumb",
           "id": "breadcrumb",
           "description": "Dynamically generates breadcrumb navigation from page hierarchy. No authored content needed.",
+          "model": "breadcrumb",
           "plugins": {
             "da": {
-              "page": {
-                "resourceType": "core/franklin/components/block",
-                "template": {}
-              }
+              "name": "breadcrumb",
+              "rows": 0,
+              "columns": 0
             }
-          },
-          "model": "breadcrumb"
-        },
-        {
-          "title": "Columns",
-          "id": "columns",
-          "plugins": {
-            "da": {
-              "page": {
-                "resourceType": "core/franklin/components/block",
-                "template": {}
-              }
-            }
-          },
-          "model": "columns"
-        },
-        {
-          "title": "Card",
-          "id": "card",
-          "plugins": {
-            "da": {
-              "page": {
-                "resourceType": "core/franklin/components/block",
-                "template": {}
-              }
-            }
-          },
-          "model": "card"
+          }
         },
         {
           "title": "Accordion",
           "id": "accordion",
+          "model": "accordion",
+          "filter": "accordion",
           "plugins": {
             "da": {
-              "page": {
-                "resourceType": "core/franklin/components/block",
-                "template": {}
-              }
+              "name": "accordion",
+              "rows": 1,
+              "columns": 2
             }
-          },
-          "model": "accordion"
+          }
         },
         {
-          "title": "Carousel",
-          "id": "carousel",
+          "title": "Accordion Item",
+          "id": "accordion-item",
+          "model": "accordion-item",
           "plugins": {
             "da": {
-              "page": {
-                "resourceType": "core/franklin/components/block",
-                "template": {}
-              }
+              "name": "accordion-item",
+              "rows": 2,
+              "columns": 0,
+              "fields": [
+                { "name": "summary", "selector": "div:nth-child(1)" },
+                { "name": "text", "selector": "div:nth-child(2)" }
+              ]
             }
-          },
-          "model": "carousel"
+          }
+        },
+        {
+          "title": "Columns",
+          "id": "columns",
+          "model": "columns",
+          "plugins": {
+            "da": {
+              "name": "columns",
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                { "name": "col1", "selector": "div:nth-child(1)" },
+                { "name": "col2", "selector": "div:nth-child(2)" }
+              ]
+            }
+          }
         },
         {
           "title": "Table",
           "id": "table",
+          "model": "table",
           "plugins": {
             "da": {
-              "page": {
-                "resourceType": "core/franklin/components/block",
-                "template": {}
-              }
+              "name": "table",
+              "rows": 1,
+              "columns": 1,
+              "fields": [
+                { "name": "content", "selector": "div:nth-child(1)" }
+              ]
             }
-          },
-          "model": "table"
+          }
+        },
+        {
+          "title": "Card",
+          "id": "card",
+          "model": "card",
+          "plugins": {
+            "da": {
+              "name": "card",
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                { "name": "image", "selector": "div:nth-child(1)" },
+                { "name": "text", "selector": "div:nth-child(2)" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Carousel",
+          "id": "carousel",
+          "model": "carousel",
+          "filter": "carousel",
+          "plugins": {
+            "da": {
+              "name": "carousel",
+              "rows": 1,
+              "columns": 2
+            }
+          }
+        },
+        {
+          "title": "Carousel Slide",
+          "id": "carousel-slide",
+          "model": "carousel-slide",
+          "plugins": {
+            "da": {
+              "name": "carousel-slide",
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                { "name": "image", "selector": "div:nth-child(1)" },
+                { "name": "text", "selector": "div:nth-child(2)" }
+              ]
+            }
+          }
         }
       ]
     },
@@ -119,81 +160,120 @@
         {
           "title": "Office Info",
           "id": "office-info",
+          "model": "office-info",
           "plugins": {
             "da": {
-              "page": {
-                "resourceType": "core/franklin/components/block",
-                "template": {}
-              }
+              "name": "office-info",
+              "rows": 1,
+              "columns": 1,
+              "fields": [
+                { "name": "content", "selector": "div:nth-child(1)" }
+              ]
             }
-          },
-          "model": "office-info"
+          }
         },
         {
           "title": "Services Links",
           "id": "services-links",
+          "model": "services-links",
+          "filter": "services-links",
           "plugins": {
             "da": {
-              "page": {
-                "resourceType": "core/franklin/components/block",
-                "template": {}
-              }
+              "name": "services-links",
+              "rows": 1,
+              "columns": 1
             }
-          },
-          "model": "services-links"
+          }
+        },
+        {
+          "title": "Service Link Item",
+          "id": "services-links-item",
+          "model": "services-links-item",
+          "plugins": {
+            "da": {
+              "name": "services-links-item",
+              "rows": 1,
+              "columns": 0,
+              "fields": [
+                { "name": "link", "selector": "div:nth-child(1)" }
+              ]
+            }
+          }
         },
         {
           "title": "Contact Card",
           "id": "contact-card",
+          "model": "contact-card",
           "plugins": {
             "da": {
-              "page": {
-                "resourceType": "core/franklin/components/block",
-                "template": {}
-              }
+              "name": "contact-card",
+              "rows": 1,
+              "columns": 3,
+              "fields": [
+                { "name": "image", "selector": "div:nth-child(1)" },
+                { "name": "info", "selector": "div:nth-child(2)" },
+                { "name": "bio", "selector": "div:nth-child(3)" }
+              ]
             }
-          },
-          "model": "contact-card"
+          }
         },
         {
           "title": "Contact Form",
           "id": "contact-form",
+          "model": "contact-form",
           "plugins": {
             "da": {
-              "page": {
-                "resourceType": "core/franklin/components/block",
-                "template": {}
-              }
+              "name": "contact-form",
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                { "name": "label", "selector": "div:nth-child(1)" },
+                { "name": "type", "selector": "div:nth-child(2)" }
+              ]
             }
-          },
-          "model": "contact-form"
+          }
         },
         {
           "title": "Insights Cards",
           "id": "insights-cards",
+          "model": "insights-cards",
+          "filter": "insights-cards",
           "plugins": {
             "da": {
-              "page": {
-                "resourceType": "core/franklin/components/block",
-                "template": {}
-              }
+              "name": "insights-cards",
+              "rows": 1,
+              "columns": 2
             }
-          },
-          "model": "insights-cards"
+          }
+        },
+        {
+          "title": "Insights Card Item",
+          "id": "insights-cards-item",
+          "model": "insights-cards-item",
+          "plugins": {
+            "da": {
+              "name": "insights-cards-item",
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                { "name": "image", "selector": "div:nth-child(1)" },
+                { "name": "text", "selector": "div:nth-child(2)" }
+              ]
+            }
+          }
         },
         {
           "title": "Offices List",
           "id": "offices-list",
           "description": "Dynamically lists all offices from the query index. No authored content needed.",
+          "model": "offices-list",
           "plugins": {
             "da": {
-              "page": {
-                "resourceType": "core/franklin/components/block",
-                "template": {}
-              }
+              "name": "offices-list",
+              "rows": 0,
+              "columns": 0
             }
-          },
-          "model": "offices-list"
+          }
         }
       ]
     },
@@ -204,28 +284,33 @@
         {
           "title": "CTA Banner",
           "id": "cta-banner",
+          "model": "cta-banner",
           "plugins": {
             "da": {
-              "page": {
-                "resourceType": "core/franklin/components/block",
-                "template": {}
-              }
+              "name": "cta-banner",
+              "rows": 1,
+              "columns": 1,
+              "fields": [
+                { "name": "content", "selector": "div:nth-child(1)" }
+              ]
             }
-          },
-          "model": "cta-banner"
+          }
         },
         {
           "title": "Feature Banner",
           "id": "feature-banner",
+          "model": "feature-banner",
           "plugins": {
             "da": {
-              "page": {
-                "resourceType": "core/franklin/components/block",
-                "template": {}
-              }
+              "name": "feature-banner",
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                { "name": "image", "selector": "div:nth-child(1)" },
+                { "name": "text", "selector": "div:nth-child(2)" }
+              ]
             }
-          },
-          "model": "feature-banner"
+          }
         }
       ]
     }

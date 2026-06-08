@@ -2,22 +2,38 @@
   {
     "id": "section",
     "components": [
+      "hero",
       "mini-hero",
       "breadcrumb",
-      "hero",
+      "accordion",
+      "columns",
+      "table",
+      "card",
+      "carousel",
       "office-info",
       "services-links",
       "contact-card",
       "contact-form",
       "insights-cards",
-      "accordion",
-      "columns",
-      "card",
-      "carousel",
-      "cta-banner",
-      "feature-banner",
       "offices-list",
-      "table"
+      "cta-banner",
+      "feature-banner"
     ]
+  },
+  {
+    "id": "accordion",
+    "components": ["accordion-item"]
+  },
+  {
+    "id": "carousel",
+    "components": ["carousel-slide"]
+  },
+  {
+    "id": "services-links",
+    "components": ["services-links-item"]
+  },
+  {
+    "id": "insights-cards",
+    "components": ["insights-cards-item"]
   }
 ]

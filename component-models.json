@@ -1,240 +1,130 @@
 [
   {
+    "id": "hero",
+    "fields": [
+      { "component": "reference", "valueType": "string", "name": "image", "label": "Image" },
+      { "component": "richtext", "valueType": "string", "name": "text", "label": "Text" }
+    ]
+  },
+  {
     "id": "mini-hero",
     "fields": [
-      {
-        "component": "text",
-        "name": "classes",
-        "label": "Mini Hero",
-        "valueType": "string",
-        "description": "This block generates its content dynamically from page metadata. No editing required."
-      }
+      { "component": "text", "valueType": "string", "name": "info", "label": "Dynamic Block", "value": "Generates title from page city metadata. No editing required." }
     ]
   },
   {
     "id": "breadcrumb",
     "fields": [
-      {
-        "component": "text",
-        "name": "classes",
-        "label": "Breadcrumb",
-        "valueType": "string",
-        "description": "This block generates breadcrumb navigation dynamically from page hierarchy. No editing required."
-      }
-    ]
-  },
-  {
-    "id": "office-info",
-    "fields": [
-      {
-        "component": "richtext",
-        "name": "description",
-        "label": "Office Description",
-        "valueType": "string",
-        "selector": "div > div > div"
-      }
-    ]
-  },
-  {
-    "id": "services-links",
-    "fields": [
-      {
-        "component": "richtext",
-        "name": "links",
-        "label": "Service Links",
-        "valueType": "string",
-        "selector": "div > div > div"
-      }
-    ]
-  },
-  {
-    "id": "contact-card",
-    "fields": [
-      {
-        "component": "reference",
-        "name": "image",
-        "label": "Photo",
-        "valueType": "string",
-        "selector": "div > div:nth-child(1) > div:nth-child(1)"
-      },
-      {
-        "component": "richtext",
-        "name": "info",
-        "label": "Contact Info",
-        "valueType": "string",
-        "selector": "div > div:nth-child(1) > div:nth-child(2)"
-      },
-      {
-        "component": "richtext",
-        "name": "bio",
-        "label": "Bio",
-        "valueType": "string",
-        "selector": "div > div:nth-child(1) > div:nth-child(3)"
-      }
-    ]
-  },
-  {
-    "id": "contact-form",
-    "fields": [
-      {
-        "component": "richtext",
-        "name": "form",
-        "label": "Form Configuration",
-        "valueType": "string",
-        "selector": "div > div > div"
-      }
-    ]
-  },
-  {
-    "id": "insights-cards",
-    "fields": [
-      {
-        "component": "richtext",
-        "name": "cards",
-        "label": "Insights Cards",
-        "valueType": "string",
-        "selector": "div > div > div"
-      }
-    ]
-  },
-  {
-    "id": "hero",
-    "fields": [
-      {
-        "component": "reference",
-        "name": "image",
-        "label": "Background Image",
-        "valueType": "string",
-        "selector": "div > div:nth-child(1) > div:nth-child(1)"
-      },
-      {
-        "component": "richtext",
-        "name": "content",
-        "label": "Hero Content",
-        "valueType": "string",
-        "selector": "div > div:nth-child(1) > div:nth-child(2)"
-      }
+      { "component": "text", "valueType": "string", "name": "info", "label": "Dynamic Block", "value": "Generates breadcrumb from page hierarchy. No editing required." }
     ]
   },
   {
     "id": "accordion",
+    "fields": []
+  },
+  {
+    "id": "accordion-item",
     "fields": [
-      {
-        "component": "richtext",
-        "name": "content",
-        "label": "Accordion Content",
-        "valueType": "string",
-        "selector": "div > div > div"
-      }
+      { "component": "richtext", "valueType": "string", "name": "summary", "label": "Summary" },
+      { "component": "richtext", "valueType": "string", "name": "text", "label": "Text" }
     ]
   },
   {
     "id": "columns",
     "fields": [
-      {
-        "component": "richtext",
-        "name": "content",
-        "label": "Column Content",
-        "valueType": "string",
-        "selector": "div > div > div"
-      }
-    ]
-  },
-  {
-    "id": "card",
-    "fields": [
-      {
-        "component": "reference",
-        "name": "image",
-        "label": "Image",
-        "valueType": "string",
-        "selector": "div > div:nth-child(1) > div:nth-child(1)"
-      },
-      {
-        "component": "richtext",
-        "name": "content",
-        "label": "Card Content",
-        "valueType": "string",
-        "selector": "div > div:nth-child(1) > div:nth-child(2)"
-      }
-    ]
-  },
-  {
-    "id": "carousel",
-    "fields": [
-      {
-        "component": "richtext",
-        "name": "content",
-        "label": "Slide Content",
-        "valueType": "string",
-        "selector": "div > div > div"
-      }
-    ]
-  },
-  {
-    "id": "cta-banner",
-    "fields": [
-      {
-        "component": "richtext",
-        "name": "content",
-        "label": "CTA Content",
-        "valueType": "string",
-        "selector": "div > div > div"
-      }
-    ]
-  },
-  {
-    "id": "feature-banner",
-    "fields": [
-      {
-        "component": "reference",
-        "name": "image",
-        "label": "Image",
-        "valueType": "string",
-        "selector": "div > div:nth-child(1) > div:nth-child(1)"
-      },
-      {
-        "component": "richtext",
-        "name": "content",
-        "label": "Banner Content",
-        "valueType": "string",
-        "selector": "div > div:nth-child(1) > div:nth-child(2)"
-      }
-    ]
-  },
-  {
-    "id": "offices-list",
-    "fields": [
-      {
-        "component": "text",
-        "name": "classes",
-        "label": "Offices List",
-        "valueType": "string",
-        "description": "This block dynamically lists all offices from the query index. No editing required."
-      }
+      { "component": "richtext", "valueType": "string", "name": "col1", "label": "Column 1" },
+      { "component": "richtext", "valueType": "string", "name": "col2", "label": "Column 2" }
     ]
   },
   {
     "id": "table",
     "fields": [
-      {
-        "component": "richtext",
-        "name": "content",
-        "label": "Table Content",
-        "valueType": "string",
-        "selector": "div > div > div"
-      }
+      { "component": "richtext", "valueType": "string", "name": "content", "label": "Content" }
+    ]
+  },
+  {
+    "id": "card",
+    "fields": [
+      { "component": "reference", "valueType": "string", "name": "image", "label": "Image" },
+      { "component": "richtext", "valueType": "string", "name": "text", "label": "Text" }
+    ]
+  },
+  {
+    "id": "carousel",
+    "fields": []
+  },
+  {
+    "id": "carousel-slide",
+    "fields": [
+      { "component": "reference", "valueType": "string", "name": "image", "label": "Image" },
+      { "component": "richtext", "valueType": "string", "name": "text", "label": "Text" }
+    ]
+  },
+  {
+    "id": "office-info",
+    "fields": [
+      { "component": "richtext", "valueType": "string", "name": "content", "label": "Office Description" }
+    ]
+  },
+  {
+    "id": "services-links",
+    "fields": []
+  },
+  {
+    "id": "services-links-item",
+    "fields": [
+      { "component": "richtext", "valueType": "string", "name": "link", "label": "Service Link" }
+    ]
+  },
+  {
+    "id": "contact-card",
+    "fields": [
+      { "component": "reference", "valueType": "string", "name": "image", "label": "Photo" },
+      { "component": "richtext", "valueType": "string", "name": "info", "label": "Contact Info" },
+      { "component": "richtext", "valueType": "string", "name": "bio", "label": "Bio" }
+    ]
+  },
+  {
+    "id": "contact-form",
+    "fields": [
+      { "component": "richtext", "valueType": "string", "name": "label", "label": "Field Label" },
+      { "component": "text", "valueType": "string", "name": "type", "label": "Field Type" }
+    ]
+  },
+  {
+    "id": "insights-cards",
+    "fields": []
+  },
+  {
+    "id": "insights-cards-item",
+    "fields": [
+      { "component": "reference", "valueType": "string", "name": "image", "label": "Image" },
+      { "component": "richtext", "valueType": "string", "name": "text", "label": "Text" }
+    ]
+  },
+  {
+    "id": "offices-list",
+    "fields": [
+      { "component": "text", "valueType": "string", "name": "info", "label": "Dynamic Block", "value": "Lists all offices from the query index. No editing required." }
+    ]
+  },
+  {
+    "id": "cta-banner",
+    "fields": [
+      { "component": "richtext", "valueType": "string", "name": "content", "label": "CTA Content" }
+    ]
+  },
+  {
+    "id": "feature-banner",
+    "fields": [
+      { "component": "reference", "valueType": "string", "name": "image", "label": "Image" },
+      { "component": "richtext", "valueType": "string", "name": "text", "label": "Banner Content" }
     ]
   },
   {
     "id": "section",
     "fields": [
-      {
-        "component": "text",
-        "name": "style",
-        "label": "Style",
-        "valueType": "string"
-      }
+      { "component": "multiselect", "name": "classes", "label": "Style", "valueType": "string", "options": [] }
     ]
   }
 ]
