@@ -1,11 +1,27 @@
 [
   {
     "id": "mini-hero",
-    "fields": []
+    "fields": [
+      {
+        "component": "container",
+        "name": "mini-hero",
+        "label": "Mini Hero",
+        "valueType": "string",
+        "description": "This block generates its content dynamically from page metadata. No editing required."
+      }
+    ]
   },
   {
     "id": "breadcrumb",
-    "fields": []
+    "fields": [
+      {
+        "component": "container",
+        "name": "breadcrumb",
+        "label": "Breadcrumb",
+        "valueType": "string",
+        "description": "This block generates breadcrumb navigation dynamically from page hierarchy. No editing required."
+      }
+    ]
   },
   {
     "id": "office-info",
@@ -13,7 +29,7 @@
       {
         "component": "richtext",
         "name": "content",
-        "label": "Office Information",
+        "label": "Office Description",
         "valueType": "string"
       }
     ]
@@ -165,7 +181,15 @@
   },
   {
     "id": "offices-list",
-    "fields": []
+    "fields": [
+      {
+        "component": "container",
+        "name": "offices-list",
+        "label": "Offices List",
+        "valueType": "string",
+        "description": "This block dynamically lists all offices from the query index. No editing required."
+      }
+    ]
   },
   {
     "id": "table",
