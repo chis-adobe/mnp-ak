@@ -8,7 +8,7 @@
           "title": "Hero",
           "id": "hero",
           "plugins": {
-            "xwalk": {
+            "da": {
               "page": {
                 "resourceType": "core/franklin/components/block",
                 "template": {}
@@ -22,7 +22,7 @@
           "id": "mini-hero",
           "description": "Dynamically generates title from page city metadata. No authored content needed.",
           "plugins": {
-            "xwalk": {
+            "da": {
               "page": {
                 "resourceType": "core/franklin/components/block",
                 "template": {}
@@ -36,7 +36,7 @@
           "id": "breadcrumb",
           "description": "Dynamically generates breadcrumb navigation from page hierarchy. No authored content needed.",
           "plugins": {
-            "xwalk": {
+            "da": {
               "page": {
                 "resourceType": "core/franklin/components/block",
                 "template": {}
@@ -49,7 +49,7 @@
           "title": "Columns",
           "id": "columns",
           "plugins": {
-            "xwalk": {
+            "da": {
               "page": {
                 "resourceType": "core/franklin/components/block",
                 "template": {}
@@ -62,7 +62,7 @@
           "title": "Card",
           "id": "card",
           "plugins": {
-            "xwalk": {
+            "da": {
               "page": {
                 "resourceType": "core/franklin/components/block",
                 "template": {}
@@ -75,7 +75,7 @@
           "title": "Accordion",
           "id": "accordion",
           "plugins": {
-            "xwalk": {
+            "da": {
               "page": {
                 "resourceType": "core/franklin/components/block",
                 "template": {}
@@ -88,7 +88,7 @@
           "title": "Carousel",
           "id": "carousel",
           "plugins": {
-            "xwalk": {
+            "da": {
               "page": {
                 "resourceType": "core/franklin/components/block",
                 "template": {}
@@ -101,7 +101,7 @@
           "title": "Table",
           "id": "table",
           "plugins": {
-            "xwalk": {
+            "da": {
               "page": {
                 "resourceType": "core/franklin/components/block",
                 "template": {}
@@ -120,7 +120,7 @@
           "title": "Office Info",
           "id": "office-info",
           "plugins": {
-            "xwalk": {
+            "da": {
               "page": {
                 "resourceType": "core/franklin/components/block",
                 "template": {}
@@ -133,7 +133,7 @@
           "title": "Services Links",
           "id": "services-links",
           "plugins": {
-            "xwalk": {
+            "da": {
               "page": {
                 "resourceType": "core/franklin/components/block",
                 "template": {}
@@ -146,7 +146,7 @@
           "title": "Contact Card",
           "id": "contact-card",
           "plugins": {
-            "xwalk": {
+            "da": {
               "page": {
                 "resourceType": "core/franklin/components/block",
                 "template": {}
@@ -159,7 +159,7 @@
           "title": "Contact Form",
           "id": "contact-form",
           "plugins": {
-            "xwalk": {
+            "da": {
               "page": {
                 "resourceType": "core/franklin/components/block",
                 "template": {}
@@ -172,7 +172,7 @@
           "title": "Insights Cards",
           "id": "insights-cards",
           "plugins": {
-            "xwalk": {
+            "da": {
               "page": {
                 "resourceType": "core/franklin/components/block",
                 "template": {}
@@ -186,7 +186,7 @@
           "id": "offices-list",
           "description": "Dynamically lists all offices from the query index. No authored content needed.",
           "plugins": {
-            "xwalk": {
+            "da": {
               "page": {
                 "resourceType": "core/franklin/components/block",
                 "template": {}
@@ -205,7 +205,7 @@
           "title": "CTA Banner",
           "id": "cta-banner",
           "plugins": {
-            "xwalk": {
+            "da": {
               "page": {
                 "resourceType": "core/franklin/components/block",
                 "template": {}
@@ -218,7 +218,7 @@
           "title": "Feature Banner",
           "id": "feature-banner",
           "plugins": {
-            "xwalk": {
+            "da": {
               "page": {
                 "resourceType": "core/franklin/components/block",
                 "template": {}
