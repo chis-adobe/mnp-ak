@@ -48,5 +48,11 @@ export default async function init(el) {
   prevBtn.addEventListener('click', () => showSlide(current - 1));
   nextBtn.addEventListener('click', () => showSlide(current + 1));
 
-  setInterval(() => showSlide(current + 1), 6000);
+  const isUE = /\.(stage-ue|ue)\.da\.live$/.test(window.location.hostname);
+  if (!isUE) {
+    const timer = setInterval(() => {
+      if (el.dataset.ueActive) { clearInterval(timer); return; }
+      showSlide(current + 1);
+    }, 6000);
+  }
 }

@@ -45,4 +45,7 @@ await loadPage();
   if (hasPreview) import('../tools/da/da.js').then((mod) => mod.default(loadPage));
   const hasQE = searchParams.has('quick-edit');
   if (hasQE) import('../tools/quick-edit/quick-edit.js').then((mod) => mod.default());
+  if (/\.(stage-ue|ue)\.da\.live$/.test(window.location.hostname)) {
+    import('../ue/scripts/ue.js');
+  }
 }());
