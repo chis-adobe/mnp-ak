@@ -14,7 +14,7 @@
               "rows": 1,
               "columns": 2,
               "fields": [
-                { "name": "image", "selector": "div:nth-child(1)" },
+                { "name": "image", "selector": "div:nth-child(1) img[src]" },
                 { "name": "text", "selector": "div:nth-child(2)" }
               ]
             }
@@ -116,7 +116,7 @@
               "rows": 1,
               "columns": 2,
               "fields": [
-                { "name": "image", "selector": "div:nth-child(1)" },
+                { "name": "image", "selector": "div:nth-child(1) img[src]" },
                 { "name": "text", "selector": "div:nth-child(2)" }
               ]
             }
@@ -145,7 +145,7 @@
               "rows": 1,
               "columns": 2,
               "fields": [
-                { "name": "image", "selector": "div:nth-child(1)" },
+                { "name": "image", "selector": "div:nth-child(1) img[src]" },
                 { "name": "text", "selector": "div:nth-child(2)" }
               ]
             }
@@ -210,7 +210,7 @@
               "rows": 1,
               "columns": 3,
               "fields": [
-                { "name": "image", "selector": "div:nth-child(1)" },
+                { "name": "image", "selector": "div:nth-child(1) img[src]" },
                 { "name": "info", "selector": "div:nth-child(2)" },
                 { "name": "bio", "selector": "div:nth-child(3)" }
               ]
@@ -256,7 +256,7 @@
               "rows": 1,
               "columns": 2,
               "fields": [
-                { "name": "image", "selector": "div:nth-child(1)" },
+                { "name": "image", "selector": "div:nth-child(1) img[src]" },
                 { "name": "text", "selector": "div:nth-child(2)" }
               ]
             }
@@ -306,7 +306,7 @@
               "rows": 1,
               "columns": 2,
               "fields": [
-                { "name": "image", "selector": "div:nth-child(1)" },
+                { "name": "image", "selector": "div:nth-child(1) img[src]" },
                 { "name": "text", "selector": "div:nth-child(2)" }
               ]
             }
