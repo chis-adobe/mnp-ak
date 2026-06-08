@@ -9,6 +9,15 @@ async function fetchOffices() {
   return json.data || [];
 }
 
+async function fetchAddresses() {
+  const resp = await fetch('/fragments/addresses/query-index.json?limit=500');
+  if (!resp.ok) return {};
+  const json = await resp.json();
+  const map = {};
+  (json.data || []).forEach((entry) => { map[entry.path] = entry; });
+  return map;
+}
+
 function renderOfficeCard(office) {
   const card = document.createElement('div');
   card.className = 'offices-list-card';
@@ -49,13 +58,27 @@ export default async function init(el) {
   wrapper.append(loading);
   el.append(wrapper);
 
-  const offices = await fetchOffices();
+  const [offices, addressMap] = await Promise.all([fetchOffices(), fetchAddresses()]);
   wrapper.innerHTML = '';
 
   if (offices.length === 0) {
     wrapper.innerHTML = '<p>No offices found.</p>';
     return;
   }
+
+  offices.forEach((office) => {
+    if (!office.city && office.addressFragment) {
+      const fragment = addressMap[office.addressFragment];
+      if (fragment) {
+        office.city = fragment.city || '';
+        office.address = fragment.address || '';
+        office.province = fragment.province || '';
+        office.postalCode = fragment.postalCode || '';
+        office.phone = fragment.phone || '';
+        office.fax = fragment.fax || '';
+      }
+    }
+  });
 
   function getCityName(o) {
     return o.city || o.path.split('/').pop().replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
