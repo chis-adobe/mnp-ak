@@ -11,13 +11,23 @@ async function loadAuthorFragment(path) {
     const html = await resp.text();
     const doc = new DOMParser().parseFromString(html, 'text/html');
     const data = {};
+    const basePath = path.substring(0, path.lastIndexOf('/') + 1);
     const block = doc.querySelector('.author-data');
     if (block) {
       [...block.querySelectorAll(':scope > div')].forEach((row) => {
         const key = row.querySelector(':scope > div:first-child');
         const val = row.querySelector(':scope > div:nth-child(2)');
         if (key && val) {
-          data[key.textContent.trim().toLowerCase()] = val.textContent.trim();
+          const field = key.textContent.trim().toLowerCase();
+          const img = val.querySelector('img');
+          if (img) {
+            const src = img.getAttribute('src');
+            data[field] = src.startsWith('./')
+              ? basePath + src.substring(2)
+              : src;
+          } else {
+            data[field] = val.textContent.trim();
+          }
         }
       });
     }
