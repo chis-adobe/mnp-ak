@@ -108,7 +108,10 @@ export default async function init(el) {
 
   const alphabetNav = document.createElement('div');
   alphabetNav.className = 'search-results-alpha';
-  const letters = [...new Set(results.map((r) => getDisplayTitle(r, officeData).charAt(0).toUpperCase()))].sort();
+  const letters = [...new Set(results.map((r) => {
+    const title = getDisplayTitle(r, officeData);
+    return title.charAt(0).toUpperCase();
+  }))].sort();
 
   letters.forEach((letter) => {
     const btn = document.createElement('button');
