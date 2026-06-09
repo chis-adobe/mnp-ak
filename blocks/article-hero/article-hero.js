@@ -5,7 +5,7 @@ export default async function init(el) {
 
   const title = getMetadata('og:title') || getMetadata('title');
   const date = getMetadata('publication-date');
-  const image = getMetadata('hero-image');
+  const image = getMetadata('og:image');
 
   if (!title) return;
 
@@ -13,10 +13,11 @@ export default async function init(el) {
   wrapper.className = 'article-hero-wrapper';
 
   if (image) {
+    const imgUrl = image.replace('author-p', 'publish-p');
     const imgWrapper = document.createElement('div');
     imgWrapper.className = 'article-hero-image';
     const img = document.createElement('img');
-    img.src = image;
+    img.src = imgUrl;
     img.alt = title;
     img.loading = 'eager';
     imgWrapper.append(img);
