@@ -12,7 +12,7 @@ async function loadAuthorFragment(path) {
     const doc = new DOMParser().parseFromString(html, 'text/html');
     const data = {};
     const basePath = path.substring(0, path.lastIndexOf('/') + 1);
-    const block = doc.querySelector('.author-data');
+    const block = doc.querySelector('.author-data, .author-info');
     if (block) {
       [...block.querySelectorAll(':scope > div')].forEach((row) => {
         const key = row.querySelector(':scope > div:first-child');

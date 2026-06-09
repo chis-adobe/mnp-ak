@@ -1,0 +1,77 @@
+.author-info {
+  max-width: var(--grid-container-width);
+  margin: var(--spacing-xxl) auto;
+  padding: 0 var(--spacing-l);
+}
+
+.author-info .author-info-header {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-xxl);
+}
+
+.author-info .author-info-photo img {
+  width: 100%;
+  max-width: 280px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.author-info .author-info-details h2 {
+  font-size: var(--heading-font-size-xl);
+  color: var(--color-mnp-heading-teal);
+  margin: 0 0 var(--spacing-xs);
+}
+
+.author-info .author-info-role {
+  font-size: var(--heading-font-size-m);
+  font-weight: 400;
+  color: var(--color-mnp-body-text);
+  margin: 0 0 var(--spacing-l);
+}
+
+.author-info .author-info-contacts {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-l);
+}
+
+.author-info .author-info-contacts li {
+  margin-bottom: var(--spacing-xs);
+  font-size: var(--body-font-size-m);
+  color: var(--color-mnp-body-text);
+}
+
+.author-info .author-info-contacts a {
+  color: var(--color-mnp-heading-teal);
+  text-decoration: none;
+}
+
+.author-info .author-info-contacts a:hover {
+  text-decoration: underline;
+}
+
+.author-info .author-info-address {
+  font-size: var(--body-font-size-m);
+  color: var(--color-mnp-body-text);
+  margin: 0;
+}
+
+.author-info .author-info-bio {
+  border-top: 1px solid var(--color-mnp-border);
+  padding-top: var(--spacing-xl);
+}
+
+.author-info .author-info-bio p {
+  font-size: var(--body-font-size-m);
+  line-height: 1.7;
+  color: var(--color-mnp-body-text);
+  margin: 0 0 var(--spacing-m);
+}
+
+@media (width >= 900px) {
+  .author-info .author-info-header {
+    grid-template-columns: 280px 1fr;
+  }
+}
