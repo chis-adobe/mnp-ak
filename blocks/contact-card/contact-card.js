@@ -108,17 +108,88 @@ function renderCard(person) {
   return card;
 }
 
+function renderSecondaryCard(person) {
+  const card = document.createElement('div');
+  card.className = 'contact-card-secondary';
+
+  if (person.thumbnail) {
+    const img = document.createElement('img');
+    img.src = person.thumbnail;
+    img.alt = person.name || '';
+    img.loading = 'lazy';
+    card.append(img);
+  }
+
+  const info = document.createElement('div');
+  info.className = 'contact-card-secondary-info';
+
+  const name = document.createElement('strong');
+  const displayName = person.certifications
+    ? `${person.name}, ${person.certifications}`
+    : person.name;
+  name.textContent = displayName || '';
+  info.append(name);
+
+  if (person.role) {
+    const role = document.createElement('span');
+    role.textContent = person.role;
+    info.append(role);
+  }
+
+  if (person.phone) {
+    const phone = document.createElement('a');
+    phone.href = `tel:${person.phone}`;
+    phone.textContent = person.phone;
+    info.append(phone);
+  }
+
+  if (person.email) {
+    const email = document.createElement('a');
+    email.href = `mailto:${person.email}`;
+    email.textContent = person.email;
+    info.append(email);
+  }
+
+  card.append(info);
+  return card;
+}
+
 export default async function init(el) {
   const rows = [...el.querySelectorAll(':scope > div')];
   if (rows.length === 0) return;
 
-  // Check if the block contains a personnel reference path
-  const firstText = rows[0]?.textContent?.trim();
-  if (firstText && firstText.startsWith('/personnel/')) {
+  // Collect all personnel paths from the block
+  const paths = [];
+  rows.forEach((row) => {
+    const text = row.textContent.trim();
+    if (text.startsWith('/personnel/')) {
+      paths.push(text);
+    }
+  });
+
+  if (paths.length > 0) {
     el.innerHTML = '';
-    const person = await loadPersonnel(firstText);
-    if (person) {
-      el.append(renderCard(person));
+
+    // First path = primary contact
+    const primary = await loadPersonnel(paths[0]);
+    if (primary) {
+      el.append(renderCard(primary));
+    }
+
+    // Remaining paths = secondary contacts
+    if (paths.length > 1) {
+      const secondaryGrid = document.createElement('div');
+      secondaryGrid.className = 'contact-card-secondary-grid';
+
+      const secondaries = await Promise.all(
+        paths.slice(1).map((p) => loadPersonnel(p)),
+      );
+
+      secondaries.filter(Boolean).forEach((person) => {
+        secondaryGrid.append(renderSecondaryCard(person));
+      });
+
+      el.append(secondaryGrid);
     }
     return;
   }
