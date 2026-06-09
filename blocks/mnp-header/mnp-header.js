@@ -122,6 +122,29 @@ export default async function init(el) {
 
   mainNav.append(mainUl);
 
+  const searchBtn = document.createElement('button');
+  searchBtn.className = 'mnp-header-search-btn';
+  searchBtn.setAttribute('aria-label', 'Search');
+  searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>';
+
+  const searchFlyout = document.createElement('div');
+  searchFlyout.className = 'mnp-header-search-flyout';
+  searchFlyout.innerHTML = `<form class="mnp-header-search-form" action="/search">
+    <input type="search" name="query" placeholder="Search MNP..." aria-label="Search" autocomplete="off"/>
+    <button type="submit" aria-label="Submit search"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
+  </form>`;
+
+  searchBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = searchFlyout.classList.contains('is-open');
+    mainUl.querySelectorAll('.is-open').forEach((open) => {
+      open.classList.remove('is-open');
+      open.querySelector('a')?.setAttribute('aria-expanded', 'false');
+    });
+    searchFlyout.classList.toggle('is-open', !isOpen);
+    if (!isOpen) searchFlyout.querySelector('input')?.focus();
+  });
+
   const toggle = document.createElement('button');
   toggle.className = 'mnp-header-toggle';
   toggle.setAttribute('aria-label', 'Toggle navigation');
@@ -130,9 +153,9 @@ export default async function init(el) {
     header.classList.toggle('is-mobile-open');
   });
 
-  mainBarInner.append(mainNav, toggle);
+  mainBarInner.append(mainNav, searchBtn, toggle);
   mainBar.append(mainBarInner);
-  header.append(topBar, mainBar);
+  header.append(topBar, mainBar, searchFlyout);
   el.append(header);
 
   // Close flyouts on outside click
@@ -142,6 +165,7 @@ export default async function init(el) {
         open.classList.remove('is-open');
         open.querySelector('a')?.setAttribute('aria-expanded', 'false');
       });
+      searchFlyout.classList.remove('is-open');
     }
   });
 

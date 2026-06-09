@@ -32,15 +32,20 @@ export default async function init(el) {
     }
   }
 
-  if (!city) return;
-
   const content = document.createElement('div');
   content.classList.add('mini-hero-content');
 
   const h1 = document.createElement('h1');
   h1.classList.add('mini-hero-title');
-  h1.innerHTML = `Professional Accounting Firm in <strong>${city}</strong>`;
-  content.append(h1);
 
+  if (city) {
+    h1.innerHTML = `Professional Accounting Firm in <strong>${city}</strong>`;
+  } else {
+    const title = getMetadata('title') || document.title;
+    if (!title) return;
+    h1.textContent = title;
+  }
+
+  content.append(h1);
   el.append(content);
 }
