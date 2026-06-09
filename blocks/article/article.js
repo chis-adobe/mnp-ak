@@ -172,13 +172,13 @@ export default async function init(el) {
   rows.forEach((row) => {
     const label = row.querySelector(':scope > div:first-child');
     if (label && label.textContent.trim().toLowerCase() === 'authors') {
-      const links = row.querySelectorAll('a');
-      authorPaths = [...links].map((a) => {
-        const href = a.getAttribute('href');
-        return href.startsWith('http')
-          ? new URL(href).pathname
-          : href;
-      });
+      const valueCell = row.querySelector(':scope > div:nth-child(2)');
+      if (valueCell) {
+        const paragraphs = valueCell.querySelectorAll('p');
+        authorPaths = [...paragraphs]
+          .map((p) => p.textContent.trim())
+          .filter((t) => t.startsWith('/'));
+      }
     }
   });
 
