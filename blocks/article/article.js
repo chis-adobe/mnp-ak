@@ -199,18 +199,13 @@ export default async function init(el) {
 
   el.append(synopsisAuthorsRow);
 
-  // Related content (under authors)
-  el.append(buildRelatedContent());
+  // Tags
+  const tags = buildTags();
+  if (tags) el.append(tags);
 
-  // Tags + Copy layout
+  // Copy + Related content layout
   const layout = document.createElement('div');
   layout.className = 'article-layout';
-
-  const sidebar = document.createElement('aside');
-  sidebar.className = 'article-sidebar';
-
-  const tags = buildTags();
-  if (tags) sidebar.append(tags);
 
   const main = document.createElement('div');
   main.className = 'article-main';
@@ -229,7 +224,11 @@ export default async function init(el) {
     }
   });
 
-  layout.append(sidebar, main);
+  const sidebar = document.createElement('aside');
+  sidebar.className = 'article-sidebar';
+  sidebar.append(buildRelatedContent());
+
+  layout.append(main, sidebar);
   el.append(layout);
 
   // Insights at the bottom
