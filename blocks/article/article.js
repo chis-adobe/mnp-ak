@@ -7,13 +7,17 @@ async function loadAuthorFragment(path) {
     const html = await resp.text();
     const doc = new DOMParser().parseFromString(html, 'text/html');
     const data = {};
-    [...doc.querySelectorAll('div > div')].forEach((row) => {
-      const key = row.querySelector(':scope > div:first-child');
-      const val = row.querySelector(':scope > div:nth-child(2)');
-      if (key && val) {
-        data[key.textContent.trim().toLowerCase()] = val.innerHTML.trim();
-      }
-    });
+    const block = doc.querySelector('[class]');
+    if (block) {
+      data.name = block.className;
+      [...block.querySelectorAll(':scope > div')].forEach((row) => {
+        const key = row.querySelector(':scope > div:first-child');
+        const val = row.querySelector(':scope > div:nth-child(2)');
+        if (key && val) {
+          data[key.textContent.trim().toLowerCase()] = val.textContent.trim();
+        }
+      });
+    }
     return data;
   } catch {
     return null;
@@ -52,8 +56,7 @@ async function buildAuthors(authorPaths) {
 
     if (author.thumbnail) {
       const img = document.createElement('img');
-      const src = author.thumbnail.match(/src="([^"]+)"/);
-      img.src = src ? src[1] : author.thumbnail;
+      img.src = author.thumbnail;
       img.alt = author.name || '';
       img.loading = 'lazy';
       card.append(img);
@@ -64,21 +67,17 @@ async function buildAuthors(authorPaths) {
 
     if (author.name) {
       const name = document.createElement('strong');
-      name.textContent = author.name.replace(/<[^>]+>/g, '');
+      const displayName = author.certifications
+        ? `${author.name}, ${author.certifications}`
+        : author.name;
+      name.textContent = displayName;
       info.append(name);
-    }
-
-    if (author.certifications) {
-      const certs = document.createElement('span');
-      certs.className = 'article-author-certs';
-      certs.textContent = author.certifications.replace(/<[^>]+>/g, '');
-      info.append(certs);
     }
 
     if (author.role) {
       const role = document.createElement('span');
       role.className = 'article-author-role';
-      role.textContent = author.role.replace(/<[^>]+>/g, '');
+      role.textContent = author.role;
       info.append(role);
     }
 
