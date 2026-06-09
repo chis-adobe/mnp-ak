@@ -3,7 +3,7 @@ import { getMetadata } from '../../scripts/ak.js';
 export default async function init(el) {
   el.innerHTML = '';
 
-  const title = getMetadata('title');
+  const title = getMetadata('og:title') || getMetadata('title');
   const date = getMetadata('publication-date');
   const image = getMetadata('hero-image');
 
