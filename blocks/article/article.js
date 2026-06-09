@@ -7,9 +7,8 @@ async function loadAuthorFragment(path) {
     const html = await resp.text();
     const doc = new DOMParser().parseFromString(html, 'text/html');
     const data = {};
-    const block = doc.querySelector('[class]');
+    const block = doc.querySelector('.author-data');
     if (block) {
-      data.name = block.className;
       [...block.querySelectorAll(':scope > div')].forEach((row) => {
         const key = row.querySelector(':scope > div:first-child');
         const val = row.querySelector(':scope > div:nth-child(2)');
