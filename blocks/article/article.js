@@ -199,13 +199,14 @@ export default async function init(el) {
 
   el.append(synopsisAuthorsRow);
 
-  // Tags
-  const tags = buildTags();
-  if (tags) el.append(tags);
-
-  // Copy + Related content layout
+  // Tags + Copy + Related content layout
   const layout = document.createElement('div');
   layout.className = 'article-layout';
+
+  const tagsCol = document.createElement('div');
+  tagsCol.className = 'article-tags-col';
+  const tags = buildTags();
+  if (tags) tagsCol.append(tags);
 
   const main = document.createElement('div');
   main.className = 'article-main';
@@ -228,7 +229,7 @@ export default async function init(el) {
   sidebar.className = 'article-sidebar';
   sidebar.append(buildRelatedContent());
 
-  layout.append(main, sidebar);
+  layout.append(tagsCol, main, sidebar);
   el.append(layout);
 
   // Insights at the bottom
