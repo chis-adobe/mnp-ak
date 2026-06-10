@@ -1,0 +1,15 @@
+/* Personnel page template */
+.personnel-template main {
+  max-width: var(--grid-container-width);
+  margin: 0 auto;
+}
+
+.personnel-template main > .section {
+  padding: 0 var(--spacing-l);
+}
+
+.personnel-template main > .section:first-child {
+  background: var(--color-mnp-dark-teal);
+  max-width: none;
+  padding: var(--spacing-xl) var(--spacing-l);
+}
