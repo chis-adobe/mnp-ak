@@ -1,4 +1,5 @@
 import { getMetadata } from '../../scripts/ak.js';
+import { getPlaceholder } from '../../scripts/utils/placeholders.js';
 
 async function getAddressFromFragment(fragmentPath) {
   try {
@@ -20,12 +21,12 @@ async function getAddressFromFragment(fragmentPath) {
   }
 }
 
-function buildInfoHeader(address) {
+async function buildInfoHeader(address) {
   const header = document.createElement('div');
   header.classList.add('office-info-header');
 
   const h2 = document.createElement('h2');
-  h2.textContent = 'Office Information';
+  h2.textContent = await getPlaceholder('office-heading', 'Office Information');
   header.append(h2);
 
   const fullAddress = `${address.address}, ${address.city}, ${address.province}, ${address['postal-code']}`;
@@ -73,7 +74,7 @@ export default async function init(el) {
   }
 
   if (address) {
-    const infoHeader = buildInfoHeader(address);
+    const infoHeader = await buildInfoHeader(address);
     el.prepend(infoHeader);
   }
 

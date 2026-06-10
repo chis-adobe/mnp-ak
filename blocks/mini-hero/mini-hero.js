@@ -1,4 +1,5 @@
 import { getMetadata } from '../../scripts/ak.js';
+import { getPlaceholder } from '../../scripts/utils/placeholders.js';
 
 async function getCityFromFragment(fragmentPath) {
   try {
@@ -39,7 +40,8 @@ export default async function init(el) {
   h1.classList.add('mini-hero-title');
 
   if (city) {
-    h1.innerHTML = `Professional Accounting Firm in <strong>${city}</strong>`;
+    const template = await getPlaceholder('office-hero-title', 'Professional Accounting Firm in {city}');
+    h1.innerHTML = template.replace('{city}', `<strong>${city}</strong>`);
   } else {
     const title = getMetadata('title') || document.title;
     if (!title) return;
