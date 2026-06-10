@@ -1,0 +1,61 @@
+/* Event page template - two-column layout with tags sidebar */
+.event-template main {
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.event-template main > .section {
+  padding: var(--spacing-l) 0;
+}
+
+.event-template main > .section:first-child {
+  grid-column: 1 / -1;
+  padding: 0;
+}
+
+.event-template main > .section:nth-child(2) {
+  padding-top: var(--spacing-xl);
+}
+
+@media (width >= 900px) {
+  .event-template main {
+    grid-template-columns: 180px 1fr;
+    gap: 0 var(--spacing-xl);
+    padding: 0 var(--spacing-l);
+  }
+
+  .event-template main > .section:first-child {
+    margin-left: calc(-1 * var(--spacing-l));
+    margin-right: calc(-1 * var(--spacing-l));
+  }
+
+  /* Tags section - left column, sticky */
+  .event-template main > .section:nth-child(2) {
+    grid-column: 1;
+    grid-row: 2 / 7;
+    position: sticky;
+    top: 100px;
+    align-self: start;
+  }
+
+  /* Content sections - right column */
+  .event-template main > .section:nth-child(n+3) {
+    grid-column: 2;
+  }
+}
+
+/* Default content section (body copy) */
+.event-template main > .section:nth-child(3) h2 {
+  font-size: var(--heading-font-size-l);
+  color: var(--color-mnp-heading-teal);
+  margin: 0 0 var(--spacing-l);
+}
+
+.event-template main > .section:nth-child(3) p {
+  font-size: var(--body-font-size-m);
+  line-height: 1.7;
+  color: var(--color-mnp-body-text);
+  margin: 0 0 var(--spacing-m);
+}

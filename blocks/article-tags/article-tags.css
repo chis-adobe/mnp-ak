@@ -1,0 +1,32 @@
+.article-tags {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-s);
+}
+
+.article-tags .article-tags-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-s);
+}
+
+.article-tags .article-tags-tag {
+  display: block;
+  background: #fff;
+  border: 1px solid #c9c9c9;
+  color: var(--color-mnp-body-text);
+  font-size: 14px;
+  padding: 8px 15px;
+  border-radius: 40px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.article-tags .article-tags-tag:hover {
+  background: var(--color-mnp-light-gray);
+  border-color: var(--color-mnp-heading-teal);
+  color: var(--color-mnp-heading-teal);
+}

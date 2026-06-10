@@ -1,7 +1,16 @@
 import { getMetadata } from '../../scripts/ak.js';
 
 export default async function init(el) {
+  const heroImage = getMetadata('hero-image');
+
   el.innerHTML = '';
+
+  if (heroImage) {
+    const bg = document.createElement('div');
+    bg.className = 'event-hero-bg';
+    bg.style.backgroundImage = `url("${heroImage}")`;
+    el.append(bg);
+  }
 
   const title = getMetadata('og:title') || getMetadata('title');
   const eventDate = getMetadata('event-date');
