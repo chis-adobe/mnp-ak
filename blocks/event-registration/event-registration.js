@@ -1,6 +1,5 @@
 export default async function init(el) {
   el.id = 'event-registration';
-  const rows = [...el.querySelectorAll(':scope > div')];
   el.innerHTML = '';
 
   const wrapper = document.createElement('div');
@@ -18,8 +17,12 @@ export default async function init(el) {
     { name: 'lastName', label: 'Last Name', type: 'text' },
     { name: 'email', label: 'Email', type: 'email' },
     { name: 'jobTitle', label: 'Job Title', type: 'text' },
-    { name: 'role', label: 'Role', type: 'select',
-      options: ['Owner/Executive', 'Director', 'Manager', 'Other'] },
+    {
+      name: 'role',
+      label: 'Role',
+      type: 'select',
+      options: ['Owner/Executive', 'Director', 'Manager', 'Other'],
+    },
     { name: 'organization', label: 'Organization', type: 'text' },
     { name: 'city', label: 'City', type: 'text' },
   ];
