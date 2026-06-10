@@ -129,8 +129,8 @@ indices:
           attribute(el, 'content')
   articles:
     include:
-      - /insights/directory/**
-    target: /insights/directory/query-index.json
+      - /articles/**
+    target: /articles/query-index.json
     properties:
       title:
         select: head > meta[property="og:title"]

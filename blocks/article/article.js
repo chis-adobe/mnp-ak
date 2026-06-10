@@ -154,7 +154,7 @@ async function buildRelatedContent() {
   const currentPath = window.location.pathname;
 
   try {
-    const resp = await fetch('/insights/directory/query-index.json');
+    const resp = await fetch('/articles/query-index.json');
     if (!resp.ok) return section;
     const json = await resp.json();
     const articles = json.data || [];
