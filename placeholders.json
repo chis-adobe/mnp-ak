@@ -1,0 +1,16 @@
+{
+  "data": [
+    { "Key": "office-heading", "Value": "Office Information:" },
+    { "Key": "office-hero-title", "Value": "Professional Accounting Firm in {city}" },
+    { "Key": "register-now", "Value": "Register now" },
+    { "Key": "presenters", "Value": "Presenters" },
+    { "Key": "synopsis", "Value": "Synopsis" },
+    { "Key": "related-content", "Value": "You might also be interested in" },
+    { "Key": "insights", "Value": "Insights" },
+    { "Key": "filter-by", "Value": "Filter by" },
+    { "Key": "no-results", "Value": "No results found." },
+    { "Key": "search-prompt", "Value": "Enter a search term or use filters to find content." },
+    { "Key": "clear-all-filters", "Value": "Clear all filters" },
+    { "Key": "apply-filters", "Value": "Apply Filters" }
+  ]
+}
