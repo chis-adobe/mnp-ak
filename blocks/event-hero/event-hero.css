@@ -1,0 +1,51 @@
+.event-hero {
+  background: var(--color-mnp-dark-teal);
+  padding: var(--spacing-xxl) var(--spacing-l);
+}
+
+.event-hero .event-hero-wrapper {
+  max-width: var(--grid-container-width);
+  margin: 0 auto;
+}
+
+.event-hero h1 {
+  color: var(--color-mnp-white);
+  font-size: var(--heading-font-size-xxl);
+  margin: 0 0 var(--spacing-l);
+}
+
+.event-hero .event-hero-details {
+  display: flex;
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-l);
+  flex-wrap: wrap;
+}
+
+.event-hero .event-hero-date,
+.event-hero .event-hero-time {
+  color: rgb(255 255 255 / 85%);
+  font-size: var(--body-font-size-m);
+}
+
+.event-hero .event-hero-cta {
+  display: inline-block;
+  background: var(--color-mnp-accent);
+  color: var(--color-mnp-white);
+  padding: 12px 32px;
+  font-weight: 700;
+  font-size: var(--body-font-size-m);
+  text-decoration: none;
+  border-radius: 2px;
+  transition: background 0.2s;
+}
+
+.event-hero .event-hero-cta:hover {
+  background: var(--color-mnp-heading-teal);
+}
+
+.event-hero .event-hero-passed {
+  color: rgb(255 255 255 / 70%);
+  font-size: var(--body-font-size-m);
+  font-style: italic;
+  margin: 0;
+}
