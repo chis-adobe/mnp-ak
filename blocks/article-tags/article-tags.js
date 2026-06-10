@@ -13,6 +13,20 @@ async function loadTaxonomy() {
   return taxonomyCache;
 }
 
+function buildTagHref(tag, category) {
+  const catMap = {
+    Service: 'service',
+    Industry: 'industry',
+    Theme: 'theme',
+    'Content Type': 'type',
+  };
+  const param = catMap[category];
+  if (param) {
+    return `/search?filter=insights&${param}=${encodeURIComponent(tag)}`;
+  }
+  return `/search?filter=insights&query=${encodeURIComponent(tag)}`;
+}
+
 export default async function init(el) {
   const items = [...el.querySelectorAll('p')].map((p) => p.textContent.trim()).filter(Boolean);
   el.innerHTML = '';
@@ -27,7 +41,7 @@ export default async function init(el) {
     const link = document.createElement('a');
     link.className = 'article-tags-tag';
     link.textContent = tag;
-    link.href = entry?.Path || `/insights/directory?tag=${encodeURIComponent(tag.toLowerCase())}`;
+    link.href = entry ? buildTagHref(entry.Tag, entry.Category) : buildTagHref(tag, '');
     if (entry?.Category) link.dataset.category = entry.Category.toLowerCase().replace(/\s+/g, '-');
     wrapper.append(link);
   });
