@@ -142,13 +142,68 @@ function buildTags() {
   return section;
 }
 
-function buildRelatedContent() {
+async function buildRelatedContent() {
   const section = document.createElement('div');
   section.className = 'article-related';
-  section.innerHTML = `
-    <h4>You might also be interested in</h4>
-    <p class="article-placeholder">Related content will be displayed here.</p>
-  `;
+
+  const h4 = document.createElement('h4');
+  h4.textContent = 'You might also be interested in';
+  section.append(h4);
+
+  const myTags = (getMetadata('insights') || '').split(',').map((t) => t.trim().toLowerCase());
+  const currentPath = window.location.pathname;
+
+  try {
+    const resp = await fetch('/insights/directory/query-index.json');
+    if (!resp.ok) return section;
+    const json = await resp.json();
+    const articles = json.data || [];
+
+    const scored = articles
+      .filter((a) => a.path !== currentPath)
+      .map((a) => {
+        const tags = (a.insights || '').split(',').map((t) => t.trim().toLowerCase());
+        const overlap = myTags.filter((t) => tags.includes(t)).length;
+        return { ...a, score: overlap };
+      })
+      .filter((a) => a.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3);
+
+    if (!scored.length) {
+      section.innerHTML += '<p class="article-placeholder">No related articles found.</p>';
+      return section;
+    }
+
+    const list = document.createElement('ul');
+    list.className = 'article-related-list';
+    scored.forEach((a) => {
+      const li = document.createElement('li');
+      const link = document.createElement('a');
+      link.href = a.path;
+      link.className = 'article-related-item';
+
+      const date = document.createElement('span');
+      date.className = 'article-related-date';
+      date.textContent = a.date || '';
+
+      const title = document.createElement('span');
+      title.className = 'article-related-title';
+      title.textContent = a.title || '';
+
+      const desc = document.createElement('span');
+      desc.className = 'article-related-desc';
+      desc.textContent = a.synopsis || a.description || '';
+
+      link.append(date, title, desc);
+      li.append(link);
+      list.append(li);
+    });
+    section.append(list);
+  } catch {
+    section.innerHTML += '<p class="article-placeholder">Related content unavailable.</p>';
+  }
+
   return section;
 }
 
@@ -227,7 +282,7 @@ export default async function init(el) {
 
   const sidebar = document.createElement('aside');
   sidebar.className = 'article-sidebar';
-  sidebar.append(buildRelatedContent());
+  sidebar.append(await buildRelatedContent());
 
   layout.append(tagsCol, main, sidebar);
   el.append(layout);

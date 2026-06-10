@@ -1,0 +1,11 @@
+/* Article page template */
+html:has(.article-template) {
+  overflow-x: clip;
+}
+
+.article-template main > .section:first-child {
+  max-width: none;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  padding: 0;
+}

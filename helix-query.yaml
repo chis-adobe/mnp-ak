@@ -127,6 +127,39 @@ indices:
         select: head > meta[property="article:tag"]
         values: |
           attribute(el, 'content')
+  articles:
+    include:
+      - /insights/directory/**
+    target: /insights/directory/query-index.json
+    properties:
+      title:
+        select: head > meta[property="og:title"]
+        value: |
+          attribute(el, "content")
+      description:
+        select: head > meta[name="description"]
+        value: |
+          attribute(el, "content")
+      date:
+        select: head > meta[name="publication-date"]
+        value: |
+          attribute(el, "content")
+      synopsis:
+        select: head > meta[name="synopsis"]
+        value: |
+          attribute(el, "content")
+      insights:
+        select: head > meta[name="insights"]
+        value: |
+          attribute(el, "content")
+      image:
+        select: head > meta[name="image"]
+        value: |
+          attribute(el, "content")
+      lastModified:
+        select: none
+        value: |
+          parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
   authors:
     include:
       - /author/**
