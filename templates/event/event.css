@@ -1,9 +1,4 @@
 /* Event page template - two-column layout with tags sidebar */
-.event-template,
-.event-template ~ * {
-  overflow-x: clip;
-}
-
 html:has(.event-template) {
   overflow-x: clip;
 }
@@ -16,16 +11,15 @@ html:has(.event-template) {
 }
 
 .event-template main > .section {
-  padding: var(--spacing-l) 0;
+  padding: var(--spacing-l) var(--spacing-l);
 }
 
 .event-template main > .section:first-child {
   grid-column: 1 / -1;
   padding: 0;
+  max-width: none;
   width: 100vw;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
+  margin-left: calc(50% - 50vw);
 }
 
 .event-template main > .section:nth-child(2) {
@@ -39,8 +33,13 @@ html:has(.event-template) {
     padding: 0 var(--spacing-l);
   }
 
+  .event-template main > .section {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
   .event-template main > .section:first-child {
-    width: 100vw;
+    margin-left: calc(50% - 50vw - var(--spacing-l));
   }
 
   /* Tags section - left column, sticky */
