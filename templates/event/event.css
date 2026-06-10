@@ -38,9 +38,6 @@ html:has(.event-template) {
     padding-right: 0;
   }
 
-  .event-template main > .section:first-child {
-    margin-left: calc(50% - 50vw - var(--spacing-l));
-  }
 
   /* Tags section - left column, sticky */
   .event-template main > .section:nth-child(2) {
