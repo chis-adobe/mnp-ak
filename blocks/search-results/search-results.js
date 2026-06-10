@@ -83,9 +83,12 @@ function buildFilterPanel(container, taxonomy) {
   filterBar.append(filterBtn);
   container.append(filterBar);
 
+  const p = getParams();
+  const hasActiveFilters = p.service || p.industry || p.theme;
+
   const panel = document.createElement('div');
   panel.className = 'search-results-filter-panel';
-  panel.hidden = true;
+  panel.hidden = !hasActiveFilters;
 
   const tabs = document.createElement('div');
   tabs.className = 'search-results-filter-tabs';
@@ -116,7 +119,6 @@ function buildFilterPanel(container, taxonomy) {
   insightsContent.className = 'search-results-filter-content';
   insightsContent.dataset.content = 'insights';
 
-  const p = getParams();
   const dropdowns = [
     { label: 'Service Line', param: 'service', options: categories.Service, current: p.service },
     { label: 'Industry', param: 'industry', options: categories.Industry, current: p.industry },
@@ -177,6 +179,8 @@ function buildFilterPanel(container, taxonomy) {
   });
 
   container.append(panel);
+
+  if (hasActiveFilters) filterBtn.classList.add('active');
 
   filterBtn.addEventListener('click', () => {
     panel.hidden = !panel.hidden;
