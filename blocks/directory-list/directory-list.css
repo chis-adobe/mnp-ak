@@ -1,0 +1,213 @@
+.directory-list {
+  max-width: var(--grid-container-width);
+  margin: var(--spacing-xxl) auto;
+  padding: 0 var(--spacing-l);
+}
+
+/* Alphabet nav */
+.directory-list .directory-list-alpha {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: var(--spacing-m);
+  padding-bottom: var(--spacing-m);
+  border-bottom: 1px solid var(--color-mnp-border);
+}
+
+.directory-list .directory-list-alpha button {
+  background: none;
+  border: 1px solid var(--color-mnp-border);
+  color: var(--color-mnp-heading-teal);
+  font-size: 14px;
+  font-weight: 600;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.directory-list .directory-list-alpha button:hover {
+  background: var(--color-mnp-light-gray);
+}
+
+/* Filter bar */
+.directory-list .directory-list-filter-bar {
+  margin-bottom: var(--spacing-xl);
+}
+
+.directory-list .directory-list-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-s);
+  background: var(--color-mnp-dark-teal);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: var(--body-font-size-m);
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.directory-list .directory-list-filter-icon {
+  display: flex;
+  align-items: center;
+}
+
+/* Grid */
+.directory-list .directory-list-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-m);
+}
+
+.directory-list .directory-list-letter {
+  font-family: var(--font-family-heading);
+  font-size: var(--heading-font-size-xl);
+  font-weight: 700;
+  color: var(--color-mnp-heading-teal);
+  padding: var(--spacing-m) 0;
+  border-bottom: 2px solid var(--color-mnp-accent);
+  margin-top: var(--spacing-l);
+  grid-column: 1 / -1;
+}
+
+/* Cards */
+.directory-list .directory-list-card {
+  padding: var(--spacing-l);
+  border: 1px solid var(--color-mnp-border);
+  border-top: 3px solid var(--color-mnp-border);
+}
+
+.directory-list .directory-list-card-title {
+  font-size: var(--heading-font-size-l);
+  font-weight: 700;
+  color: var(--color-mnp-heading-teal);
+  margin: 0 0 var(--spacing-m);
+}
+
+.directory-list .directory-list-card-title a {
+  color: var(--color-mnp-heading-teal);
+  text-decoration: none;
+}
+
+.directory-list .directory-list-card-title a:hover {
+  text-decoration: underline;
+}
+
+.directory-list .directory-list-card-address {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-s);
+  margin-bottom: var(--spacing-m);
+  font-size: var(--body-font-size-m);
+  color: var(--color-mnp-body-text);
+  line-height: 1.5;
+}
+
+.directory-list .directory-list-card-icon {
+  flex-shrink: 0;
+  color: var(--color-mnp-heading-teal);
+  display: flex;
+  align-items: center;
+}
+
+.directory-list .directory-list-card-pin {
+  margin-top: 2px;
+}
+
+.directory-list .directory-list-card-contact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.directory-list .directory-list-card-contact-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--body-font-size-m);
+  color: var(--color-mnp-body-text);
+}
+
+.directory-list .directory-list-card-contact-row a {
+  color: var(--color-mnp-body-text);
+  text-decoration: none;
+}
+
+.directory-list .directory-list-card-details {
+  display: inline-block;
+  margin-top: var(--spacing-m);
+  color: var(--color-mnp-heading-teal);
+  font-weight: 600;
+  font-size: var(--body-font-size-m);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.directory-list .directory-list-card-details:hover {
+  text-decoration: underline;
+}
+
+/* Personnel card variant */
+.directory-list .directory-list-card-person {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: var(--spacing-m);
+}
+
+.directory-list .directory-list-card-photo img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.directory-list .directory-list-card-person .directory-list-card-title {
+  font-size: var(--heading-font-size-m);
+  margin: 0 0 var(--spacing-xs);
+}
+
+.directory-list .directory-list-card-role {
+  font-size: var(--body-font-size-s);
+  color: var(--color-mnp-body-text);
+  margin: 0 0 var(--spacing-s);
+}
+
+.directory-list .directory-list-card-contacts {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-s);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.directory-list .directory-list-card-contacts li {
+  font-size: var(--body-font-size-s);
+}
+
+.directory-list .directory-list-card-contacts a {
+  color: var(--color-mnp-heading-teal);
+  text-decoration: none;
+}
+
+.directory-list .directory-list-card-contacts a:hover {
+  text-decoration: underline;
+}
+
+@media (width >= 900px) {
+  .directory-list .directory-list-grid-offices {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .directory-list .directory-list-grid-personnel {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width >= 1200px) {
+  .directory-list .directory-list-grid-offices {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

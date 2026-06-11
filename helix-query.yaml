@@ -160,6 +160,43 @@ indices:
         select: none
         value: |
           parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
+  personnel:
+    include:
+      - /personnel/**
+    target: /personnel/query-index.json
+    properties:
+      name:
+        select: head > meta[name="name"]
+        value: |
+          attribute(el, "content")
+      certifications:
+        select: head > meta[name="certifications"]
+        value: |
+          attribute(el, "content")
+      role:
+        select: head > meta[name="role"]
+        value: |
+          attribute(el, "content")
+      phone:
+        select: head > meta[name="phone"]
+        value: |
+          attribute(el, "content")
+      tollFree:
+        select: head > meta[name="toll-free"]
+        value: |
+          attribute(el, "content")
+      email:
+        select: head > meta[name="email"]
+        value: |
+          attribute(el, "content")
+      image:
+        select: head > meta[name="thumbnail"]
+        value: |
+          attribute(el, "content")
+      lastModified:
+        select: none
+        value: |
+          parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
   authors:
     include:
       - /author/**

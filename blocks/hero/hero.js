@@ -1,3 +1,5 @@
+import { getMetadata } from '../../scripts/ak.js';
+
 function setBackgroundFocus(img) {
   const { title } = img.dataset;
   if (!title?.includes('data-focal')) return;
@@ -55,7 +57,46 @@ function decorateForeground(fg) {
   }
 }
 
+function buildFromMetadata(el) {
+  const title = getMetadata('og:title') || getMetadata('title');
+  const description = getMetadata('description');
+  const image = getMetadata('og:image') || getMetadata('image');
+  if (!title) return false;
+
+  el.innerHTML = '';
+
+  if (image && !image.includes('default-meta-image')) {
+    const bg = document.createElement('div');
+    const pic = document.createElement('picture');
+    const img = document.createElement('img');
+    img.src = image.replace('author-p', 'publish-p');
+    img.alt = title;
+    pic.append(img);
+    bg.append(pic);
+    el.append(bg);
+  }
+
+  const fg = document.createElement('div');
+  const inner = document.createElement('div');
+  const h1 = document.createElement('h1');
+  h1.textContent = title;
+  inner.append(h1);
+  if (description) {
+    const p = document.createElement('p');
+    p.textContent = description;
+    inner.append(p);
+  }
+  fg.append(inner);
+  el.append(fg);
+  return true;
+}
+
 export default async function init(el) {
+  const hasContent = el.querySelector(':scope > div > div')?.textContent?.trim();
+  if (!hasContent) {
+    if (!buildFromMetadata(el)) return;
+  }
+
   const rows = [...el.querySelectorAll(':scope > div')];
   const fg = rows.pop();
   fg.classList.add('hero-foreground');
