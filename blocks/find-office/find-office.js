@@ -1,27 +1,9 @@
 // Sample data for standalone EDS preview (no bridge).
 // In production, data comes dynamically from bridge.toolResult.
-const SAMPLE_DATA = [
-  {
-    name: 'MNP Calgary Downtown',
-    address: '1500, 640 - 5th Avenue SW',
-    city: 'Calgary',
-    province: 'AB',
-    phone: '403-263-3385',
-    toll_free: '1-877-500-0792'
-  },
-  {
-    name: 'MNP Calgary North',
-    address: '200, 5403 Crowchild Trail NW',
-    city: 'Calgary',
-    province: 'AB',
-    phone: '403-263-3385',
-    toll_free: '1-877-500-0792'
-  }
-];
+const SAMPLE_DATA = [];
 
 // Brand palette from BuildWidgetRequest.
-// getThemedCardBg() darkens palette[0] to luminance ≤ 0.12 for WCAG AA contrast.
-const PALETTE = ['#007bff','#cf4a0c','#0a3343','#6d6d6d','#212529'];
+const PALETTE = ['#007bff','#6d6d6d','#cf4a0c','#0a3343','#212529'];
 
 function getThemedCardBg(palette) {
   if (!palette || !palette[0]) return null;
@@ -39,10 +21,7 @@ function getThemedCardBg(palette) {
     if (relLum(Math.round(r*m),Math.round(g*m),Math.round(b*m)) > 0.12) hi=m; else lo=m;
   }
   const dr=Math.round(r*lo), dg=Math.round(g*lo), db=Math.round(b*lo);
-  return {
-    bg:`#${dr.toString(16).padStart(2,'0')}${dg.toString(16).padStart(2,'0')}${db.toString(16).padStart(2,'0')}`,
-    fg:'#ffffff'
-  };
+  return { bg:`#${dr.toString(16).padStart(2,'0')}${dg.toString(16).padStart(2,'0')}${db.toString(16).padStart(2,'0')}`, fg:'#ffffff' };
 }
 
 const theme = getThemedCardBg(PALETTE);
@@ -56,9 +35,9 @@ export default async function decorate(block, bridge) {
     if (isPreview) {
       offices = SAMPLE_DATA;
     } else {
-      // structuredContent.offices — bare array outputSchema; key derived from actionName "find_office"
       const _result = await bridge.toolResult;
       const structuredContent = _result?.structuredContent || _result;
+      // structuredContent.offices — bare array outputSchema; key derived from actionName "find_office"
       offices = structuredContent?.offices || [];
     }
   } else {
@@ -66,7 +45,7 @@ export default async function decorate(block, bridge) {
   }
 
   block.textContent = '';
-  
+
   if (!offices || offices.length === 0) {
     renderSearchCard(block, bridge);
   } else {
@@ -91,23 +70,22 @@ function renderSearchCard(block, bridge) {
 
   const pinIcon = document.createElement('div');
   pinIcon.className = 'pin-icon';
-  pinIcon.innerHTML = `<svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>`;
+  pinIcon.innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>';
   card.appendChild(pinIcon);
 
-  const heading = document.createElement('h2');
+  const heading = document.createElement('h3');
   heading.textContent = 'Find an office near you';
   card.appendChild(heading);
 
   const input = document.createElement('input');
   input.type = 'text';
   input.placeholder = 'Enter city or province...';
-  input.setAttribute('aria-label', 'City or province');
+  input.className = 'search-input';
   card.appendChild(input);
 
   const button = document.createElement('button');
+  button.className = 'search-button';
   button.textContent = 'Find Offices';
-  button.setAttribute('aria-label', 'Search for offices');
-  
   if (bridge) {
     button.addEventListener('click', () => {
       const query = input.value.trim();
@@ -124,52 +102,60 @@ function renderSearchCard(block, bridge) {
       }
     });
   }
-  
   card.appendChild(button);
+
   block.appendChild(card);
 }
 
 function renderOffices(block, offices, bridge) {
   const container = document.createElement('div');
-  container.className = 'results-container';
+  container.className = 'offices-container';
 
   const displayOffices = offices.slice(0, 2);
 
-  displayOffices.forEach((office) => {
+  displayOffices.forEach(office => {
     const card = document.createElement('div');
     card.className = 'office-card';
     card.style.cssText = `background:${theme?.bg ?? '#1a3a5c'};color:${theme?.fg ?? '#fff'}`;
 
     const pinCircle = document.createElement('div');
     pinCircle.className = 'pin-circle';
-    pinCircle.innerHTML = `<svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>`;
+    pinCircle.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>';
     card.appendChild(pinCircle);
 
     const name = document.createElement('div');
     name.className = 'office-name';
-    name.textContent = office.name || '';
+    name.textContent = office.name || 'Office';
     card.appendChild(name);
 
     const address = document.createElement('div');
     address.className = 'office-address';
-    const fullAddress = [office.address, office.city, office.province].filter(Boolean).join(', ');
-    address.textContent = fullAddress;
+    address.textContent = office.address || '';
     card.appendChild(address);
 
     if (office.phone) {
-      const phone = document.createElement('a');
+      const phone = document.createElement('div');
       phone.className = 'office-phone';
-      phone.href = `tel:${office.phone.replace(/[^0-9+]/g, '')}`;
       phone.textContent = office.phone;
       card.appendChild(phone);
     }
 
     if (office.toll_free) {
       const tollFree = document.createElement('div');
-      tollFree.className = 'office-hours';
+      tollFree.className = 'office-toll-free';
       tollFree.textContent = `Toll-free: ${office.toll_free}`;
       card.appendChild(tollFree);
     }
+
+    const ctaBtn = document.createElement('button');
+    ctaBtn.className = 'directions-btn';
+    ctaBtn.textContent = 'Get Directions';
+    if (bridge && office.address) {
+      ctaBtn.addEventListener('click', () => {
+        bridge.sendMessage(`Get directions to ${office.name} at ${office.address}`);
+      });
+    }
+    card.appendChild(ctaBtn);
 
     container.appendChild(card);
   });

@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-/* Required for correct iframe sizing — AEM section margins inflate shadow body */
+/* Required for correct iframe sizing */
 main > div,
 main > .section,
 main > .section:first-of-type {
@@ -23,53 +23,52 @@ main .find-office {
   min-height: 280px;
 }
 
-/* Search card (empty state) */
+/* Search card - centered, empty state */
 main .find-office .search-card {
   max-width: 400px;
   width: 100%;
   border-radius: 12px;
-  padding: 24px;
+  padding: 32px 24px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
 }
 
-main .find-office .search-card .pin-icon {
-  width: 48px;
-  height: 48px;
-  margin: 0 auto 16px;
+main .find-office .pin-icon {
   opacity: 0.7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-main .find-office .search-card .pin-icon svg {
-  width: 100%;
-  height: 100%;
-}
-
-main .find-office .search-card h2 {
-  margin: 0 0 20px;
+main .find-office .search-card h3 {
+  margin: 0;
   font-size: 15px;
   font-weight: 600;
-  line-height: 1.3;
+  line-height: 1.4;
 }
 
-main .find-office .search-card input {
+main .find-office .search-input {
   width: 100%;
   padding: 12px 16px;
-  border: 1px solid rgba(0,0,0,0.1);
+  border: none;
   border-radius: 8px;
-  font-size: 14px;
   background: #fff;
   color: #333;
+  font-size: 14px;
+  font-family: inherit;
   box-sizing: border-box;
-  margin-bottom: 12px;
 }
 
-main .find-office .search-card input::placeholder {
-  color: rgba(0,0,0,0.4);
+main .find-office .search-input::placeholder {
+  color: #999;
 }
 
-main .find-office .search-card button {
+main .find-office .search-button {
   width: 100%;
-  padding: 12px 16px;
+  padding: 12px 24px;
   border: none;
   border-radius: 8px;
   background: #007bff;
@@ -78,83 +77,83 @@ main .find-office .search-card button {
   font-weight: 600;
   cursor: pointer;
   transition: opacity 0.15s;
+  font-family: inherit;
 }
 
-main .find-office .search-card button:hover {
+main .find-office .search-button:hover {
   opacity: 0.9;
 }
 
-main .find-office .search-card button:focus-visible {
-  outline: 2px solid #007bff;
-  outline-offset: 2px;
-}
-
-/* Results container */
-main .find-office .results-container {
+/* Results view - flex row of office cards */
+main .find-office .offices-container {
   display: flex;
   flex-direction: row;
   gap: 16px;
   justify-content: center;
   flex-wrap: wrap;
-  width: 100%;
   max-width: 600px;
 }
 
-/* Office card */
 main .find-office .office-card {
-  width: 260px;
+  flex: 0 0 260px;
+  min-width: 260px;
   border-radius: 12px;
   padding: 20px;
-  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-main .find-office .office-card .pin-circle {
+main .find-office .pin-circle {
   width: 32px;
   height: 32px;
   border-radius: 50%;
   background: rgba(255,255,255,0.2);
   display: flex;
-  align-items: center;
   justify-content: center;
-  margin-bottom: 12px;
+  align-items: center;
+  margin-bottom: 4px;
 }
 
-main .find-office .office-card .pin-circle svg {
-  width: 16px;
-  height: 16px;
-}
-
-main .find-office .office-card .office-name {
+main .find-office .office-name {
   font-size: 14px;
   font-weight: 600;
-  margin: 0 0 8px;
   line-height: 1.3;
 }
 
-main .find-office .office-card .office-address {
+main .find-office .office-address {
   font-size: 12px;
   opacity: 0.78;
-  margin: 0 0 8px;
   line-height: 1.4;
 }
 
-main .find-office .office-card .office-phone {
+main .find-office .office-phone {
   font-size: 12px;
   color: #007bff;
-  margin: 0 0 4px;
-  text-decoration: none;
-  display: block;
+  font-weight: 500;
 }
 
-main .find-office .office-card .office-phone:hover {
-  text-decoration: underline;
-}
-
-main .find-office .office-card .office-hours {
+main .find-office .office-toll-free {
   font-size: 11px;
   opacity: 0.65;
-  margin: 0;
-  line-height: 1.4;
+}
+
+main .find-office .directions-btn {
+  margin-top: 8px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #007bff;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  font-family: inherit;
+}
+
+main .find-office .directions-btn:hover {
+  opacity: 0.9;
 }
 
 /* Dark mode */
@@ -162,15 +161,8 @@ main .find-office .office-card .office-hours {
   main .find-office {
     background: transparent;
   }
-  
-  main .find-office .search-card input {
-    background: #fff;
-    color: #333;
-    border-color: rgba(0,0,0,0.1);
-  }
-  
-  main .find-office .search-card input::placeholder {
-    color: rgba(0,0,0,0.4);
+  main .find-office .office-phone {
+    color: #4da6ff;
   }
 }
 
@@ -178,12 +170,20 @@ body.dark main .find-office {
   background: transparent;
 }
 
-body.dark main .find-office .search-card input {
-  background: #fff;
-  color: #333;
-  border-color: rgba(0,0,0,0.1);
+body.dark main .find-office .office-phone {
+  color: #4da6ff;
 }
 
-body.dark main .find-office .search-card input::placeholder {
-  color: rgba(0,0,0,0.4);
+/* Mobile responsive */
+@media (max-width: 576px) {
+  main .find-office {
+    padding: 12px;
+  }
+  main .find-office .offices-container {
+    flex-direction: column;
+  }
+  main .find-office .office-card {
+    flex: 1 1 auto;
+    min-width: 100%;
+  }
 }
