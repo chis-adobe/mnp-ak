@@ -52,6 +52,9 @@ export default async function init(el) {
   const divider1 = document.createElement('hr');
   right.append(divider1);
 
+  const contactWrapper = document.createElement('div');
+  contactWrapper.className = 'author-data-contact-wrapper';
+
   const contactList = document.createElement('ul');
   contactList.className = 'author-data-contact';
 
@@ -75,14 +78,16 @@ export default async function init(el) {
     li.textContent = `Fax: ${data.fax}`;
     contactList.append(li);
   }
-  right.append(contactList);
+  contactWrapper.append(contactList);
 
   if (data.address) {
     const addr = document.createElement('p');
     addr.className = 'author-data-address';
     addr.textContent = data.address;
-    right.append(addr);
+    contactWrapper.append(addr);
   }
+
+  right.append(contactWrapper);
 
   const divider2 = document.createElement('hr');
   right.append(divider2);
