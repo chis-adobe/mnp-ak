@@ -1,0 +1,177 @@
+/* Inter font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Required for correct iframe sizing — AEM section margins inflate shadow body */
+main > div,
+main > .section,
+main > .section:first-of-type {
+  margin: 0;
+}
+main > .section > div {
+  max-width: none;
+  padding: 0;
+}
+body {
+  overflow: auto;
+}
+
+main .get-service-details {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+main .get-service-details .service-card {
+  display: flex;
+  flex-direction: row;
+  max-width: 645px;
+  width: 100%;
+  height: 280px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Image left side - fixed 260px */
+main .get-service-details .service-image {
+  flex: 0 0 260px;
+  position: relative;
+  overflow: hidden;
+}
+
+main .get-service-details .service-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* CTA button on image */
+main .get-service-details .cta-on-image {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+main .get-service-details .cta-on-image:hover {
+  opacity: 0.9;
+}
+
+main .get-service-details .cta-on-image:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* Content right side */
+main .get-service-details .service-content {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+
+main .get-service-details .category-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  align-self: flex-start;
+}
+
+main .get-service-details .service-name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+main .get-service-details .service-description {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.78;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+main .get-service-details .contact-info {
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,0.15);
+}
+
+main .get-service-details .contact-name,
+main .get-service-details .contact-phone {
+  margin: 4px 0;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+main .get-service-details .contact-phone {
+  color: #007bff;
+  font-weight: 600;
+}
+
+main .get-service-details .capabilities-list {
+  margin: 8px 0 0;
+  padding: 0 0 0 20px;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+main .get-service-details .capabilities-list li {
+  margin: 4px 0;
+  line-height: 1.4;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  main .get-service-details {
+    background: transparent;
+  }
+  main .get-service-details .contact-phone {
+    color: #4da3ff;
+  }
+}
+
+body.dark main .get-service-details {
+  background: transparent;
+}
+
+body.dark main .get-service-details .contact-phone {
+  color: #4da3ff;
+}
+
+/* Responsive - stack on very narrow viewports */
+@media (max-width: 480px) {
+  main .get-service-details .service-card {
+    flex-direction: column;
+    height: auto;
+  }
+
+  main .get-service-details .service-image {
+    flex: 0 0 180px;
+    width: 100%;
+  }
+}
