@@ -1,0 +1,217 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Required for correct iframe sizing — AEM section margins inflate shadow body */
+main > div,
+main > .section,
+main > .section:first-of-type {
+  margin: 0;
+}
+main > .section > div {
+  max-width: none;
+  padding: 0;
+}
+body {
+  overflow: auto;
+}
+
+main .browse-services {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  padding: 8px;
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+main .browse-services .services-carousel-wrapper {
+  position: relative;
+}
+
+main .browse-services .services-carousel {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 4px;
+}
+
+main .browse-services .services-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+main .browse-services .service-card {
+  flex: 0 0 220px;
+  height: 300px;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  scroll-snap-align: start;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: box-shadow 0.2s;
+}
+
+main .browse-services .service-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+main .browse-services .service-image {
+  position: relative;
+  flex: 6;
+  overflow: hidden;
+}
+
+main .browse-services .service-cta {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 20px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 13px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  font-family: inherit;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+main .browse-services .service-cta:hover {
+  opacity: 0.9;
+}
+
+main .browse-services .service-cta:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+main .browse-services .service-content {
+  flex: 4;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+main .browse-services .service-badge {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  opacity: 0.8;
+  letter-spacing: 0.5px;
+  display: inline-block;
+  padding: 2px 8px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 4px;
+  align-self: flex-start;
+  margin-bottom: 2px;
+}
+
+main .browse-services .service-name {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+main .browse-services .service-desc {
+  font-size: 11px;
+  margin: 0;
+  line-height: 1.4;
+  opacity: 0.78;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+main .browse-services .carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.95);
+  border: 1px solid rgba(0,0,0,0.1);
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+main .browse-services .carousel-arrow:hover {
+  background: rgba(255,255,255,1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+main .browse-services .carousel-arrow:focus-visible {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+main .browse-services .carousel-arrow-left {
+  left: -12px;
+}
+
+main .browse-services .carousel-arrow-right {
+  right: -12px;
+}
+
+/* Dark mode — dim outer background only, NOT the palette-colored card content */
+@media (prefers-color-scheme: dark) {
+  main .browse-services {
+    background: transparent;
+  }
+  main .browse-services .service-card {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  main .browse-services .service-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+  main .browse-services .carousel-arrow {
+    background: rgba(50,50,50,0.95);
+    color: #fff;
+    border-color: rgba(255,255,255,0.1);
+  }
+  main .browse-services .carousel-arrow:hover {
+    background: rgba(60,60,60,1);
+  }
+}
+
+body.dark main .browse-services {
+  background: transparent;
+}
+
+body.dark main .browse-services .service-card {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+body.dark main .browse-services .service-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+body.dark main .browse-services .carousel-arrow {
+  background: rgba(50,50,50,0.95);
+  color: #fff;
+  border-color: rgba(255,255,255,0.1);
+}
+
+body.dark main .browse-services .carousel-arrow:hover {
+  background: rgba(60,60,60,1);
+}
