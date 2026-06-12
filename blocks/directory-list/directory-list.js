@@ -93,18 +93,22 @@ function renderPersonnelCard(person) {
   return card;
 }
 
+const SEARCH_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19zm-6 0A4.5 4.5 0 1 1 14 9.5 4.49 4.49 0 0 1 9.5 14z"/></svg>';
+
 const CONFIG = {
   offices: {
     indexUrl: '/offices/query-index.json?limit=500',
     sortKey: (o) => o.city || o.path.split('/').pop().replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
     render: renderOfficeCard,
     enrich: enrichOffices,
+    resultLabel: 'offices',
   },
   personnel: {
     indexUrl: '/personnel/query-index.json?limit=2000',
     sortKey: (p) => p.name || p.path.split('/').pop().replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
     render: renderPersonnelCard,
     enrich: null,
+    resultLabel: 'personnel',
   },
 };
 
@@ -125,6 +129,7 @@ export default async function init(el) {
 
   let items = await fetchIndex(config.indexUrl);
   if (config.enrich) items = await config.enrich(items);
+  items = items.filter((i) => i.path !== `/${type}` && i.path !== `/${type}/`);
   wrapper.innerHTML = '';
 
   if (items.length === 0) {
@@ -133,6 +138,23 @@ export default async function init(el) {
   }
 
   items.sort((a, b) => config.sortKey(a).localeCompare(config.sortKey(b)));
+
+  const header = document.createElement('div');
+  header.className = 'directory-list-header';
+  const headerText = document.createElement('div');
+  headerText.className = 'directory-list-header-text';
+  headerText.innerHTML = `
+    <h2 class="directory-list-header-title">Displaying results for:</h2>
+    <p class="directory-list-header-count">Showing ${items.length} ${config.resultLabel}</p>
+  `;
+  const searchBar = document.createElement('div');
+  searchBar.className = 'directory-list-search';
+  searchBar.innerHTML = `
+    <input type="search" placeholder="Search..." aria-label="Search ${config.resultLabel}" />
+    <button type="button" aria-label="Submit search">${SEARCH_ICON}</button>
+  `;
+  header.append(headerText, searchBar);
+  wrapper.append(header);
 
   const letters = [...new Set(items.map((i) => config.sortKey(i).charAt(0).toUpperCase()))].sort();
 

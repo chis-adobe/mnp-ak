@@ -1,12 +1,11 @@
 .breadcrumb {
-  background: var(--color-mnp-dark-teal);
-  padding: 0 var(--spacing-l) var(--spacing-xxl);
+  background: none;
+  padding: var(--spacing-l) var(--spacing-l) 0;
 }
 
 .breadcrumb .breadcrumb-list {
   list-style: none;
   padding: 0;
-  margin: 0;
   display: flex;
   gap: var(--spacing-s);
   flex-wrap: wrap;
@@ -17,12 +16,13 @@
 .breadcrumb .breadcrumb-list li {
   margin: 0;
   font-size: var(--body-font-size-s);
-  color: rgb(255 255 255 / 70%);
+  color: var(--color-mnp-body-text);
 }
 
 .breadcrumb .breadcrumb-list li::after {
   content: '\203A';
   margin-left: var(--spacing-s);
+  color: var(--color-mnp-body-text);
 }
 
 .breadcrumb .breadcrumb-list li:last-child::after {
@@ -30,11 +30,10 @@
 }
 
 .breadcrumb .breadcrumb-list a {
-  color: rgb(255 255 255 / 80%);
+  color: var(--color-mnp-heading-teal);
   text-decoration: none;
 }
 
 .breadcrumb .breadcrumb-list a:hover {
-  color: var(--color-mnp-white);
   text-decoration: underline;
 }
