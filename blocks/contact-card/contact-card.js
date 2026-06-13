@@ -31,7 +31,7 @@ async function loadPersonnel(path) {
   }
 }
 
-function renderCard(person) {
+function renderCard(person, path) {
   const card = document.createElement('div');
   card.className = 'contact-card-inner';
 
@@ -94,6 +94,14 @@ function renderCard(person) {
     info.append(email);
   }
 
+  if (path) {
+    const more = document.createElement('a');
+    more.href = path;
+    more.className = 'contact-card-more';
+    more.textContent = 'Read More';
+    info.append(more);
+  }
+
   card.append(info);
 
   if (person.profile) {
@@ -108,7 +116,7 @@ function renderCard(person) {
   return card;
 }
 
-function renderSecondaryCard(person) {
+function renderSecondaryCard(person, path) {
   const card = document.createElement('div');
   card.className = 'contact-card-secondary';
 
@@ -150,6 +158,14 @@ function renderSecondaryCard(person) {
     info.append(email);
   }
 
+  if (path) {
+    const more = document.createElement('a');
+    more.href = path;
+    more.className = 'contact-card-more';
+    more.textContent = 'Read More';
+    info.append(more);
+  }
+
   card.append(info);
   return card;
 }
@@ -173,7 +189,7 @@ export default async function init(el) {
     // First path = primary contact
     const primary = await loadPersonnel(paths[0]);
     if (primary) {
-      el.append(renderCard(primary));
+      el.append(renderCard(primary, paths[0]));
     }
 
     // Remaining paths = secondary contacts
@@ -181,12 +197,13 @@ export default async function init(el) {
       const secondaryGrid = document.createElement('div');
       secondaryGrid.className = 'contact-card-secondary-grid';
 
+      const secondaryPaths = paths.slice(1);
       const secondaries = await Promise.all(
-        paths.slice(1).map((p) => loadPersonnel(p)),
+        secondaryPaths.map((p) => loadPersonnel(p)),
       );
 
-      secondaries.filter(Boolean).forEach((person) => {
-        secondaryGrid.append(renderSecondaryCard(person));
+      secondaries.forEach((person, i) => {
+        if (person) secondaryGrid.append(renderSecondaryCard(person, secondaryPaths[i]));
       });
 
       el.append(secondaryGrid);
