@@ -112,12 +112,46 @@ const CONFIG = {
   },
 };
 
-export default async function init(el) {
-  const typeInput = el.textContent.trim().toLowerCase();
+async function renderWidget(block, bridge) {
+  bridge.applyHostStyles();
+
+  let offices = [];
+  if (!bridge.hostContext?.preview) {
+    const result = await bridge.toolResult;
+    const structuredContent = result?.structuredContent || result;
+    offices = structuredContent?.offices || [];
+  }
+
+  block.classList.add('directory-list-widget');
+  block.innerHTML = '';
+
+  if (offices.length === 0) {
+    const empty = document.createElement('p');
+    empty.className = 'directory-list-empty';
+    empty.textContent = 'No offices found. Try asking me to search by city or province.';
+    block.append(empty);
+  } else {
+    const grid = document.createElement('div');
+    grid.className = 'directory-list-grid directory-list-grid-offices';
+    offices.forEach((office) => grid.append(renderOfficeCard(office)));
+    block.append(grid);
+  }
+
+  bridge.reportSize(block.offsetWidth, block.offsetHeight);
+  const ro = new ResizeObserver(() => bridge.reportSize(block.offsetWidth, block.offsetHeight));
+  ro.observe(block);
+}
+
+export default async function init(block, bridge) {
+  if (bridge) {
+    return renderWidget(block, bridge);
+  }
+
+  const typeInput = block.textContent.trim().toLowerCase();
   const type = CONFIG[typeInput] ? typeInput : 'offices';
   const config = CONFIG[type];
 
-  el.innerHTML = '';
+  block.innerHTML = '';
 
   const wrapper = document.createElement('div');
   wrapper.className = 'directory-list-wrapper';
@@ -125,7 +159,7 @@ export default async function init(el) {
   const loading = document.createElement('p');
   loading.textContent = 'Loading...';
   wrapper.append(loading);
-  el.append(wrapper);
+  block.append(wrapper);
 
   let items = await fetchIndex(config.indexUrl);
   if (config.enrich) items = await config.enrich(items);

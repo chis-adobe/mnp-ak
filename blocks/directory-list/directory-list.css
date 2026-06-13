@@ -4,6 +4,18 @@
   padding: 0 var(--spacing-l);
 }
 
+.directory-list.directory-list-widget {
+  max-width: 100%;
+  margin: 0;
+  padding: var(--spacing-m, 16px);
+}
+
+.directory-list.directory-list-widget .directory-list-empty {
+  color: var(--color-mnp-body-text, #444);
+  font-size: var(--body-font-size-m, 14px);
+  margin: 0;
+}
+
 /* Search header */
 .directory-list .directory-list-header {
   display: flex;
