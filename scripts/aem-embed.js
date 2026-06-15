@@ -154,10 +154,13 @@ export class AEMEmbed extends HTMLElement {
 
     // Fallback for projects (e.g. ak.js) that don't export decorateMain:
     // DA-authored content already has <div class="block-name"> structure but
-    // without the 'block' class that aem-embed uses to discover blocks.
+    // without the 'section' / 'block' classes that aem-embed uses to discover blocks.
     if (!main.querySelector('.block')) {
-      main.querySelectorAll(':scope > div > div[class]').forEach((el) => {
-        el.classList.add('block');
+      main.querySelectorAll(':scope > div').forEach((section) => {
+        section.classList.add('section');
+        section.querySelectorAll(':scope > div[class]').forEach((el) => {
+          el.classList.add('block');
+        });
       });
     }
 
@@ -177,7 +180,7 @@ export class AEMEmbed extends HTMLElement {
     const sections = main.querySelectorAll('.section');
     sections.forEach((s) => {
       s.dataset.sectionStatus = 'loaded';
-      s.style = '';
+      s.style.display = 'block';
     });
   }
 
