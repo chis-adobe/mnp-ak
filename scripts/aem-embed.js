@@ -152,6 +152,15 @@ export class AEMEmbed extends HTMLElement {
       await decorateMain(main, true);
     }
 
+    // Fallback for projects (e.g. ak.js) that don't export decorateMain:
+    // DA-authored content already has <div class="block-name"> structure but
+    // without the 'block' class that aem-embed uses to discover blocks.
+    if (!main.querySelector('.block')) {
+      main.querySelectorAll(':scope > div > div[class]').forEach((el) => {
+        el.classList.add('block');
+      });
+    }
+
     const blockElements = main.querySelectorAll('.block');
 
     if (blockElements.length > 0) {
