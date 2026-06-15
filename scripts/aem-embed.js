@@ -227,6 +227,18 @@ export class AEMEmbed extends HTMLElement {
         styles.onerror = () => { body.style = ''; };
         this.shadowRoot.appendChild(styles);
 
+        // CSS custom properties defined on :root in a linked stylesheet don't cascade into
+        // shadow DOM elements. Fetch styles.css and re-inject it with :root → :host so the
+        // design-system variables are available to all blocks inside this shadow root.
+        fetch(`${origin}${window.hlx.codeBasePath}/styles/styles.css`)
+          .then((r) => r.text())
+          .then((css) => {
+            const hostVars = document.createElement('style');
+            hostVars.textContent = css.replace(/:root\b/g, ':host');
+            this.shadowRoot.appendChild(hostVars);
+          })
+          .catch(() => { /* non-fatal: falls back to unthemed rendering */ });
+
         let htmlText = await resp.text();
         const regex = /.\/media/g;
         htmlText = htmlText.replace(regex, `${origin}/media`);
