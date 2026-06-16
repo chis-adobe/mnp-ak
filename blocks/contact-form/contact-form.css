@@ -77,6 +77,29 @@
   background: var(--color-mnp-dark-teal);
 }
 
+.contact-form .contact-form-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.contact-form .contact-form-status {
+  margin-top: var(--spacing-m);
+  font-size: var(--body-font-size-m);
+  padding: var(--spacing-s) var(--spacing-m);
+}
+
+.contact-form .contact-form-status-success {
+  background: #e6f4ea;
+  color: #1e6b3e;
+  border-left: 3px solid #1e6b3e;
+}
+
+.contact-form .contact-form-status-error {
+  background: #fdecea;
+  color: #b71c1c;
+  border-left: 3px solid #b71c1c;
+}
+
 @media (width >= 900px) {
   .contact-form .contact-form-fields {
     grid-template-columns: repeat(2, 1fr);
