@@ -240,8 +240,12 @@ export default async function init(el) {
       const valueCell = row.querySelector(':scope > div:nth-child(2)');
       if (valueCell) {
         const paragraphs = valueCell.querySelectorAll('p');
-        authorPaths = [...paragraphs]
-          .map((p) => p.textContent.trim())
+        const sources = paragraphs.length
+          ? [...paragraphs].map((p) => p.textContent)
+          : valueCell.textContent.split('\n');
+        authorPaths = sources
+          .flatMap((s) => s.split(','))
+          .map((t) => t.trim())
           .filter((t) => t.startsWith('/'));
       }
     }
