@@ -2,7 +2,9 @@ function toColumnName(label) {
   return label.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
 }
 
-export default async function init(el) {
+export default async function init(el, bridge) {
+  if (bridge) bridge.applyHostStyles();
+
   const rows = [...el.querySelectorAll(':scope > div')];
   el.innerHTML = '';
 
@@ -14,6 +16,14 @@ export default async function init(el) {
 
   let supabaseUrl = 'https://wdgjvnbgtulfuevdtvjk.supabase.co';
   let supabaseKey = 'sb_publishable_z3Bo2By780HZIQxZ7cf9vg_iTNLg-Cx';
+  let officeNameFromBridge = '';
+
+  if (bridge) {
+    bridge.toolResult.then((result) => {
+      const sc = result?.structuredContent || result;
+      officeNameFromBridge = sc?.office_name || '';
+    });
+  }
 
   rows.forEach((row) => {
     const cols = [...row.querySelectorAll(':scope > div')];
@@ -92,6 +102,7 @@ export default async function init(el) {
     new FormData(form).forEach((value, key) => {
       data[toColumnName(key)] = value;
     });
+    if (officeNameFromBridge) data.office_name = officeNameFromBridge;
 
     submitBtn.disabled = true;
     submitBtn.textContent = 'Submitting...';
@@ -125,4 +136,10 @@ export default async function init(el) {
   });
 
   el.append(heading, form, status);
+
+  if (bridge) {
+    bridge.reportSize(el.offsetWidth, el.offsetHeight);
+    const ro = new ResizeObserver(() => bridge.reportSize(el.offsetWidth, el.offsetHeight));
+    ro.observe(el);
+  }
 }
