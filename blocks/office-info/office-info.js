@@ -89,4 +89,34 @@ export default async function init(el) {
       }
     }
   });
+
+  // Two-column layout: text content on the left, Google map on the right
+  if (address) {
+    const fullAddress = [address.address, address.city, address.province, address['postal-code']]
+      .filter(Boolean)
+      .join(', ');
+
+    const content = document.createElement('div');
+    content.className = 'office-info-content';
+    [...el.children].forEach((child) => content.append(child));
+
+    const layout = document.createElement('div');
+    layout.className = 'office-info-layout';
+    layout.append(content);
+
+    if (fullAddress) {
+      const mapCol = document.createElement('div');
+      mapCol.className = 'office-info-map';
+      const iframe = document.createElement('iframe');
+      iframe.title = `Map of MNP ${address.city || ''} office`.trim();
+      iframe.src = `https://www.google.com/maps?q=${encodeURIComponent(fullAddress)}&output=embed`;
+      iframe.loading = 'lazy';
+      iframe.allowFullscreen = true;
+      iframe.referrerPolicy = 'no-referrer-when-downgrade';
+      mapCol.append(iframe);
+      layout.append(mapCol);
+    }
+
+    el.append(layout);
+  }
 }
