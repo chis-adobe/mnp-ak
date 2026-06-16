@@ -22,7 +22,14 @@ export default async function init(el, bridge) {
     bridge.toolResult.then((result) => {
       const sc = result?.structuredContent || result;
       officeNameFromBridge = sc?.office_name || '';
+      if (officeNameFromBridge) {
+        heading.textContent = heading.textContent.replace('<office_name>', officeNameFromBridge);
+      } else {
+        heading.textContent = heading.textContent.replace(/\s*<office_name>\s*/g, ' ').trim();
+      }
     });
+  } else {
+    heading.textContent = heading.textContent.replace(/\s*<office_name>\s*/g, ' ').trim();
   }
 
   rows.forEach((row) => {
