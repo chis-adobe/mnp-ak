@@ -45,6 +45,20 @@
   text-decoration: underline;
 }
 
+.contact-card .contact-card-more {
+  display: inline-block;
+  margin-top: var(--spacing-m);
+  color: var(--color-mnp-body-text);
+  font-size: var(--body-font-size-s);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.contact-card .contact-card-more:hover {
+  color: var(--color-mnp-heading-teal);
+  text-decoration: underline;
+}
+
 .contact-card .contact-card-bio {
   color: var(--color-mnp-body-text);
   line-height: 1.6;
