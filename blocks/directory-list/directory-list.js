@@ -95,6 +95,142 @@ function renderPersonnelCard(person) {
 
 const SEARCH_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19zm-6 0A4.5 4.5 0 1 1 14 9.5 4.49 4.49 0 0 1 9.5 14z"/></svg>';
 
+const GEOCODE_CACHE_KEY = 'mnp-office-geocode';
+
+function getUserPosition() {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(new Error('no geolocation'));
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      (err) => reject(err),
+      { timeout: 10000, maximumAge: 600000 },
+    );
+  });
+}
+
+// Reverse-geocode the user's coordinates to a province code (no API key).
+async function getUserProvince({ lat, lng }) {
+  try {
+    const resp = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`);
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    return data.principalSubdivisionCode ? data.principalSubdivisionCode.split('-').pop() : null;
+  } catch {
+    return null;
+  }
+}
+
+function loadGeocodeCache() {
+  try {
+    return JSON.parse(localStorage.getItem(GEOCODE_CACHE_KEY)) || {};
+  } catch {
+    return {};
+  }
+}
+
+function saveGeocodeCache(cache) {
+  try {
+    localStorage.setItem(GEOCODE_CACHE_KEY, JSON.stringify(cache));
+  } catch { /* ignore quota errors */ }
+}
+
+async function nominatimLookup(query) {
+  try {
+    const resp = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=ca&q=${encodeURIComponent(query)}`);
+    if (!resp.ok) return null;
+    const results = await resp.json();
+    if (!results.length) return null;
+    return { lat: parseFloat(results[0].lat), lng: parseFloat(results[0].lon) };
+  } catch {
+    return null;
+  }
+}
+
+// Forward-geocode an office to coordinates (OpenStreetMap Nominatim, no key).
+// Falls back to a city-level lookup when the full street address can't be resolved.
+async function geocodeOffice(office, cache) {
+  const key = office.path;
+  if (cache[key]) return cache[key];
+
+  const fullQuery = [office.address, office.city, office.province, 'Canada'].filter(Boolean).join(', ');
+  const cityQuery = [office.city, office.province, 'Canada'].filter(Boolean).join(', ');
+  if (!fullQuery) return null;
+
+  let coords = await nominatimLookup(fullQuery);
+  if (!coords && cityQuery && cityQuery !== fullQuery) {
+    coords = await nominatimLookup(cityQuery);
+  }
+  if (!coords) return null;
+
+  cache[key] = coords;
+  saveGeocodeCache(cache);
+  return coords;
+}
+
+// Haversine distance in km.
+function distanceKm(a, b) {
+  const R = 6371;
+  const dLat = ((b.lat - a.lat) * Math.PI) / 180;
+  const dLng = ((b.lng - a.lng) * Math.PI) / 180;
+  const lat1 = (a.lat * Math.PI) / 180;
+  const lat2 = (b.lat * Math.PI) / 180;
+  const h = Math.sin(dLat / 2) ** 2
+    + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+// Resolve the 3 closest offices to the user, using a province pre-filter to limit geocoding calls.
+async function findNearbyOffices(offices, userPos) {
+  const province = await getUserProvince(userPos);
+  let candidates = offices;
+  if (province) {
+    const inProvince = offices.filter((o) => (o.province || '').toUpperCase() === province.toUpperCase());
+    if (inProvince.length >= 3) candidates = inProvince;
+  }
+
+  const cache = loadGeocodeCache();
+  const located = [];
+  // Sequential to respect Nominatim's rate limit; cache keeps repeat visits fast.
+  for (const office of candidates) {
+    // eslint-disable-next-line no-await-in-loop
+    const coords = await geocodeOffice(office, cache);
+    if (coords) located.push({ office, distance: distanceKm(userPos, coords) });
+  }
+
+  located.sort((a, b) => a.distance - b.distance);
+  return located.slice(0, 3).map((entry) => entry.office);
+}
+
+// Renders the Nearby Offices panel asynchronously; removes it if nothing can be resolved.
+async function renderNearbyPanel(wrapper, offices) {
+  const panel = document.createElement('div');
+  panel.className = 'directory-list-nearby';
+  panel.innerHTML = `
+    <h2 class="directory-list-nearby-title">Nearby Offices</h2>
+    <p class="directory-list-nearby-loading">Finding nearby offices...</p>
+  `;
+  wrapper.prepend(panel);
+
+  try {
+    const userPos = await getUserPosition();
+    const nearby = await findNearbyOffices(offices, userPos);
+    if (!nearby.length) {
+      panel.remove();
+      return;
+    }
+    const grid = document.createElement('div');
+    grid.className = 'directory-list-grid directory-list-grid-offices directory-list-nearby-grid';
+    nearby.forEach((office) => grid.append(renderOfficeCard(office)));
+    panel.querySelector('.directory-list-nearby-loading').remove();
+    panel.append(grid);
+  } catch {
+    panel.remove();
+  }
+}
+
 const CONFIG = {
   offices: {
     indexUrl: '/offices/query-index.json?limit=500',
@@ -144,7 +280,8 @@ async function renderWidget(block, bridge) {
 
 export default async function init(block, bridge) {
   if (bridge) {
-    return renderWidget(block, bridge);
+    await renderWidget(block, bridge);
+    return;
   }
 
   const typeInput = block.textContent.trim().toLowerCase();
@@ -231,4 +368,9 @@ export default async function init(block, bridge) {
   });
 
   wrapper.append(grid);
+
+  // Offices mode: surface the 3 closest offices to the user at the very top.
+  if (type === 'offices') {
+    renderNearbyPanel(wrapper, items);
+  }
 }

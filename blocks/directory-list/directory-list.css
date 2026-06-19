@@ -278,3 +278,32 @@
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
+/* Nearby Offices panel */
+.directory-list .directory-list-nearby {
+  margin-bottom: var(--spacing-xl);
+  padding-bottom: var(--spacing-l);
+  border-bottom: 1px solid var(--color-mnp-border);
+}
+
+.directory-list .directory-list-nearby-title {
+  font-size: var(--heading-font-size-m);
+  color: var(--color-mnp-heading-teal);
+  margin: 0 0 var(--spacing-m);
+}
+
+.directory-list .directory-list-nearby-loading {
+  font-size: var(--body-font-size-m);
+  color: var(--color-mnp-body-text);
+  margin: 0;
+}
+
+.directory-list .directory-list-nearby-grid {
+  margin: 0;
+}
+
+@media (width >= 768px) {
+  .directory-list .directory-list-nearby-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
