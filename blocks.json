@@ -1,0 +1,702 @@
+{
+  "$comment": "Authoring block library for the MNP DA project. Mirrors component-definition.json (groups > components > plugins.da scaffolds) and enriches each block with its field model, description, and container nesting rules. Use as the source of truth for which blocks authors can insert and what structure each one expects. Dynamic blocks (rows/columns = 0) generate their own content at runtime and need no authored input.",
+  "groups": [
+    {
+      "title": "Content Blocks",
+      "id": "content",
+      "components": [
+        {
+          "title": "Hero",
+          "id": "hero",
+          "description": "Full-width hero with a background/feature image and rich text.",
+          "model": "hero",
+          "fields": [
+            { "component": "reference", "valueType": "string", "name": "image", "label": "Image", "multi": false },
+            { "component": "richtext", "valueType": "string", "name": "text", "label": "Text" }
+          ],
+          "plugins": {
+            "da": {
+              "name": "hero",
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                { "name": "image", "selector": "div:nth-child(1) img[src]" },
+                { "name": "text", "selector": "div:nth-child(2)" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Mini Hero",
+          "id": "mini-hero",
+          "description": "Dynamic. Generates the page title from city metadata. No authored content needed.",
+          "dynamic": true,
+          "model": "mini-hero",
+          "fields": [
+            { "component": "text", "valueType": "string", "name": "info", "label": "Dynamic Block", "value": "Generates title from page city metadata. No editing required." }
+          ],
+          "plugins": {
+            "da": { "name": "mini-hero", "rows": 0, "columns": 0 }
+          }
+        },
+        {
+          "title": "Breadcrumb",
+          "id": "breadcrumb",
+          "description": "Dynamic. Generates breadcrumb navigation from the page hierarchy. No authored content needed.",
+          "dynamic": true,
+          "model": "breadcrumb",
+          "fields": [
+            { "component": "text", "valueType": "string", "name": "info", "label": "Dynamic Block", "value": "Generates breadcrumb from page hierarchy. No editing required." }
+          ],
+          "plugins": {
+            "da": { "name": "breadcrumb", "rows": 0, "columns": 0 }
+          }
+        },
+        {
+          "title": "Accordion",
+          "id": "accordion",
+          "description": "Container for collapsible accordion items.",
+          "model": "accordion",
+          "fields": [],
+          "container": ["accordion-item"],
+          "filter": "accordion",
+          "plugins": {
+            "da": { "name": "accordion", "rows": 1, "columns": 2 }
+          }
+        },
+        {
+          "title": "Accordion Item",
+          "id": "accordion-item",
+          "description": "A single accordion row: a summary (clickable header) and expandable body text.",
+          "model": "accordion-item",
+          "fields": [
+            { "component": "richtext", "valueType": "string", "name": "summary", "label": "Summary" },
+            { "component": "richtext", "valueType": "string", "name": "text", "label": "Text" }
+          ],
+          "plugins": {
+            "da": {
+              "name": "accordion-item",
+              "rows": 2,
+              "columns": 0,
+              "fields": [
+                { "name": "summary", "selector": "div:nth-child(1)" },
+                { "name": "text", "selector": "div:nth-child(2)" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Columns",
+          "id": "columns",
+          "description": "Two side-by-side rich text columns.",
+          "model": "columns",
+          "fields": [
+            { "component": "richtext", "valueType": "string", "name": "col1", "label": "Column 1" },
+            { "component": "richtext", "valueType": "string", "name": "col2", "label": "Column 2" }
+          ],
+          "plugins": {
+            "da": {
+              "name": "columns",
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                { "name": "col1", "selector": "div:nth-child(1)" },
+                { "name": "col2", "selector": "div:nth-child(2)" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Table",
+          "id": "table",
+          "description": "Rich text rendered as a table.",
+          "model": "table",
+          "fields": [
+            { "component": "richtext", "valueType": "string", "name": "content", "label": "Content" }
+          ],
+          "plugins": {
+            "da": {
+              "name": "table",
+              "rows": 1,
+              "columns": 1,
+              "fields": [
+                { "name": "content", "selector": "div:nth-child(1)" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Card",
+          "id": "card",
+          "description": "A single card with an image and rich text.",
+          "model": "card",
+          "fields": [
+            { "component": "reference", "valueType": "string", "name": "image", "label": "Image", "multi": false },
+            { "component": "richtext", "valueType": "string", "name": "text", "label": "Text" }
+          ],
+          "plugins": {
+            "da": {
+              "name": "card",
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                { "name": "image", "selector": "div:nth-child(1) img[src]" },
+                { "name": "text", "selector": "div:nth-child(2)" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Carousel",
+          "id": "carousel",
+          "description": "Container for carousel slides.",
+          "model": "carousel",
+          "fields": [],
+          "container": ["carousel-slide"],
+          "filter": "carousel",
+          "plugins": {
+            "da": { "name": "carousel", "rows": 1, "columns": 2 }
+          }
+        },
+        {
+          "title": "Carousel Slide",
+          "id": "carousel-slide",
+          "description": "A single carousel slide with an image and rich text.",
+          "model": "carousel-slide",
+          "fields": [
+            { "component": "reference", "valueType": "string", "name": "image", "label": "Image", "multi": false },
+            { "component": "richtext", "valueType": "string", "name": "text", "label": "Text" }
+          ],
+          "plugins": {
+            "da": {
+              "name": "carousel-slide",
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                { "name": "image", "selector": "div:nth-child(1) img[src]" },
+                { "name": "text", "selector": "div:nth-child(2)" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Rich Text",
+          "id": "richtext",
+          "description": "Free-form rich text region. No decoration applied.",
+          "model": "richtext",
+          "fields": [
+            { "component": "richtext", "valueType": "string", "name": "content", "label": "Content" }
+          ],
+          "plugins": {
+            "da": {
+              "name": "richtext",
+              "rows": 1,
+              "columns": 1,
+              "fields": [
+                { "name": "content", "selector": "div:nth-child(1)" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "YouTube",
+          "id": "youtube",
+          "description": "Embeds a YouTube video (privacy-enhanced, no-cookie). Author a YouTube link or video ID.",
+          "model": "youtube",
+          "fields": [
+            { "component": "aem-content", "valueType": "string", "name": "link", "label": "YouTube URL or Video ID" }
+          ],
+          "plugins": {
+            "da": {
+              "name": "youtube",
+              "rows": 1,
+              "columns": 1,
+              "fields": [
+                { "name": "link", "selector": "div:nth-child(1)" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Fragment",
+          "id": "fragment",
+          "description": "Embeds another document (content fragment) by path.",
+          "model": "fragment",
+          "fields": [
+            { "component": "aem-content", "valueType": "string", "name": "reference", "label": "Fragment Path" }
+          ],
+          "plugins": {
+            "da": {
+              "name": "fragment",
+              "rows": 1,
+              "columns": 1,
+              "fields": [
+                { "name": "reference", "selector": "div:nth-child(1)" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Advanced Tabs",
+          "id": "advanced-tabs",
+          "description": "Turns the sections that follow it into tab panels. Author an unordered list where each list item is a tab label; each subsequent section becomes a panel.",
+          "model": "advanced-tabs",
+          "fields": [
+            { "component": "richtext", "valueType": "string", "name": "tabs", "label": "Tab Labels (unordered list)" }
+          ],
+          "plugins": {
+            "da": {
+              "name": "advanced-tabs",
+              "rows": 1,
+              "columns": 1,
+              "fields": [
+                { "name": "tabs", "selector": "div:nth-child(1)" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "title": "Article & Insights Blocks",
+      "id": "article",
+      "components": [
+        {
+          "title": "Article",
+          "id": "article",
+          "description": "Article body layout. Author key/value rows: 'authors' (one or more /personnel/* paths, comma- or line-separated) and 'copy' (the article rich text). Renders title bar, synopsis, author cards, copy, related content, and insights.",
+          "model": "article",
+          "fields": [
+            { "component": "text", "valueType": "string", "name": "key", "label": "Field (authors | copy)" },
+            { "component": "richtext", "valueType": "string", "name": "value", "label": "Value" }
+          ],
+          "plugins": {
+            "da": {
+              "name": "article",
+              "rows": 2,
+              "columns": 2,
+              "fields": [
+                { "name": "key", "selector": "div:nth-child(1)" },
+                { "name": "value", "selector": "div:nth-child(2)" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Article Hero",
+          "id": "article-hero",
+          "description": "Dynamic. Builds the article header (title, publication date, hero image) from page metadata. Author image URLs are transformed to the publish tier automatically. No authored content needed.",
+          "dynamic": true,
+          "model": "article-hero",
+          "fields": [
+            { "component": "text", "valueType": "string", "name": "info", "label": "Dynamic Block", "value": "Generates article hero from page metadata. No editing required." }
+          ],
+          "plugins": {
+            "da": { "name": "article-hero", "rows": 0, "columns": 0 }
+          }
+        },
+        {
+          "title": "Article Tags",
+          "id": "article-tags",
+          "description": "Dynamic. Renders taxonomy tag links from the page 'insights' metadata. No authored content needed.",
+          "dynamic": true,
+          "model": "article-tags",
+          "fields": [
+            { "component": "text", "valueType": "string", "name": "info", "label": "Dynamic Block", "value": "Generates tags from page insights metadata. No editing required." }
+          ],
+          "plugins": {
+            "da": { "name": "article-tags", "rows": 0, "columns": 0 }
+          }
+        },
+        {
+          "title": "Author Data",
+          "id": "author-data",
+          "description": "Personnel profile (full layout). Author key/value rows. Keys: name, certifications, role, phone, toll-free, email, fax, address, thumbnail (image), profile (multi-paragraph bio).",
+          "model": "author-data",
+          "fields": [
+            { "component": "text", "valueType": "string", "name": "key", "label": "Field" },
+            { "component": "richtext", "valueType": "string", "name": "value", "label": "Value" }
+          ],
+          "plugins": {
+            "da": {
+              "name": "author-data",
+              "rows": 10,
+              "columns": 2,
+              "fields": [
+                { "name": "key", "selector": "div:nth-child(1)" },
+                { "name": "value", "selector": "div:nth-child(2)" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Author Info",
+          "id": "author-info",
+          "description": "Compact personnel info block. Author key/value rows (name, role, phone, email, etc.). Used inside fragments referenced by other blocks.",
+          "model": "author-info",
+          "fields": [
+            { "component": "text", "valueType": "string", "name": "key", "label": "Field" },
+            { "component": "richtext", "valueType": "string", "name": "value", "label": "Value" }
+          ],
+          "plugins": {
+            "da": {
+              "name": "author-info",
+              "rows": 6,
+              "columns": 2,
+              "fields": [
+                { "name": "key", "selector": "div:nth-child(1)" },
+                { "name": "value", "selector": "div:nth-child(2)" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Search Results",
+          "id": "search-results",
+          "description": "Dynamic. Renders searchable, filterable results from the article and content query indexes. No authored content needed.",
+          "dynamic": true,
+          "model": "search-results",
+          "fields": [
+            { "component": "text", "valueType": "string", "name": "info", "label": "Dynamic Block", "value": "Generates search results from query indexes. No editing required." }
+          ],
+          "plugins": {
+            "da": { "name": "search-results", "rows": 0, "columns": 0 }
+          }
+        }
+      ]
+    },
+    {
+      "title": "Office Blocks",
+      "id": "office",
+      "components": [
+        {
+          "title": "Office Info",
+          "id": "office-info",
+          "description": "Office information section. Author the description rich text only (heading + paragraphs + 'Open location in Maps' link). The 'Office Information' heading, address, phone, and fax are generated from page metadata or an address fragment. Renders a Google map beside the content.",
+          "model": "office-info",
+          "fields": [
+            { "component": "richtext", "valueType": "string", "name": "content", "label": "Description" }
+          ],
+          "plugins": {
+            "da": {
+              "name": "office-info",
+              "rows": 1,
+              "columns": 1,
+              "fields": [
+                { "name": "content", "selector": "div:nth-child(1)" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Services Links",
+          "id": "services-links",
+          "description": "Container for a responsive multi-column grid of service links.",
+          "model": "services-links",
+          "fields": [],
+          "container": ["services-links-item"],
+          "filter": "services-links",
+          "plugins": {
+            "da": { "name": "services-links", "rows": 1, "columns": 1 }
+          }
+        },
+        {
+          "title": "Service Link Item",
+          "id": "services-links-item",
+          "description": "A single service link row.",
+          "model": "services-links-item",
+          "fields": [
+            { "component": "aem-content", "valueType": "string", "name": "link", "label": "Link" }
+          ],
+          "plugins": {
+            "da": {
+              "name": "services-links-item",
+              "rows": 1,
+              "columns": 0,
+              "fields": [
+                { "name": "link", "selector": "div:nth-child(1)" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Contact Card",
+          "id": "contact-card",
+          "description": "Personnel contact cards. Author one /personnel/* path per row as plain text (NOT a link). First path renders the full primary card; the rest render in a secondary 2-column grid. Falls back to authored image/info/bio columns if no paths are given.",
+          "model": "contact-card",
+          "fields": [
+            { "component": "reference", "valueType": "string", "name": "image", "label": "Image", "multi": false },
+            { "component": "richtext", "valueType": "string", "name": "info", "label": "Info" },
+            { "component": "richtext", "valueType": "string", "name": "bio", "label": "Bio" }
+          ],
+          "plugins": {
+            "da": {
+              "name": "contact-card",
+              "rows": 1,
+              "columns": 3,
+              "fields": [
+                { "name": "image", "selector": "div:nth-child(1) img[src]" },
+                { "name": "info", "selector": "div:nth-child(2)" },
+                { "name": "bio", "selector": "div:nth-child(3)" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Contact Form",
+          "id": "contact-form",
+          "description": "Contact form. Author one row per field: label in column 1, field type in column 2 (heading, text, email, tel, select, textarea). For 'select', add a third column with comma-separated options.",
+          "model": "contact-form",
+          "fields": [
+            { "component": "text", "valueType": "string", "name": "label", "label": "Label" },
+            { "component": "text", "valueType": "string", "name": "type", "label": "Field Type" }
+          ],
+          "plugins": {
+            "da": {
+              "name": "contact-form",
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                { "name": "label", "selector": "div:nth-child(1)" },
+                { "name": "type", "selector": "div:nth-child(2)" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Insights Cards",
+          "id": "insights-cards",
+          "description": "Container for a grid of insight/article cards.",
+          "model": "insights-cards",
+          "fields": [],
+          "container": ["insights-cards-item"],
+          "filter": "insights-cards",
+          "plugins": {
+            "da": { "name": "insights-cards", "rows": 1, "columns": 2 }
+          }
+        },
+        {
+          "title": "Insights Card Item",
+          "id": "insights-cards-item",
+          "description": "A single insight card: image plus text (category, date, title link, summary).",
+          "model": "insights-cards-item",
+          "fields": [
+            { "component": "reference", "valueType": "string", "name": "image", "label": "Image", "multi": false },
+            { "component": "richtext", "valueType": "string", "name": "text", "label": "Text" }
+          ],
+          "plugins": {
+            "da": {
+              "name": "insights-cards-item",
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                { "name": "image", "selector": "div:nth-child(1) img[src]" },
+                { "name": "text", "selector": "div:nth-child(2)" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Offices List",
+          "id": "offices-list",
+          "description": "Dynamic. Lists all offices from the query index. No authored content needed.",
+          "dynamic": true,
+          "model": "offices-list",
+          "fields": [
+            { "component": "text", "valueType": "string", "name": "info", "label": "Dynamic Block", "value": "Lists all offices from the query index. No editing required." }
+          ],
+          "plugins": {
+            "da": { "name": "offices-list", "rows": 0, "columns": 0 }
+          }
+        },
+        {
+          "title": "Directory List",
+          "id": "directory-list",
+          "description": "Dynamic. Renders an A–Z filterable directory (offices/personnel) from a query index. No authored content needed.",
+          "dynamic": true,
+          "model": "directory-list",
+          "fields": [
+            { "component": "text", "valueType": "string", "name": "info", "label": "Dynamic Block", "value": "Generates directory from query index. No editing required." }
+          ],
+          "plugins": {
+            "da": { "name": "directory-list", "rows": 0, "columns": 0 }
+          }
+        },
+        {
+          "title": "Find Office",
+          "id": "find-office",
+          "description": "Dynamic. Interactive office finder widget. Data is supplied at runtime. No authored content needed.",
+          "dynamic": true,
+          "model": "find-office",
+          "fields": [
+            { "component": "text", "valueType": "string", "name": "info", "label": "Dynamic Block", "value": "Interactive office finder. No editing required." }
+          ],
+          "plugins": {
+            "da": { "name": "find-office", "rows": 0, "columns": 0 }
+          }
+        }
+      ]
+    },
+    {
+      "title": "Event Blocks",
+      "id": "event",
+      "components": [
+        {
+          "title": "Event Hero",
+          "id": "event-hero",
+          "description": "Dynamic. Builds the event header (image, title, date, time) from page metadata. No authored content needed.",
+          "dynamic": true,
+          "model": "event-hero",
+          "fields": [
+            { "component": "text", "valueType": "string", "name": "info", "label": "Dynamic Block", "value": "Generates event hero from page metadata. No editing required." }
+          ],
+          "plugins": {
+            "da": { "name": "event-hero", "rows": 0, "columns": 0 }
+          }
+        },
+        {
+          "title": "Event Info",
+          "id": "event-info",
+          "description": "Dynamic. Renders event details (date, time, agenda, location) from page metadata. No authored content needed.",
+          "dynamic": true,
+          "model": "event-info",
+          "fields": [
+            { "component": "text", "valueType": "string", "name": "info", "label": "Dynamic Block", "value": "Generates event info from page metadata. No editing required." }
+          ],
+          "plugins": {
+            "da": { "name": "event-info", "rows": 0, "columns": 0 }
+          }
+        },
+        {
+          "title": "Event Registration",
+          "id": "event-registration",
+          "description": "Dynamic. Renders an event registration form. No authored content needed.",
+          "dynamic": true,
+          "model": "event-registration",
+          "fields": [
+            { "component": "text", "valueType": "string", "name": "info", "label": "Dynamic Block", "value": "Renders event registration form. No editing required." }
+          ],
+          "plugins": {
+            "da": { "name": "event-registration", "rows": 0, "columns": 0 }
+          }
+        },
+        {
+          "title": "Presenters",
+          "id": "presenters",
+          "description": "Grid of presenter cards. Author one /personnel/* path per row as plain text. Each resolves to a presenter card (photo, name, role).",
+          "model": "presenters",
+          "fields": [
+            { "component": "aem-content", "valueType": "string", "name": "path", "label": "Personnel Path" }
+          ],
+          "plugins": {
+            "da": {
+              "name": "presenters",
+              "rows": 1,
+              "columns": 1,
+              "fields": [
+                { "name": "path", "selector": "div:nth-child(1)" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Schedule",
+          "id": "schedule",
+          "description": "Dynamic. Renders a schedule/agenda sourced from a linked fragment. No authored content needed.",
+          "dynamic": true,
+          "model": "schedule",
+          "fields": [
+            { "component": "text", "valueType": "string", "name": "info", "label": "Dynamic Block", "value": "Generates schedule from linked fragment. No editing required." }
+          ],
+          "plugins": {
+            "da": { "name": "schedule", "rows": 0, "columns": 0 }
+          }
+        }
+      ]
+    },
+    {
+      "title": "Marketing Blocks",
+      "id": "marketing",
+      "components": [
+        {
+          "title": "CTA Banner",
+          "id": "cta-banner",
+          "description": "Call-to-action banner with rich text content.",
+          "model": "cta-banner",
+          "fields": [
+            { "component": "richtext", "valueType": "string", "name": "content", "label": "Content" }
+          ],
+          "plugins": {
+            "da": {
+              "name": "cta-banner",
+              "rows": 1,
+              "columns": 1,
+              "fields": [
+                { "name": "content", "selector": "div:nth-child(1)" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Feature Banner",
+          "id": "feature-banner",
+          "description": "Feature banner with an image and rich text.",
+          "model": "feature-banner",
+          "fields": [
+            { "component": "reference", "valueType": "string", "name": "image", "label": "Image", "multi": false },
+            { "component": "richtext", "valueType": "string", "name": "text", "label": "Text" }
+          ],
+          "plugins": {
+            "da": {
+              "name": "feature-banner",
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                { "name": "image", "selector": "div:nth-child(1) img[src]" },
+                { "name": "text", "selector": "div:nth-child(2)" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Industry Selector",
+          "id": "industry-selector",
+          "description": "Interactive industry picker. Author one industry name per row as plain text; each becomes a selectable option.",
+          "model": "industry-selector",
+          "fields": [
+            { "component": "text", "valueType": "string", "name": "option", "label": "Industry Option" }
+          ],
+          "plugins": {
+            "da": {
+              "name": "industry-selector",
+              "rows": 1,
+              "columns": 1,
+              "fields": [
+                { "name": "option", "selector": "div:nth-child(1)" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Service List",
+          "id": "service-list",
+          "description": "List of services. Author one row per service with content (heading, description, link) in the first column.",
+          "model": "service-list",
+          "fields": [
+            { "component": "richtext", "valueType": "string", "name": "content", "label": "Content" }
+          ],
+          "plugins": {
+            "da": {
+              "name": "service-list",
+              "rows": 1,
+              "columns": 1,
+              "fields": [
+                { "name": "content", "selector": "div:nth-child(1)" }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
