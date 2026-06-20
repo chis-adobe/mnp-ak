@@ -638,10 +638,10 @@
           }
         },
         {
-          "title": "CTA Rows",
-          "id": "cta-rows",
-          "description": "Stacked image-and-text call-to-action rows with no spacing between them. Author one row per cell-trio: image, text (heading + paragraphs + optional link), and a colour name (grey, white, teal-light, teal, dark-teal) that sets the row background. Text sits left, image right, side by side on desktop and stacked on mobile.",
-          "model": "cta-rows",
+          "title": "Feature Banner",
+          "id": "feature-banner",
+          "description": "Stacked image-and-text rows with no spacing between them. Author one or more rows, each a cell-trio: image, text (heading + paragraphs + optional link), and a colour name (grey, white, teal-light, teal, dark-teal) that sets the row background. Text sits left, image right, side by side on desktop and stacked on mobile.",
+          "model": "feature-banner",
           "fields": [
             { "component": "reference", "valueType": "string", "name": "image", "label": "Image", "multi": false },
             { "component": "richtext", "valueType": "string", "name": "text", "label": "Text" },
@@ -649,34 +649,13 @@
           ],
           "plugins": {
             "da": {
-              "name": "cta-rows",
+              "name": "feature-banner",
               "rows": 1,
               "columns": 3,
               "fields": [
                 { "name": "image", "selector": "div:nth-child(1) img[src]" },
                 { "name": "text", "selector": "div:nth-child(2)" },
                 { "name": "color", "selector": "div:nth-child(3)" }
-              ]
-            }
-          }
-        },
-        {
-          "title": "Feature Banner",
-          "id": "feature-banner",
-          "description": "Feature banner with an image and rich text.",
-          "model": "feature-banner",
-          "fields": [
-            { "component": "reference", "valueType": "string", "name": "image", "label": "Image", "multi": false },
-            { "component": "richtext", "valueType": "string", "name": "text", "label": "Text" }
-          ],
-          "plugins": {
-            "da": {
-              "name": "feature-banner",
-              "rows": 1,
-              "columns": 2,
-              "fields": [
-                { "name": "image", "selector": "div:nth-child(1) img[src]" },
-                { "name": "text", "selector": "div:nth-child(2)" }
               ]
             }
           }
