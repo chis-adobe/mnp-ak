@@ -1,6 +1,7 @@
 const COLOR_CLASSES = {
   teal: 'feature-banner-row-teal',
   'teal-light': 'feature-banner-row-teal-light',
+  'teal-dark': 'feature-banner-row-teal-dark',
   grey: 'feature-banner-row-grey',
   gray: 'feature-banner-row-grey',
   white: 'feature-banner-row-white',

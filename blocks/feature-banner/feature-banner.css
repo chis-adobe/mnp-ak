@@ -73,8 +73,13 @@
   background: #fff;
 }
 
+/* Colour codes match mnp.ca's mnp-cta-image classes */
 .feature-banner .feature-banner-row-teal-light {
-  background: var(--color-teal-100);
+  background: #1a465a;
+}
+
+.feature-banner .feature-banner-row-teal-dark {
+  background: #0a3343;
 }
 
 .feature-banner .feature-banner-row-teal {
@@ -86,11 +91,19 @@
 }
 
 /* Light text on dark backgrounds */
+.feature-banner .feature-banner-row-teal-light .feature-banner-content,
+.feature-banner .feature-banner-row-teal-dark .feature-banner-content,
 .feature-banner .feature-banner-row-teal .feature-banner-content,
 .feature-banner .feature-banner-row-dark-teal .feature-banner-content {
   color: #fff;
 }
 
+.feature-banner .feature-banner-row-teal-light .feature-banner-content h2,
+.feature-banner .feature-banner-row-teal-light .feature-banner-content h3,
+.feature-banner .feature-banner-row-teal-light .feature-banner-cta,
+.feature-banner .feature-banner-row-teal-dark .feature-banner-content h2,
+.feature-banner .feature-banner-row-teal-dark .feature-banner-content h3,
+.feature-banner .feature-banner-row-teal-dark .feature-banner-cta,
 .feature-banner .feature-banner-row-teal .feature-banner-content h2,
 .feature-banner .feature-banner-row-teal .feature-banner-content h3,
 .feature-banner .feature-banner-row-teal .feature-banner-cta,
@@ -100,6 +113,8 @@
   color: #fff;
 }
 
+.feature-banner .feature-banner-row-teal-light .feature-banner-cta,
+.feature-banner .feature-banner-row-teal-dark .feature-banner-cta,
 .feature-banner .feature-banner-row-teal .feature-banner-cta,
 .feature-banner .feature-banner-row-dark-teal .feature-banner-cta {
   border-color: #fff;
