@@ -1,4 +1,4 @@
-// Named Dynamic Media smart crops (Scene7), ordered widest-first.
+// Named Dynamic Media smart crops, ordered widest-first.
 // Each crop is content-aware so the focal subject stays in frame.
 const SMART_CROPS = [
   { name: 'Large', width: 1260, minViewport: 900 },
@@ -11,29 +11,44 @@ function isScene7Url(url) {
   return /scene7\.com\/is\/image\//.test(url);
 }
 
-// Build a Scene7 rendition URL for a named smart crop at a target width (webp).
-function s7Url(base, cropName, width) {
-  const clean = base.split('?')[0].replace(/:[A-Za-z]+$/, '');
-  return `${clean}:${cropName}?wid=${width}&fmt=webp-alpha`;
+// AEM Assets web-optimized delivery URL, e.g.
+// https://delivery-<id>.adobeaemcloud.com/adobe/assets/urn:aaid:aem:.../as/<name>.<ext>
+function isDeliveryUrl(url) {
+  return /\/adobe\/assets\/urn:aaid:aem:[^/]+\/as\//.test(url);
 }
 
-// Replace an authored <picture>/<img> that points at a Scene7 asset with a
-// responsive <picture> whose sources pick the best smart crop per viewport width.
+function isSmartCropUrl(url) {
+  return isScene7Url(url) || isDeliveryUrl(url);
+}
+
+// Build a smart-crop rendition URL at a target width for either source style.
+function cropUrl(base, cropName, width) {
+  const clean = base.split('?')[0];
+  if (isDeliveryUrl(clean)) {
+    // AEM Assets delivery: ?smartcrop=<Name>&width=<px>
+    return `${clean}?smartcrop=${cropName}&width=${width}`;
+  }
+  // Scene7: <base>:<Name>?wid=<px>&fmt=webp-alpha
+  const noCrop = clean.replace(/:[A-Za-z]+$/, '');
+  return `${noCrop}:${cropName}?wid=${width}&fmt=webp-alpha`;
+}
+
+// Replace an authored <picture>/<img> that points at a smart-crop-capable asset
+// with a responsive <picture> whose sources pick the best crop per viewport width.
 function buildSmartCropPicture(originalImg, base, altOverride) {
   const picture = document.createElement('picture');
 
   SMART_CROPS.forEach((crop) => {
     const source = document.createElement('source');
-    source.type = 'image/webp';
     // Serve at 2x the crop's native width for crisp rendering on hi-dpi.
-    source.srcset = s7Url(base, crop.name, crop.width * 2);
+    source.srcset = cropUrl(base, crop.name, crop.width * 2);
     if (crop.minViewport > 0) source.media = `(min-width: ${crop.minViewport}px)`;
     picture.append(source);
   });
 
   const img = document.createElement('img');
   // Default/fallback: the smallest crop.
-  img.src = s7Url(base, 'Small', 800);
+  img.src = cropUrl(base, 'Small', 800);
   img.alt = altOverride || originalImg?.getAttribute('alt') || '';
   img.loading = originalImg?.getAttribute('loading') || 'lazy';
   picture.append(img);
@@ -42,9 +57,9 @@ function buildSmartCropPicture(originalImg, base, altOverride) {
 }
 
 function applySmartCrops(imageCol) {
-  // Scene7 assets are authored as a link (EDS rehosts <img> srcs, stripping the
-  // Scene7 URL, but leaves link hrefs untouched).
-  const link = [...imageCol.querySelectorAll('a')].find((a) => isScene7Url(a.href));
+  // Smart-crop assets are authored as a link (EDS rehosts <img> srcs, stripping
+  // the external URL, but leaves link hrefs untouched).
+  const link = [...imageCol.querySelectorAll('a')].find((a) => isSmartCropUrl(a.href));
   if (link) {
     const href = link.getAttribute('href');
     // Use the link's text as alt only when the author gave it a real label
@@ -56,11 +71,11 @@ function applySmartCrops(imageCol) {
     return;
   }
 
-  // Fallback: a direct Scene7 <img> src (e.g. local preview that doesn't rehost).
+  // Fallback: a direct smart-crop <img> src (e.g. local preview that doesn't rehost).
   const img = imageCol.querySelector('img');
   if (!img) return;
   const src = img.getAttribute('src') || '';
-  if (!isScene7Url(src)) return;
+  if (!isSmartCropUrl(src)) return;
   const oldPicture = img.closest('picture') || img;
   const newPicture = buildSmartCropPicture(img, src);
   oldPicture.replaceWith(newPicture);
