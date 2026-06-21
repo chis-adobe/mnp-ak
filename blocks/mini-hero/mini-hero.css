@@ -1,5 +1,5 @@
 .mini-hero {
-  background: red;
+  background: var(--color-mnp-dark-teal);
   padding: var(--spacing-xxl) var(--spacing-l);
 }
 
