@@ -218,12 +218,12 @@
           }
         },
         {
-          "title": "Contact Form",
-          "id": "contact-form",
-          "model": "contact-form",
+          "title": "Form",
+          "id": "form",
+          "model": "form",
           "plugins": {
             "da": {
-              "name": "contact-form",
+              "name": "form",
               "rows": 1,
               "columns": 2,
               "fields": [

@@ -443,17 +443,17 @@
           }
         },
         {
-          "title": "Contact Form",
-          "id": "contact-form",
-          "description": "Contact form. Author one row per field: label in column 1, field type in column 2 (heading, text, email, tel, select, textarea). For 'select', add a third column with comma-separated options.",
-          "model": "contact-form",
+          "title": "Form",
+          "id": "form",
+          "description": "Generic form. Author one row per field: label in column 1, field type in column 2 (text, email, tel, select, textarea, checkbox, office-header). For 'select', add a third column with comma-separated options. The 'office-header' type renders a dynamic 'Contact our <city> team today' heading from the office context. Alternatively, reference a single /forms/* fragment to reuse a shared form.",
+          "model": "form",
           "fields": [
             { "component": "text", "valueType": "string", "name": "label", "label": "Label" },
             { "component": "text", "valueType": "string", "name": "type", "label": "Field Type" }
           ],
           "plugins": {
             "da": {
-              "name": "contact-form",
+              "name": "form",
               "rows": 1,
               "columns": 2,
               "fields": [

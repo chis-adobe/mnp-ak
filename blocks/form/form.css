@@ -1,62 +1,68 @@
-.contact-form {
+.form {
   max-width: var(--grid-container-width);
   margin: var(--spacing-xxl) auto;
   padding: var(--spacing-xl);
   background: var(--color-mnp-light-gray);
 }
 
-.contact-form .contact-form-fields {
+.form .form-office-header {
+  font-size: var(--heading-font-size-l);
+  color: var(--color-mnp-heading-teal);
+  margin: 0 0 var(--spacing-l);
+}
+
+.form .form-fields {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--spacing-m);
 }
 
-.contact-form .contact-form-field {
+.form .form-field {
   display: flex;
   flex-direction: column;
 }
 
-.contact-form .contact-form-field label {
+.form .form-field label {
   font-size: var(--body-font-size-s);
   font-weight: 600;
   margin-bottom: var(--spacing-xs);
   color: var(--color-mnp-heading-teal);
 }
 
-.contact-form .contact-form-field input,
-.contact-form .contact-form-field textarea,
-.contact-form .contact-form-field select {
+.form .form-field input,
+.form .form-field textarea,
+.form .form-field select {
   padding: 10px 12px;
   border: 1px solid var(--color-mnp-border);
   font-size: var(--body-font-size-m);
   font-family: var(--font-family);
 }
 
-.contact-form .contact-form-field input:focus,
-.contact-form .contact-form-field textarea:focus,
-.contact-form .contact-form-field select:focus {
+.form .form-field input:focus,
+.form .form-field textarea:focus,
+.form .form-field select:focus {
   outline: 2px solid var(--color-mnp-accent);
   border-color: var(--color-mnp-accent);
 }
 
-.contact-form .contact-form-field-checkbox {
+.form .form-field-checkbox {
   flex-direction: row;
   align-items: flex-start;
   gap: var(--spacing-s);
 }
 
-.contact-form .contact-form-field-checkbox label {
+.form .form-field-checkbox label {
   font-weight: 400;
   font-size: var(--body-font-size-s);
   color: var(--color-mnp-body-text);
 }
 
-.contact-form .contact-form-field-checkbox input {
+.form .form-field-checkbox input {
   width: auto;
   margin-top: 3px;
 }
 
-.contact-form .contact-form-submit {
+.form .form-submit {
   background: var(--color-mnp-heading-teal);
   color: var(--color-mnp-white);
   border: none;
@@ -68,40 +74,40 @@
   justify-self: start;
 }
 
-.contact-form .contact-form-submit:hover {
+.form .form-submit:hover {
   background: var(--color-mnp-dark-teal);
 }
 
-.contact-form .contact-form-submit:disabled {
+.form .form-submit:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-.contact-form .contact-form-status {
+.form .form-status {
   margin-top: var(--spacing-m);
   font-size: var(--body-font-size-m);
   padding: var(--spacing-s) var(--spacing-m);
 }
 
-.contact-form .contact-form-status-success {
+.form .form-status-success {
   background: #e6f4ea;
   color: #1e6b3e;
   border-left: 3px solid #1e6b3e;
 }
 
-.contact-form .contact-form-status-error {
+.form .form-status-error {
   background: #fdecea;
   color: #b71c1c;
   border-left: 3px solid #b71c1c;
 }
 
 @media (width >= 900px) {
-  .contact-form .contact-form-fields {
+  .form .form-fields {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .contact-form .contact-form-field-checkbox,
-  .contact-form .contact-form-submit {
+  .form .form-field-checkbox,
+  .form .form-submit {
     grid-column: span 2;
   }
 }

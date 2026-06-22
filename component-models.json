@@ -85,7 +85,7 @@
     ]
   },
   {
-    "id": "contact-form",
+    "id": "form",
     "fields": [
       { "component": "richtext", "valueType": "string", "name": "label", "label": "Field Label" },
       { "component": "text", "valueType": "string", "name": "type", "label": "Field Type" }

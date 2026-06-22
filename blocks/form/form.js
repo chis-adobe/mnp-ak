@@ -1,8 +1,11 @@
+import { getMetadata } from '../../scripts/ak.js';
+import { getPlaceholder } from '../../scripts/utils/placeholders.js';
+
 function toColumnName(label) {
   return label.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
 }
 
-// Parse contact-form field rows (label | type | options) from a set of row elements.
+// Parse form field rows (label | type | options) from a set of row elements.
 function parseFieldRows(rows) {
   const fields = [];
   let supabaseUrl = 'https://wdgjvnbgtulfuevdtvjk.supabase.co';
@@ -10,11 +13,11 @@ function parseFieldRows(rows) {
 
   rows.forEach((row) => {
     const cols = [...row.querySelectorAll(':scope > div')];
-    if (cols.length < 2) return;
+    if (cols.length < 1) return;
     const label = cols[0]?.textContent?.trim();
     const type = cols[1]?.textContent?.trim()?.toLowerCase() || 'text';
 
-    // Legacy: a heading row is ignored here (headings now live on the page).
+    // Legacy: a heading row is ignored here (plain headings live on the page).
     if (type === 'heading') return;
 
     if (type === 'config') {
@@ -41,7 +44,7 @@ async function resolveFormFragment(el) {
     if (!resp.ok) return null;
     const html = await resp.text();
     const doc = new DOMParser().parseFromString(html, 'text/html');
-    const block = doc.querySelector('.contact-form');
+    const block = doc.querySelector('.form, .contact-form');
     if (!block) return null;
     return [...block.querySelectorAll(':scope > div')];
   } catch {
@@ -49,9 +52,55 @@ async function resolveFormFragment(el) {
   }
 }
 
+// Read the city from an address fragment (same shape office-info/mini-hero use).
+async function getCityFromFragment(fragmentPath) {
+  try {
+    const resp = await fetch(`${fragmentPath}.plain.html`);
+    if (!resp.ok) return null;
+    const html = await resp.text();
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const cityRow = [...doc.querySelectorAll('div > div')].find((row) => {
+      const firstCell = row.querySelector(':scope > div:first-child');
+      return firstCell && firstCell.textContent.trim().toLowerCase() === 'city';
+    });
+    const valueCell = cityRow?.querySelector(':scope > div:nth-child(2)');
+    return valueCell ? valueCell.textContent.trim() : null;
+  } catch {
+    return null;
+  }
+}
+
+// Resolve the office city across all runmodes:
+//   1. page `city` metadata (standalone EDS office page)
+//   2. `address-fragment` metadata (office page that defers its address)
+//   3. bridge tool-result (llm-app embed — first office in structuredContent)
+async function resolveCity(bridge) {
+  let city = getMetadata('city');
+  if (city) return city;
+
+  const addressFragment = getMetadata('address-fragment');
+  if (addressFragment) {
+    city = await getCityFromFragment(addressFragment);
+    if (city) return city;
+  }
+
+  if (bridge && !bridge.hostContext?.preview) {
+    try {
+      const result = await bridge.toolResult;
+      const structuredContent = result?.structuredContent || result;
+      const office = structuredContent?.offices?.[0] || structuredContent?.office;
+      if (office?.city) return office.city;
+    } catch {
+      /* no tool result available */
+    }
+  }
+
+  return '';
+}
+
 function buildField({ label, type, options }) {
   const fieldWrapper = document.createElement('div');
-  fieldWrapper.className = 'contact-form-field';
+  fieldWrapper.className = 'form-field';
 
   const labelEl = document.createElement('label');
   labelEl.textContent = label;
@@ -71,7 +120,7 @@ function buildField({ label, type, options }) {
   } else if (type === 'checkbox') {
     input = document.createElement('input');
     input.type = 'checkbox';
-    fieldWrapper.classList.add('contact-form-field-checkbox');
+    fieldWrapper.classList.add('form-field-checkbox');
   } else {
     input = document.createElement('input');
     input.type = type;
@@ -97,18 +146,34 @@ export default async function init(el, bridge) {
 
   const { fields, supabaseUrl, supabaseKey } = parseFieldRows(rows);
 
+  // The office-header field is a dynamic heading, not an input — pull it out
+  // and compose its text from the resolved office city.
+  const headerField = fields.find((f) => f.type === 'office-header');
+  const inputFields = fields.filter((f) => f.type !== 'office-header');
+
+  if (headerField) {
+    const city = await resolveCity(bridge);
+    if (city) {
+      const heading = document.createElement('h3');
+      heading.className = 'form-office-header';
+      const template = await getPlaceholder('contact-team', 'Contact our {city} team today');
+      heading.textContent = template.replace('{city}', city);
+      el.append(heading);
+    }
+  }
+
   const form = document.createElement('form');
-  form.className = 'contact-form-fields';
-  fields.forEach((field) => form.append(buildField(field)));
+  form.className = 'form-fields';
+  inputFields.forEach((field) => form.append(buildField(field)));
 
   const submitBtn = document.createElement('button');
   submitBtn.type = 'submit';
   submitBtn.textContent = 'Submit';
-  submitBtn.className = 'contact-form-submit';
+  submitBtn.className = 'form-submit';
   form.append(submitBtn);
 
   const status = document.createElement('p');
-  status.className = 'contact-form-status';
+  status.className = 'form-status';
   status.hidden = true;
 
   form.addEventListener('submit', async (e) => {
@@ -116,7 +181,7 @@ export default async function init(el, bridge) {
 
     if (!supabaseUrl || !supabaseKey) {
       // eslint-disable-next-line no-console
-      console.warn('[contact-form] Supabase config missing');
+      console.warn('[form] Supabase config missing');
       return;
     }
 
@@ -145,10 +210,10 @@ export default async function init(el, bridge) {
 
       form.reset();
       status.textContent = 'Thank you, your message has been sent.';
-      status.className = 'contact-form-status contact-form-status-success';
+      status.className = 'form-status form-status-success';
     } catch {
       status.textContent = 'Something went wrong. Please try again.';
-      status.className = 'contact-form-status contact-form-status-error';
+      status.className = 'form-status form-status-error';
     } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = 'Submit';
