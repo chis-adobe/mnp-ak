@@ -30,10 +30,12 @@
 }
 
 .contact-card .contact-card-photo img {
-  width: 150px;
-  height: 150px;
+  width: 100%;
+  max-width: 175px;
+  aspect-ratio: 3 / 4;
+  height: auto;
   object-fit: cover;
-  border-radius: 50%;
+  border-radius: 0;
 }
 
 /* Person name + certifications heading: soleil 20px/600 teal */
@@ -46,8 +48,9 @@
   margin: 0 0 var(--spacing-s);
 }
 
-/* Role / title line: Open Sans 16px/400, heading teal */
+/* Role / title line: Open Sans 16px/400, heading teal — lighter than the name */
 .contact-card .contact-card-title {
+  font-family: var(--font-family);
   font-size: var(--body-font-size-m);
   font-weight: 400;
   line-height: 1.375;
@@ -58,6 +61,13 @@
 /* Contact links (phone / toll-free / email): Open Sans 16px body grey */
 .contact-card .contact-card-info p {
   margin: 0 0 var(--spacing-s);
+}
+
+/* Grey divider above the contact details (first line after the role) */
+.contact-card .contact-card-info .contact-card-title + p {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #c9c9c9;
 }
 
 /* Grey divider below the email (end of the contact details) */
