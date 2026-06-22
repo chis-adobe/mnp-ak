@@ -185,9 +185,11 @@ export default async function init(el, bridge) {
       return;
     }
 
+    const COLUMN_ALIASES = { e_mail: 'email', e_mail_address: 'email', email_address: 'email' };
     const data = {};
     new FormData(form).forEach((value, key) => {
-      data[toColumnName(key)] = value;
+      const col = toColumnName(key);
+      data[COLUMN_ALIASES[col] || col] = value;
     });
     if (city) data.office_name = city;
 
