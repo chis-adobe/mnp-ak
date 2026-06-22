@@ -9,16 +9,42 @@
   margin: 0 0 var(--spacing-m);
 }
 
+/* Orange accent underline beneath the "Office Information" heading */
+.office-info .office-info-header h2::after {
+  content: '';
+  display: block;
+  width: 125px;
+  border-bottom: 2px solid #f15a22;
+  margin-top: var(--spacing-s);
+}
+
 .office-info p {
   color: var(--color-mnp-body-text);
   line-height: 1.375;
   margin: 0 0 16px;
 }
 
-/* Address line: heading-teal, slightly bolder, sits above the contact list */
-.office-info .office-info-header p {
+/* Address line: heading-teal, slightly bolder, grey divider below it */
+.office-info .office-info-header .office-info-address {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-s);
   color: var(--color-mnp-heading-teal);
   font-weight: 600;
+  margin: 0 0 16px;
+  padding: 0 0 16px;
+  border-bottom: 1px solid #c9c9c9;
+}
+
+/* Icons next to address / phone / fax */
+.office-info .office-info-icon {
+  flex-shrink: 0;
+  color: var(--color-mnp-body-text);
+}
+
+/* Address pin aligns to the first line of a multi-line address */
+.office-info .office-info-address .office-info-icon {
+  margin-top: 2px;
 }
 
 .office-info a {
@@ -33,16 +59,25 @@
 .office-info .office-info-contact ul,
 .office-info ul {
   list-style: none;
-  padding: 0;
+  padding: 0 0 var(--spacing-xl);
   margin: 0 0 var(--spacing-xl);
+  border-bottom: 1px solid #c9c9c9;
 }
 
 .office-info .office-info-contact li,
 .office-info ul li {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-s);
   margin: 0 0 var(--spacing-s);
   font-size: var(--body-font-size-m);
   line-height: 1.375;
   color: var(--color-mnp-body-text);
+}
+
+.office-info .office-info-contact li:last-child,
+.office-info ul li:last-child {
+  margin-bottom: 0;
 }
 
 /* Two-column layout: content left, map right */
