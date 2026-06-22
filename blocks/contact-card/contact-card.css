@@ -1,11 +1,9 @@
 .contact-card {
   max-width: var(--grid-container-width);
   margin: var(--spacing-xxl) auto;
-  padding: var(--spacing-xl);
-  background: var(--color-mnp-light-gray);
 }
 
-.contact-card > div {
+.contact-card .contact-card-inner {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--spacing-xl);
@@ -22,35 +20,54 @@
   border-radius: 50%;
 }
 
+/* Person name + certifications heading: soleil 20px/600 teal */
 .contact-card .contact-card-name {
-  font-size: var(--heading-font-size-l);
-  margin: 0 0 var(--spacing-xs);
+  font-family: var(--font-family-heading);
+  font-size: var(--heading-font-size-m);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--color-mnp-heading-teal);
+  margin: 0 0 var(--spacing-s);
 }
 
+/* Role / title line: Open Sans 16px/400, heading teal */
 .contact-card .contact-card-title {
-  color: var(--color-mnp-body-text);
-  font-size: var(--body-font-size-s);
-  margin: 0 0 var(--spacing-m);
+  font-size: var(--body-font-size-m);
+  font-weight: 400;
+  line-height: 1.375;
+  color: var(--color-mnp-heading-teal);
+  margin: 0 0 16px;
+  padding: 0 0 16px;
+  border-bottom: 1px solid #c9c9c9;
+}
+
+/* Contact links (phone / toll-free / email): Open Sans 16px body grey */
+.contact-card .contact-card-info p {
+  margin: 0 0 var(--spacing-s);
 }
 
 .contact-card .contact-card-info a {
-  display: block;
-  color: var(--color-mnp-heading-teal);
+  display: inline-block;
+  color: var(--color-mnp-body-text);
   text-decoration: none;
-  margin-bottom: var(--spacing-xs);
-  font-size: var(--body-font-size-s);
+  font-size: var(--body-font-size-m);
+  font-weight: 400;
+  line-height: 1.375;
 }
 
 .contact-card .contact-card-info a:hover {
   text-decoration: underline;
 }
 
+/* Read More link: 14px/600 body grey */
+.contact-card .contact-card-info a.contact-card-more,
 .contact-card .contact-card-more {
   display: inline-block;
   margin-top: var(--spacing-m);
   color: var(--color-mnp-body-text);
   font-size: var(--body-font-size-s);
   font-weight: 600;
+  line-height: 1.25;
   text-decoration: none;
 }
 
@@ -59,13 +76,19 @@
   text-decoration: underline;
 }
 
+/* Bio paragraphs: Open Sans 16px/400 body grey */
 .contact-card .contact-card-bio {
   color: var(--color-mnp-body-text);
-  line-height: 1.6;
 }
 
 .contact-card .contact-card-bio p {
-  margin: 0 0 var(--spacing-m);
+  font-size: var(--body-font-size-m);
+  line-height: 1.375;
+  margin: 0 0 16px;
+}
+
+.contact-card .contact-card-bio p:last-child {
+  margin-bottom: 0;
 }
 
 /* Secondary contacts grid */
@@ -75,7 +98,7 @@
   gap: var(--spacing-l);
   margin-top: var(--spacing-xl);
   padding-top: var(--spacing-xl);
-  border-top: 1px solid var(--color-mnp-border);
+  border-top: 1px solid #c9c9c9;
 }
 
 .contact-card .contact-card-secondary {
@@ -99,18 +122,20 @@
 }
 
 .contact-card .contact-card-secondary-info strong {
-  font-size: var(--body-font-size-m);
+  font-family: var(--font-family-heading);
+  font-size: var(--body-font-size-l);
+  font-weight: 600;
   color: var(--color-mnp-heading-teal);
 }
 
 .contact-card .contact-card-secondary-info span {
   font-size: var(--body-font-size-s);
-  color: var(--color-mnp-body-text);
+  color: var(--color-mnp-heading-teal);
 }
 
 .contact-card .contact-card-secondary-info a {
   font-size: var(--body-font-size-s);
-  color: var(--color-mnp-heading-teal);
+  color: var(--color-mnp-body-text);
   text-decoration: none;
 }
 
@@ -119,8 +144,8 @@
 }
 
 @media (width >= 900px) {
-  .contact-card > div {
-    grid-template-columns: 150px 1fr 2fr;
+  .contact-card .contact-card-inner {
+    grid-template-columns: 150px 1.2fr 2fr;
     align-items: start;
   }
 
