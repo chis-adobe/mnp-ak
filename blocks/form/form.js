@@ -90,6 +90,7 @@ async function resolveCity(bridge) {
       const structuredContent = result?.structuredContent || result;
       const office = structuredContent?.offices?.[0] || structuredContent?.office;
       if (office?.city) return office.city;
+      if (structuredContent?.office_name) return structuredContent.office_name;
     } catch {
       /* no tool result available */
     }
@@ -151,15 +152,14 @@ export default async function init(el, bridge) {
   const headerField = fields.find((f) => f.type === 'office-header');
   const inputFields = fields.filter((f) => f.type !== 'office-header');
 
-  if (headerField) {
-    const city = await resolveCity(bridge);
-    if (city) {
-      const heading = document.createElement('h3');
-      heading.className = 'form-office-header';
-      const template = await getPlaceholder('contact-team', 'Contact our {city} team today');
-      heading.textContent = template.replace('{city}', city);
-      el.append(heading);
-    }
+  const city = await resolveCity(bridge);
+
+  if (headerField && city) {
+    const heading = document.createElement('h3');
+    heading.className = 'form-office-header';
+    const template = await getPlaceholder('contact-team', 'Contact our {city} team today');
+    heading.textContent = template.replace('{city}', city);
+    el.append(heading);
   }
 
   const form = document.createElement('form');
@@ -189,6 +189,7 @@ export default async function init(el, bridge) {
     new FormData(form).forEach((value, key) => {
       data[toColumnName(key)] = value;
     });
+    if (city) data.office_name = city;
 
     submitBtn.disabled = true;
     submitBtn.textContent = 'Submitting...';
