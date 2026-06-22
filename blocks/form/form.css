@@ -45,6 +45,22 @@
   border-color: var(--color-mnp-accent);
 }
 
+.form .form-field-invalid input,
+.form .form-field-invalid textarea {
+  border-color: #b71c1c;
+}
+
+.form .form-field-invalid input:focus,
+.form .form-field-invalid textarea:focus {
+  outline-color: #b71c1c;
+}
+
+.form .form-field-error {
+  margin-top: var(--spacing-xs);
+  font-size: var(--body-font-size-s);
+  color: #b71c1c;
+}
+
 .form .form-field-checkbox {
   flex-direction: row;
   align-items: flex-start;

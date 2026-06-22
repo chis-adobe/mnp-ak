@@ -99,6 +99,19 @@ async function resolveCity(bridge) {
   return '';
 }
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Reduce a phone string to its 10 NANP digits (dropping an optional country "1").
+function phoneDigits(value) {
+  return (value || '').replace(/\D/g, '').replace(/^1(?=\d{10}$)/, '');
+}
+
+function formatPhone(value) {
+  const d = phoneDigits(value);
+  if (d.length !== 10) return value;
+  return `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`;
+}
+
 function buildField({ label, type, options }) {
   const fieldWrapper = document.createElement('div');
   fieldWrapper.className = 'form-field';
@@ -132,8 +145,66 @@ function buildField({ label, type, options }) {
   labelEl.setAttribute('for', input.name);
   input.id = input.name;
 
-  fieldWrapper.append(labelEl, input);
-  return fieldWrapper;
+  const errorEl = document.createElement('span');
+  errorEl.className = 'form-field-error';
+  errorEl.hidden = true;
+  errorEl.id = `${input.name}-error`;
+
+  const clearError = () => {
+    errorEl.hidden = true;
+    errorEl.textContent = '';
+    fieldWrapper.classList.remove('form-field-invalid');
+    input.removeAttribute('aria-invalid');
+    input.removeAttribute('aria-describedby');
+  };
+
+  const showError = (message) => {
+    errorEl.textContent = message;
+    errorEl.hidden = false;
+    fieldWrapper.classList.add('form-field-invalid');
+    input.setAttribute('aria-invalid', 'true');
+    input.setAttribute('aria-describedby', errorEl.id);
+  };
+
+  // validate(): returns true when the field is acceptable. Empty optional fields
+  // pass; format checks only apply once the user has entered something.
+  let validate = () => true;
+
+  if (type === 'email') {
+    validate = () => {
+      const value = input.value.trim();
+      if (!value || EMAIL_RE.test(value)) {
+        clearError();
+        return true;
+      }
+      showError('Please enter a valid email address.');
+      return false;
+    };
+    input.addEventListener('blur', validate);
+    input.addEventListener('input', clearError);
+  } else if (type === 'tel') {
+    input.inputMode = 'tel';
+    input.autocomplete = 'tel';
+    validate = () => {
+      const value = input.value.trim();
+      if (!value) {
+        clearError();
+        return true;
+      }
+      if (phoneDigits(value).length === 10) {
+        input.value = formatPhone(value);
+        clearError();
+        return true;
+      }
+      showError('Please enter a 10-digit phone number.');
+      return false;
+    };
+    input.addEventListener('blur', validate);
+    input.addEventListener('input', clearError);
+  }
+
+  fieldWrapper.append(labelEl, input, errorEl);
+  return { fieldWrapper, input, validate };
 }
 
 export default async function init(el, bridge) {
@@ -164,7 +235,12 @@ export default async function init(el, bridge) {
 
   const form = document.createElement('form');
   form.className = 'form-fields';
-  inputFields.forEach((field) => form.append(buildField(field)));
+  const validators = [];
+  inputFields.forEach((field) => {
+    const { fieldWrapper, validate } = buildField(field);
+    validators.push(validate);
+    form.append(fieldWrapper);
+  });
 
   const submitBtn = document.createElement('button');
   submitBtn.type = 'submit';
@@ -178,6 +254,13 @@ export default async function init(el, bridge) {
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    // Run all field validators; focus the first invalid field and abort on failure.
+    const results = validators.map((v) => v());
+    if (results.includes(false)) {
+      form.querySelector('.form-field-invalid input')?.focus();
+      return;
+    }
 
     if (!supabaseUrl || !supabaseKey) {
       // eslint-disable-next-line no-console
