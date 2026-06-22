@@ -1,6 +1,7 @@
 {
   "data": [
     { "Key": "office-heading", "Value": "Office Information:" },
+    { "Key": "contact-office-member", "Value": "Contact an office member" },
     { "Key": "office-hero-title", "Value": "Professional Accounting Firm in {city}" },
     { "Key": "register-now", "Value": "Register now" },
     { "Key": "presenters", "Value": "Presenters" },

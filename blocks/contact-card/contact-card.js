@@ -1,3 +1,7 @@
+import { getPlaceholder } from '../../scripts/utils/placeholders.js';
+
+const CHEVRON = '<svg class="contact-card-chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>';
+
 async function loadPersonnel(path) {
   try {
     const resp = await fetch(`${path}.plain.html`);
@@ -98,7 +102,7 @@ function renderCard(person, path) {
     const more = document.createElement('a');
     more.href = path;
     more.className = 'contact-card-more';
-    more.textContent = 'Read More';
+    more.innerHTML = `<span>Read More</span>${CHEVRON}`;
     info.append(more);
   }
 
@@ -162,7 +166,7 @@ function renderSecondaryCard(person, path) {
     const more = document.createElement('a');
     more.href = path;
     more.className = 'contact-card-more';
-    more.textContent = 'Read More';
+    more.innerHTML = `<span>Read More</span>${CHEVRON}`;
     info.append(more);
   }
 
@@ -185,6 +189,12 @@ export default async function init(el) {
 
   if (paths.length > 0) {
     el.innerHTML = '';
+
+    // Section heading (e.g. "Contact an office member")
+    const heading = document.createElement('h2');
+    heading.className = 'contact-card-section-title';
+    heading.textContent = await getPlaceholder('contact-office-member', 'Contact an office member');
+    el.append(heading);
 
     // First path = primary contact
     const primary = await loadPersonnel(paths[0]);

@@ -3,6 +3,22 @@
   margin: var(--spacing-xxl) auto;
 }
 
+/* Section heading with orange accent underline */
+.contact-card .contact-card-section-title {
+  font-size: var(--heading-font-size-xl);
+  line-height: 1.385;
+  color: var(--color-mnp-heading-teal);
+  margin: 0 0 var(--spacing-l);
+}
+
+.contact-card .contact-card-section-title::after {
+  content: '';
+  display: block;
+  width: 125px;
+  border-bottom: 2px solid #f15a22;
+  margin-top: var(--spacing-s);
+}
+
 .contact-card .contact-card-inner {
   display: grid;
   grid-template-columns: 1fr;
@@ -37,13 +53,18 @@
   line-height: 1.375;
   color: var(--color-mnp-heading-teal);
   margin: 0 0 16px;
-  padding: 0 0 16px;
-  border-bottom: 1px solid #c9c9c9;
 }
 
 /* Contact links (phone / toll-free / email): Open Sans 16px body grey */
 .contact-card .contact-card-info p {
   margin: 0 0 var(--spacing-s);
+}
+
+/* Grey divider below the email (end of the contact details) */
+.contact-card .contact-card-info p:has(.contact-card-email) {
+  margin: 0 0 16px;
+  padding: 0 0 16px;
+  border-bottom: 1px solid #c9c9c9;
 }
 
 .contact-card .contact-card-info a {
@@ -59,16 +80,23 @@
   text-decoration: underline;
 }
 
-/* Read More link: 14px/600 body grey */
+/* Read More link: 14px/600 body grey, with chevron to the right */
 .contact-card .contact-card-info a.contact-card-more,
 .contact-card .contact-card-more {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
   margin-top: var(--spacing-m);
   color: var(--color-mnp-body-text);
   font-size: var(--body-font-size-s);
   font-weight: 600;
   line-height: 1.25;
   text-decoration: none;
+}
+
+.contact-card .contact-card-chevron {
+  flex-shrink: 0;
+  color: var(--color-mnp-accent);
 }
 
 .contact-card .contact-card-more:hover {
