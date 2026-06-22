@@ -116,6 +116,10 @@
   },
   {
     "id": "feature-banner",
+    "fields": []
+  },
+  {
+    "id": "feature-banner-row",
     "fields": [
       { "component": "reference", "valueType": "string", "name": "image", "label": "Image", "multi": false },
       { "component": "richtext", "valueType": "string", "name": "text", "label": "Banner Content" },

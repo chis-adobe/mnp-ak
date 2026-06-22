@@ -640,8 +640,24 @@
         {
           "title": "Feature Banner",
           "id": "feature-banner",
-          "description": "Stacked image-and-text rows with no spacing between them. Author one or more rows, each a cell-trio: image, text (heading + paragraphs + optional link), and a colour name (grey, white, teal-light, teal, dark-teal) that sets the row background. Text sits left, image right, side by side on desktop and stacked on mobile.",
+          "description": "Stacked image-and-text rows with no spacing between them. Container for one or more Feature Banner Rows. Text sits left, image right, side by side on desktop and stacked on mobile.",
           "model": "feature-banner",
+          "fields": [],
+          "container": ["feature-banner-row"],
+          "filter": "feature-banner",
+          "plugins": {
+            "da": {
+              "name": "feature-banner",
+              "rows": 1,
+              "columns": 3
+            }
+          }
+        },
+        {
+          "title": "Feature Banner Row",
+          "id": "feature-banner-row",
+          "description": "A single feature-banner row: an image, text (heading + paragraphs + optional link), and a colour name (grey, white, teal-light, teal, dark-teal) that sets the row background.",
+          "model": "feature-banner-row",
           "fields": [
             { "component": "reference", "valueType": "string", "name": "image", "label": "Image", "multi": false },
             { "component": "richtext", "valueType": "string", "name": "text", "label": "Text" },
@@ -649,7 +665,7 @@
           ],
           "plugins": {
             "da": {
-              "name": "feature-banner",
+              "name": "feature-banner-row",
               "rows": 1,
               "columns": 3,
               "fields": [

@@ -35,5 +35,9 @@
   {
     "id": "insights-cards",
     "components": ["insights-cards-item"]
+  },
+  {
+    "id": "feature-banner",
+    "components": ["feature-banner-row"]
   }
 ]

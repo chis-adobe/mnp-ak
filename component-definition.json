@@ -299,11 +299,24 @@
         {
           "title": "Feature Banner",
           "id": "feature-banner",
-          "description": "Stacked image-and-text rows with no spacing. Each row: image, text, and a colour name (grey, white, teal-light, teal, dark-teal) that sets the row background.",
+          "description": "Stacked image-and-text rows with no spacing. Add one or more rows; each row has an image, text, and a colour name (grey, white, teal-light, teal, dark-teal) that sets the row background.",
           "model": "feature-banner",
+          "filter": "feature-banner",
           "plugins": {
             "da": {
               "name": "feature-banner",
+              "rows": 1,
+              "columns": 3
+            }
+          }
+        },
+        {
+          "title": "Feature Banner Row",
+          "id": "feature-banner-row",
+          "model": "feature-banner-row",
+          "plugins": {
+            "da": {
+              "name": "feature-banner-row",
               "rows": 1,
               "columns": 3,
               "fields": [
