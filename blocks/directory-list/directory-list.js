@@ -137,19 +137,24 @@ function saveGeocodeCache(cache) {
   } catch { /* ignore quota errors */ }
 }
 
-async function nominatimLookup(query) {
+// Forward-geocode via Photon (Komoot) — keyless and CORS-enabled, unlike
+// Nominatim, whose policy blocks browser use and returns CORS-less 403s.
+async function photonLookup(query) {
   try {
-    const resp = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=ca&q=${encodeURIComponent(query)}`);
+    const resp = await fetch(`https://photon.komoot.io/api/?limit=1&q=${encodeURIComponent(query)}`);
     if (!resp.ok) return null;
-    const results = await resp.json();
-    if (!results.length) return null;
-    return { lat: parseFloat(results[0].lat), lng: parseFloat(results[0].lon) };
+    const data = await resp.json();
+    const feature = data.features?.[0];
+    const coords = feature?.geometry?.coordinates;
+    if (!coords || feature.properties?.countrycode !== 'CA') return null;
+    const [lng, lat] = coords;
+    return { lat, lng };
   } catch {
     return null;
   }
 }
 
-// Forward-geocode an office to coordinates (OpenStreetMap Nominatim, no key).
+// Forward-geocode an office to coordinates (Photon, no key).
 // Falls back to a city-level lookup when the full street address can't be resolved.
 async function geocodeOffice(office, cache) {
   const key = office.path;
@@ -159,9 +164,9 @@ async function geocodeOffice(office, cache) {
   const cityQuery = [office.city, office.province, 'Canada'].filter(Boolean).join(', ');
   if (!fullQuery) return null;
 
-  let coords = await nominatimLookup(fullQuery);
+  let coords = await photonLookup(fullQuery);
   if (!coords && cityQuery && cityQuery !== fullQuery) {
-    coords = await nominatimLookup(cityQuery);
+    coords = await photonLookup(cityQuery);
   }
   if (!coords) return null;
 
@@ -193,7 +198,7 @@ async function findNearbyOffices(offices, userPos) {
 
   const cache = loadGeocodeCache();
   const located = [];
-  // Sequential to respect Nominatim's rate limit; cache keeps repeat visits fast.
+  // Sequential to respect the geocoder's rate limit; cache keeps repeat visits fast.
   for (const office of candidates) {
     // eslint-disable-next-line no-await-in-loop
     const coords = await geocodeOffice(office, cache);
