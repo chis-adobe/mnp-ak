@@ -669,9 +669,9 @@
               "rows": 1,
               "columns": 3,
               "fields": [
-                { "name": "image", "selector": "div:nth-child(1) img[src]" },
+                { "name": "image", "selector": "div:nth-child(1)>picture>img[src]" },
                 { "name": "text", "selector": "div:nth-child(2)" },
-                { "name": "color", "selector": "div:nth-child(3)" }
+                { "name": "color", "selector": "div:nth-child(3)>p" }
               ]
             }
           }
