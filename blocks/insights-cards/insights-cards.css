@@ -4,6 +4,23 @@
   padding: var(--spacing-xxl) 0;
 }
 
+/* Orange accent underline beneath the section's "Insights" heading */
+.section:has(.insights-cards) .default-content-wrapper h2,
+.section:has(.insights-cards) .default-content h2 {
+  position: relative;
+  padding-bottom: var(--spacing-s);
+}
+
+.section:has(.insights-cards) .default-content-wrapper h2::after,
+.section:has(.insights-cards) .default-content h2::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 125px;
+  border-bottom: 2px solid #f15a22;
+}
+
 .insights-cards-wrapper .insights-card {
   position: relative;
   display: grid;
