@@ -5,11 +5,6 @@
   background: var(--color-mnp-light-gray);
 }
 
-.contact-form .contact-form-heading {
-  font-size: var(--heading-font-size-l);
-  margin: 0 0 var(--spacing-xl);
-}
-
 .contact-form .contact-form-fields {
   display: grid;
   grid-template-columns: 1fr;
