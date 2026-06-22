@@ -207,13 +207,60 @@ async function buildRelatedContent() {
   return section;
 }
 
-function buildInsights() {
+async function buildInsights() {
   const section = document.createElement('div');
   section.className = 'article-insights';
-  section.innerHTML = `
-    <h2>Insights</h2>
-    <p class="article-placeholder">Latest insights will be displayed here.</p>
-  `;
+
+  const heading = document.createElement('h2');
+  heading.textContent = 'Insights';
+  section.append(heading);
+
+  const cards = document.createElement('div');
+  cards.className = 'insights-cards';
+  section.append(cards);
+
+  const myTags = (getMetadata('insights') || '')
+    .split(',').map((t) => t.trim().toLowerCase()).filter(Boolean);
+  const currentPath = window.location.pathname;
+
+  try {
+    const resp = await fetch('/articles/query-index.json?limit=500');
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const json = await resp.json();
+    const scored = (json.data || [])
+      .filter((a) => a.path !== currentPath)
+      .map((a) => {
+        const tags = (a.insights || '').split(',').map((t) => t.trim().toLowerCase());
+        const score = myTags.filter((t) => tags.includes(t)).length;
+        return { ...a, score };
+      })
+      .filter((a) => a.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3);
+
+    scored.forEach((a) => {
+      const category = (a.insights || '').split(',')[0].trim();
+      const excerpt = a.synopsis || a.description || '';
+      const image = (a.image || '').replace('author-p', 'publish-p');
+      const card = document.createElement('div');
+      card.className = 'insights-card';
+      card.innerHTML = `
+        ${image ? `<div class="insights-card-image"><a href="${a.path}"><img src="${image}" alt="${a.title || ''}" loading="lazy"></a></div>` : ''}
+        <div class="insights-card-content">
+          ${category ? `<p class="insights-card-category">${category}</p>` : ''}
+          ${a.date ? `<p class="insights-card-date">${a.date}</p>` : ''}
+          <h3 class="insights-card-title"><a href="${a.path}">${a.title || ''}</a></h3>
+          ${excerpt ? `<p class="insights-card-excerpt">${excerpt}</p>` : ''}
+        </div>
+      `;
+      cards.append(card);
+    });
+
+    if (!scored.length) section.remove();
+  } catch {
+    section.remove();
+  }
+
   return section;
 }
 
@@ -292,5 +339,5 @@ export default async function init(el) {
   el.append(layout);
 
   // Insights at the bottom
-  el.append(buildInsights());
+  el.append(await buildInsights());
 }
