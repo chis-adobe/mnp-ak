@@ -5,17 +5,24 @@
 
 .office-info h2 {
   font-size: var(--heading-font-size-xl);
-  margin: 0 0 var(--spacing-l);
+  line-height: 1.385;
+  margin: 0 0 var(--spacing-m);
 }
 
 .office-info p {
   color: var(--color-mnp-body-text);
-  line-height: 1.6;
-  margin: 0 0 var(--spacing-m);
+  line-height: 1.375;
+  margin: 0 0 16px;
+}
+
+/* Address line: heading-teal, slightly bolder, sits above the contact list */
+.office-info .office-info-header p {
+  color: var(--color-mnp-heading-teal);
+  font-weight: 600;
 }
 
 .office-info a {
-  color: var(--color-mnp-heading-teal);
+  color: inherit;
   text-decoration: none;
 }
 
@@ -23,15 +30,19 @@
   text-decoration: underline;
 }
 
-.office-info .office-info-contact ul {
+.office-info .office-info-contact ul,
+.office-info ul {
   list-style: none;
   padding: 0;
-  margin: 0 0 var(--spacing-l);
+  margin: 0 0 var(--spacing-xl);
 }
 
-.office-info .office-info-contact li {
+.office-info .office-info-contact li,
+.office-info ul li {
   margin: 0 0 var(--spacing-s);
   font-size: var(--body-font-size-m);
+  line-height: 1.375;
+  color: var(--color-mnp-body-text);
 }
 
 /* Two-column layout: content left, map right */
