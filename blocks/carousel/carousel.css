@@ -103,6 +103,29 @@
   right: var(--spacing-m);
 }
 
+.carousel .carousel-pause {
+  position: absolute;
+  bottom: var(--spacing-m);
+  right: var(--spacing-m);
+  background: rgb(255 255 255 / 20%);
+  border: none;
+  color: white;
+  font-size: 18px;
+  line-height: 1;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  transition: background 0.2s;
+}
+
+.carousel .carousel-pause:hover {
+  background: rgb(255 255 255 / 40%);
+}
+
 @media (width >= 900px) {
   .carousel,
   .carousel .carousel-slide {

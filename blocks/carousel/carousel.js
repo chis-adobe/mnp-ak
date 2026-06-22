@@ -120,7 +120,13 @@ export default async function init(el) {
   nextBtn.setAttribute('aria-label', 'Next slide');
   nextBtn.textContent = '›';
 
-  el.append(prevBtn, nextBtn);
+  const pauseBtn = document.createElement('button');
+  pauseBtn.className = 'carousel-pause';
+  pauseBtn.setAttribute('aria-label', 'Pause slideshow');
+  pauseBtn.setAttribute('aria-pressed', 'false');
+  pauseBtn.textContent = '⏸';
+
+  el.append(prevBtn, nextBtn, pauseBtn);
 
   let current = 0;
   const total = slides.length;
@@ -135,13 +141,41 @@ export default async function init(el) {
   nextBtn.addEventListener('click', () => showSlide(current + 1));
 
   const isUE = /\.(stage-ue|ue)\.da\.live$/.test(window.location.hostname);
-  if (!isUE) {
-    const timer = setInterval(() => {
+  let timer = null;
+
+  function startAutoplay() {
+    if (timer || isUE) return;
+    timer = setInterval(() => {
       if (el.dataset.ueActive) {
         clearInterval(timer);
+        timer = null;
         return;
       }
       showSlide(current + 1);
     }, 6000);
   }
+
+  function stopAutoplay() {
+    if (timer) {
+      clearInterval(timer);
+      timer = null;
+    }
+  }
+
+  pauseBtn.addEventListener('click', () => {
+    const paused = !!timer;
+    if (paused) {
+      stopAutoplay();
+      pauseBtn.textContent = '▶';
+      pauseBtn.setAttribute('aria-label', 'Play slideshow');
+      pauseBtn.setAttribute('aria-pressed', 'true');
+    } else {
+      startAutoplay();
+      pauseBtn.textContent = '⏸';
+      pauseBtn.setAttribute('aria-label', 'Pause slideshow');
+      pauseBtn.setAttribute('aria-pressed', 'false');
+    }
+  });
+
+  startAutoplay();
 }
