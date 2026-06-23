@@ -35,6 +35,10 @@ const decorateArea = ({ area = document }) => {
 
 export async function loadPage() {
   setConfig({ hostnames, locales, linkBlocks, components, decorateArea });
+  // Resolve any page-level A/B experiment before decoration so the chosen
+  // variant's content is what gets hydrated. No-op when no experiment is authored.
+  const { default: runExperiment } = await import('./experiment.js');
+  await runExperiment();
   await loadArea();
 }
 await loadPage();
