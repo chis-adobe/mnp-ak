@@ -1,4 +1,5 @@
 .feature-banner {
+  max-width: var(--grid-container-width);
   margin: var(--spacing-xxl) auto;
 }
 
