@@ -40,15 +40,9 @@ function assignVariant(experiment, variants, split) {
   const key = `${STORAGE_PREFIX}${experiment}`;
   const labels = [CONTROL, ...variants.map((_, i) => `challenger-${i + 1}`)];
 
-  let assigned;
-  try {
-    assigned = localStorage.getItem(key);
-  } catch {
-    /* storage unavailable */
-  }
-  if (assigned && labels.includes(assigned)) return assigned;
-
-  // Forced assignment for QA: ?experiment=<name>/<variant-label>
+  // Forced assignment for QA takes precedence over any stored bucket:
+  // ?experiment=<name>/<variant-label>. Overwrites the sticky value so the
+  // forced variant persists for the rest of the QA session.
   const forced = new URLSearchParams(window.location.search).get('experiment');
   if (forced) {
     const [fName, fVariant] = forced.split('/');
@@ -57,6 +51,14 @@ function assignVariant(experiment, variants, split) {
       return fVariant;
     }
   }
+
+  let assigned;
+  try {
+    assigned = localStorage.getItem(key);
+  } catch {
+    /* storage unavailable */
+  }
+  if (assigned && labels.includes(assigned)) return assigned;
 
   const roll = Math.random();
   let cumulative = 0;
