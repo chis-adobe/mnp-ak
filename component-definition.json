@@ -234,6 +234,21 @@
           }
         },
         {
+          "title": "Embedded Form",
+          "id": "embedded-form",
+          "model": "embedded-form",
+          "plugins": {
+            "da": {
+              "name": "embedded-form",
+              "rows": 1,
+              "columns": 1,
+              "fields": [
+                { "name": "source", "selector": "a[href]" }
+              ]
+            }
+          }
+        },
+        {
           "title": "Insights Cards",
           "id": "insights-cards",
           "model": "insights-cards",

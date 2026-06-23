@@ -5,6 +5,9 @@ import { recommended, source, test } from '@adobe/eslint-config-helix';
 export default defineConfig([
   globalIgnores([
     '**/deps',
+    // Vendored AEM Adaptive Forms block (adobe-rnd/aem-boilerplate-forms),
+    // imported as-is to stay upgradable; not linted to project style.
+    'blocks/embedded-form/**',
   ]),
   {
     languageOptions: {

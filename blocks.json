@@ -464,6 +464,25 @@
           }
         },
         {
+          "title": "Embedded Form",
+          "id": "embedded-form",
+          "description": "Embeds an AEM Adaptive Form authored elsewhere. Author a single cell containing a link to the form's location (an Adaptive Form URL, a doc-based form sheet, or a published form HTML). The block fetches that definition and renders the full form (rule engine, validation, submission) inline.",
+          "model": "embedded-form",
+          "fields": [
+            { "component": "aem-content", "valueType": "string", "name": "source", "label": "Form Source" }
+          ],
+          "plugins": {
+            "da": {
+              "name": "embedded-form",
+              "rows": 1,
+              "columns": 1,
+              "fields": [
+                { "name": "source", "selector": "a[href]" }
+              ]
+            }
+          }
+        },
+        {
           "title": "Insights Cards",
           "id": "insights-cards",
           "description": "Container for a grid of insight/article cards.",

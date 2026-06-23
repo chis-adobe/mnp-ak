@@ -92,6 +92,12 @@
     ]
   },
   {
+    "id": "embedded-form",
+    "fields": [
+      { "component": "aem-content", "valueType": "string", "name": "source", "label": "Form Source" }
+    ]
+  },
+  {
     "id": "insights-cards",
     "fields": []
   },
