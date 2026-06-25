@@ -1,6 +1,7 @@
 .mini-hero {
-  background: var(--color-mnp-dark-teal);
+  /* background: var(--color-mnp-dark-teal); */
   padding: var(--spacing-xxl) var(--spacing-l);
+  background: red;
 }
 
 .mini-hero .mini-hero-content {
