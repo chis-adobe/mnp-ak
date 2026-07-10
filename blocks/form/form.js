@@ -1,317 +1,590 @@
-import { getMetadata } from '../../scripts/ak.js';
-import { getPlaceholder } from '../../scripts/utils/placeholders.js';
+import { createOptimizedPicture, loadCSS } from '../../scripts/aem.js';
+import transferRepeatableDOM, { insertAddButton, insertRemoveButton } from './components/repeat/repeat.js';
+import { emailPattern, getSubmitBaseUrl, SUBMISSION_SERVICE } from './constant.js';
+import GoogleReCaptcha from './integrations/recaptcha.js';
+import componentDecorator from './mappings.js';
+import { handleSubmit } from './submit.js';
+import DocBasedFormToAF from './transform.js';
+import {
+  checkValidation,
+  createButton,
+  createDropdownUsingEnum,
+  createFieldWrapper,
+  createHelpText,
+  createLabel,
+  createRadioOrCheckboxUsingEnum,
+  extractIdFromUrl,
+  getHTMLRenderType,
+  getSitePageName,
+  setConstraints,
+  setPlaceholder,
+  stripTags,
+  createRadioOrCheckbox,
+  createInput,
+} from './util.js';
 
-function toColumnName(label) {
-  return label.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+export const DELAY_MS = 0;
+let captchaField;
+let afModule;
+
+const withFieldWrapper = (element) => (fd) => {
+  const wrapper = createFieldWrapper(fd);
+  wrapper.append(element(fd));
+  return wrapper;
+};
+
+const createTextArea = withFieldWrapper((fd) => {
+  const input = document.createElement('textarea');
+  setPlaceholder(input, fd);
+  return input;
+});
+
+const createSelect = withFieldWrapper((fd) => {
+  const select = document.createElement('select');
+  createDropdownUsingEnum(fd, select);
+  return select;
+});
+
+function createHeading(fd) {
+  const wrapper = createFieldWrapper(fd);
+  const heading = document.createElement('h2');
+  heading.textContent = fd.value || fd.label.value;
+  heading.id = fd.id;
+  wrapper.append(heading);
+
+  return wrapper;
 }
 
-// Parse form field rows (label | type | options) from a set of row elements.
-function parseFieldRows(rows) {
-  const fields = [];
-  let supabaseUrl = 'https://wdgjvnbgtulfuevdtvjk.supabase.co';
-  let supabaseKey = 'sb_publishable_z3Bo2By780HZIQxZ7cf9vg_iTNLg-Cx';
+function createLegend(fd) {
+  return createLabel(fd, 'legend');
+}
 
-  rows.forEach((row) => {
-    const cols = [...row.querySelectorAll(':scope > div')];
-    if (cols.length < 1) return;
-    const label = cols[0]?.textContent?.trim();
-    const type = cols[1]?.textContent?.trim()?.toLowerCase() || 'text';
+function createRepeatablePanel(wrapper, fd) {
+  setConstraints(wrapper, fd);
+  wrapper.dataset.repeatable = true;
+  wrapper.dataset.index = fd.index || 0;
+  if (fd.properties) {
+    Object.keys(fd.properties).forEach((key) => {
+      if (!key.startsWith('fd:')) {
+        wrapper.dataset[key] = fd.properties[key];
+      }
+    });
+  }
+  if ((!fd.index || fd?.index === 0) && fd.properties?.variant !== 'noButtons') {
+    insertAddButton(wrapper, wrapper);
+    insertRemoveButton(wrapper, wrapper);
+  }
+}
 
-    // Legacy: a heading row is ignored here (plain headings live on the page).
-    if (type === 'heading') return;
+function createFieldSet(fd) {
+  const wrapper = createFieldWrapper(fd, 'fieldset', createLegend);
+  wrapper.id = fd.id;
+  wrapper.name = fd.name;
+  if (fd.fieldType === 'panel') {
+    wrapper.classList.add('panel-wrapper');
+  }
+  if (fd.repeatable === true) {
+    createRepeatablePanel(wrapper, fd);
+  }
+  return wrapper;
+}
 
-    if (type === 'config') {
-      if (label === 'supabase-url') supabaseUrl = cols[2]?.textContent?.trim() || supabaseUrl;
-      if (label === 'supabase-key') supabaseKey = cols[2]?.textContent?.trim() || supabaseKey;
-      return;
-    }
-
-    fields.push({ label, type, options: cols[2]?.textContent || '' });
+function setConstraintsMessage(field, messages = {}) {
+  Object.keys(messages).forEach((key) => {
+    field.dataset[`${key}ErrorMessage`] = messages[key];
   });
-
-  return { fields, supabaseUrl, supabaseKey };
 }
 
-// If the block holds a single reference to a /forms/* fragment, fetch its field rows.
-async function resolveFormFragment(el) {
-  const text = el.textContent.trim();
-  const link = el.querySelector('a');
-  const ref = (link && link.getAttribute('href')) || text;
-  if (!/^\/forms\//.test(ref)) return null;
-
-  try {
-    const resp = await fetch(`${ref}.plain.html`);
-    if (!resp.ok) return null;
-    const html = await resp.text();
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    const block = doc.querySelector('.form, .contact-form');
-    if (!block) return null;
-    return [...block.querySelectorAll(':scope > div')];
-  } catch {
-    return null;
+function createRadioOrCheckboxGroup(fd) {
+  const wrapper = createFieldSet({ ...fd });
+  createRadioOrCheckboxUsingEnum(fd, wrapper);
+  wrapper.dataset.required = fd.required;
+  if (fd.tooltip) {
+    wrapper.title = stripTags(fd.tooltip, '');
   }
+  setConstraintsMessage(wrapper, fd.constraintMessages);
+  return wrapper;
 }
 
-// Read the city from an address fragment (same shape office-info/mini-hero use).
-async function getCityFromFragment(fragmentPath) {
-  try {
-    const resp = await fetch(`${fragmentPath}.plain.html`);
-    if (!resp.ok) return null;
-    const html = await resp.text();
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    const cityRow = [...doc.querySelectorAll('div > div')].find((row) => {
-      const firstCell = row.querySelector(':scope > div:first-child');
-      return firstCell && firstCell.textContent.trim().toLowerCase() === 'city';
-    });
-    const valueCell = cityRow?.querySelector(':scope > div:nth-child(2)');
-    return valueCell ? valueCell.textContent.trim() : null;
-  } catch {
-    return null;
-  }
-}
-
-// Resolve the office city across all runmodes:
-//   1. page `city` metadata (standalone EDS office page)
-//   2. `address-fragment` metadata (office page that defers its address)
-//   3. bridge tool-result (llm-app embed — first office in structuredContent)
-async function resolveCity(bridge) {
-  let city = getMetadata('city');
-  if (city) return city;
-
-  const addressFragment = getMetadata('address-fragment');
-  if (addressFragment) {
-    city = await getCityFromFragment(addressFragment);
-    if (city) return city;
-  }
-
-  if (bridge && !bridge.hostContext?.preview) {
-    try {
-      const result = await bridge.toolResult;
-      const structuredContent = result?.structuredContent || result;
-      const office = structuredContent?.offices?.[0] || structuredContent?.office;
-      if (office?.city) return office.city;
-      if (structuredContent?.office_name) return structuredContent.office_name;
-    } catch {
-      /* no tool result available */
-    }
-  }
-
-  return '';
-}
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-// Reduce a phone string to its 10 NANP digits (dropping an optional country "1").
-function phoneDigits(value) {
-  return (value || '').replace(/\D/g, '').replace(/^1(?=\d{10}$)/, '');
-}
-
-function formatPhone(value) {
-  const d = phoneDigits(value);
-  if (d.length !== 10) return value;
-  return `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`;
-}
-
-function buildField({ label, type, options }) {
-  const fieldWrapper = document.createElement('div');
-  fieldWrapper.className = 'form-field';
-
-  const labelEl = document.createElement('label');
-  labelEl.textContent = label;
-
-  let input;
-  if (type === 'textarea') {
-    input = document.createElement('textarea');
-    input.rows = 4;
-  } else if (type === 'select') {
-    input = document.createElement('select');
-    const opts = options?.split(',') || ['Select One'];
-    opts.forEach((opt) => {
-      const option = document.createElement('option');
-      option.textContent = opt.trim();
-      input.append(option);
-    });
-  } else if (type === 'checkbox') {
-    input = document.createElement('input');
-    input.type = 'checkbox';
-    fieldWrapper.classList.add('form-field-checkbox');
+function createPlainText(fd) {
+  const paragraph = document.createElement('p');
+  if (fd.richText) {
+    paragraph.innerHTML = stripTags(fd.value);
   } else {
-    input = document.createElement('input');
-    input.type = type;
+    paragraph.textContent = fd.value;
   }
-
-  input.name = label.toLowerCase().replace(/[^a-z]/g, '-');
-  input.placeholder = label;
-  labelEl.setAttribute('for', input.name);
-  input.id = input.name;
-
-  const errorEl = document.createElement('span');
-  errorEl.className = 'form-field-error';
-  errorEl.hidden = true;
-  errorEl.id = `${input.name}-error`;
-
-  const clearError = () => {
-    errorEl.hidden = true;
-    errorEl.textContent = '';
-    fieldWrapper.classList.remove('form-field-invalid');
-    input.removeAttribute('aria-invalid');
-    input.removeAttribute('aria-describedby');
-  };
-
-  const showError = (message) => {
-    errorEl.textContent = message;
-    errorEl.hidden = false;
-    fieldWrapper.classList.add('form-field-invalid');
-    input.setAttribute('aria-invalid', 'true');
-    input.setAttribute('aria-describedby', errorEl.id);
-  };
-
-  // validate(): returns true when the field is acceptable. Empty optional fields
-  // pass; format checks only apply once the user has entered something.
-  let validate = () => true;
-
-  if (type === 'email') {
-    validate = () => {
-      const value = input.value.trim();
-      if (!value || EMAIL_RE.test(value)) {
-        clearError();
-        return true;
-      }
-      showError('Please enter a valid email address.');
-      return false;
-    };
-    input.addEventListener('blur', validate);
-    input.addEventListener('input', clearError);
-  } else if (type === 'tel') {
-    input.inputMode = 'tel';
-    input.autocomplete = 'tel';
-    validate = () => {
-      const value = input.value.trim();
-      if (!value) {
-        clearError();
-        return true;
-      }
-      if (phoneDigits(value).length === 10) {
-        input.value = formatPhone(value);
-        clearError();
-        return true;
-      }
-      showError('Please enter a 10-digit phone number.');
-      return false;
-    };
-    input.addEventListener('blur', validate);
-    input.addEventListener('input', clearError);
-  }
-
-  fieldWrapper.append(labelEl, input, errorEl);
-  return { fieldWrapper, input, validate };
+  const wrapper = createFieldWrapper(fd);
+  wrapper.id = fd.id;
+  wrapper.replaceChildren(paragraph);
+  return wrapper;
 }
 
-export default async function init(el, bridge) {
-  if (bridge) bridge.applyHostStyles();
+function createImage(fd) {
+  const field = createFieldWrapper(fd);
+  field.id = fd?.id;
+  const imagePath = fd.value || fd.properties['fd:repoPath'] || '';
+  const altText = fd.altText || fd.name;
+  field.append(createOptimizedPicture(imagePath, altText));
+  return field;
+}
 
-  // Fields come either from a /forms/* fragment reference or from inline rows.
-  let rows = await resolveFormFragment(el);
-  if (!rows) rows = [...el.querySelectorAll(':scope > div')];
+const fieldRenderers = {
+  'drop-down': createSelect,
+  'plain-text': createPlainText,
+  checkbox: createRadioOrCheckbox,
+  button: createButton,
+  multiline: createTextArea,
+  panel: createFieldSet,
+  radio: createRadioOrCheckbox,
+  'radio-group': createRadioOrCheckboxGroup,
+  'checkbox-group': createRadioOrCheckboxGroup,
+  image: createImage,
+  heading: createHeading,
+};
 
-  el.innerHTML = '';
-
-  const { fields, supabaseUrl, supabaseKey } = parseFieldRows(rows);
-
-  // The office-header field is a dynamic heading, not an input — pull it out
-  // and compose its text from the resolved office city.
-  const headerField = fields.find((f) => f.type === 'office-header');
-  const inputFields = fields.filter((f) => f.type !== 'office-header');
-
-  const city = await resolveCity(bridge);
-
-  if (headerField && city) {
-    const heading = document.createElement('h3');
-    heading.className = 'form-office-header';
-    const template = await getPlaceholder('contact-team', 'Contact our {city} team today');
-    heading.textContent = template.replace('{city}', city);
-    el.append(heading);
+function colSpanDecorator(field, element) {
+  const colSpan = field['Column Span'] || field.properties?.colspan;
+  if (colSpan && element) {
+    element.classList.add(`col-${colSpan}`);
   }
+}
 
-  const form = document.createElement('form');
-  form.className = 'form-fields';
-  const validators = [];
-  inputFields.forEach((field) => {
-    const { fieldWrapper, validate } = buildField(field);
-    validators.push(validate);
-    form.append(fieldWrapper);
-  });
+const handleFocus = (input, field) => {
+  const editValue = input.getAttribute('edit-value');
+  input.type = field.type;
+  input.value = editValue;
+};
 
-  const submitBtn = document.createElement('button');
-  submitBtn.type = 'submit';
-  submitBtn.textContent = 'Submit';
-  submitBtn.className = 'form-submit';
-  form.append(submitBtn);
+const handleFocusOut = (input) => {
+  const displayValue = input.getAttribute('display-value');
+  input.type = 'text';
+  input.value = displayValue;
+};
 
-  const status = document.createElement('p');
-  status.className = 'form-status';
-  status.hidden = true;
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    // Run all field validators; focus the first invalid field and abort on failure.
-    const results = validators.map((v) => v());
-    if (results.includes(false)) {
-      form.querySelector('.form-field-invalid input')?.focus();
-      return;
+function inputDecorator(field, element) {
+  const input = element?.querySelector('input,textarea,select');
+  if (input) {
+    input.id = field.id;
+    input.name = field.name;
+    if (field.tooltip) {
+      input.title = stripTags(field.tooltip, '');
     }
-
-    if (!supabaseUrl || !supabaseKey) {
-      // eslint-disable-next-line no-console
-      console.warn('[form] Supabase config missing');
-      return;
+    input.readOnly = field.readOnly;
+    input.autocomplete = field.autoComplete ?? 'off';
+    input.disabled = field.enabled === false;
+    if (field.fieldType === 'drop-down' && field.readOnly) {
+      input.disabled = true;
     }
-
-    const COLUMN_ALIASES = { e_mail: 'email', e_mail_address: 'email', email_address: 'email' };
-    const data = {};
-    new FormData(form).forEach((value, key) => {
-      const col = toColumnName(key);
-      data[COLUMN_ALIASES[col] || col] = value;
-    });
-    if (city) data.office_name = city;
-
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Submitting...';
-    status.hidden = true;
-
-    try {
-      const resp = await fetch(`${supabaseUrl}/rest/v1/contact_requests`, {
-        method: 'POST',
-        headers: {
-          apikey: supabaseKey,
-          Authorization: `Bearer ${supabaseKey}`,
-          'Content-Type': 'application/json',
-          Prefer: 'return=minimal',
-        },
-        body: JSON.stringify(data),
+    const fieldType = getHTMLRenderType(field);
+    if (['number', 'date', 'text', 'email'].includes(fieldType) && (field.displayFormat || field.displayValueExpression)) {
+      field.type = fieldType;
+      input.setAttribute('edit-value', field.value ?? '');
+      input.setAttribute('display-value', field.displayValue ?? '');
+      input.type = 'text';
+      input.value = field.displayValue ?? '';
+      // Handle mobile touch events to enable native date picker
+      let isMobileTouch = false;
+      input.addEventListener('touchstart', () => {
+        isMobileTouch = true;
+        input.type = field.type;
+        // Set the edit value immediately to prevent empty field
+        const editValue = input.getAttribute('edit-value');
+        if (editValue) {
+          input.value = editValue;
+        }
       });
 
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      input.addEventListener('focus', () => {
+        // Only change type on desktop or if not already changed by touchstart
+        if (!isMobileTouch && input.type !== field.type) {
+          input.type = field.type;
+        }
+        handleFocus(input, field);
+        // Reset mobile touch flag
+        isMobileTouch = false;
+      });
+      input.addEventListener('blur', () => handleFocusOut(input));
+    } else if (input.type !== 'file') {
+      input.value = field.value ?? '';
+      if (input.type === 'radio' || input.type === 'checkbox') {
+        input.value = field?.enum?.[0] ?? 'on';
+        input.checked = field.value === input.value;
+      }
+    } else {
+      input.multiple = field.type === 'file[]';
+    }
+    if (field.required) {
+      input.setAttribute('required', 'required');
+    }
+    if (field.description) {
+      input.setAttribute('aria-describedby', `${field.id}-description`);
+    }
+    if (field.minItems) {
+      input.dataset.minItems = field.minItems;
+    }
+    if (field.maxItems) {
+      input.dataset.maxItems = field.maxItems;
+    }
+    if (field.maxFileSize) {
+      input.dataset.maxFileSize = field.maxFileSize;
+    }
+    if (field.default !== undefined) {
+      input.setAttribute('value', field.default);
+    }
+    if (input.type === 'email') {
+      input.pattern = emailPattern;
+    }
+    setConstraintsMessage(element, field.constraintMessages);
+    element.dataset.required = field.required;
+  }
+}
 
-      form.reset();
-      status.textContent = 'Thank you, your message has been sent.';
-      status.className = 'form-status form-status-success';
-    } catch {
-      status.textContent = 'Something went wrong. Please try again.';
-      status.className = 'form-status form-status-error';
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Submit';
-      status.hidden = false;
+function decoratePanelContainer(panelDefinition, panelContainer) {
+  if (!panelContainer) return;
+
+  const isPanelWrapper = (container) => container.classList?.contains('panel-wrapper');
+
+  const shouldAddLabel = (container, panel) => panel.label && !container.querySelector(`legend[for=${container.dataset.id}]`);
+
+  if (isPanelWrapper(panelContainer)) {
+    if (shouldAddLabel(panelContainer, panelDefinition)) {
+      const legend = createLegend(panelDefinition);
+      if (legend) {
+        panelContainer.insertAdjacentElement('afterbegin', legend);
+      }
+    }
+  }
+}
+
+function renderField(fd) {
+  const fieldType = fd?.fieldType?.replace('-input', '') ?? 'text';
+  const renderer = fieldRenderers[fieldType];
+  let field;
+  if (typeof renderer === 'function') {
+    field = renderer(fd);
+  } else {
+    field = createFieldWrapper(fd);
+    field.append(createInput(fd));
+  }
+  if (fd.description) {
+    field.append(createHelpText(fd));
+    field.dataset.description = fd.description; // In case overriden by error message
+  }
+  if (fd.fieldType !== 'radio-group' && fd.fieldType !== 'checkbox-group' && fd.fieldType !== 'captcha') {
+    inputDecorator(fd, field);
+  }
+  return field;
+}
+
+export async function generateFormRendition(panel, container, formId, getItems = (p) => p?.items) {
+  const items = getItems(panel) || [];
+  const promises = items.map(async (field) => {
+    field.value = field.value ?? '';
+    const { fieldType } = field;
+    if (fieldType === 'captcha') {
+      captchaField = field;
+      const element = createFieldWrapper(field);
+      element.textContent = 'CAPTCHA';
+      return element;
+    }
+    const element = renderField(field);
+    if (field.appliedCssClassNames) {
+      element.className += ` ${field.appliedCssClassNames}`;
+    }
+    colSpanDecorator(field, element);
+    if (field?.fieldType === 'panel') {
+      await generateFormRendition(field, element, formId, getItems);
+      return element;
+    }
+    await componentDecorator(element, field, container, formId);
+    return element;
+  });
+
+  const children = await Promise.all(promises);
+  container.append(...children.filter((_) => _ != null));
+  decoratePanelContainer(panel, container);
+  await componentDecorator(container, panel, null, formId);
+}
+
+function enableValidation(form) {
+  form.querySelectorAll('input,textarea,select').forEach((input) => {
+    input.addEventListener('invalid', (event) => {
+      checkValidation(event.target);
+    });
+  });
+
+  form.addEventListener('change', (event) => {
+    checkValidation(event.target);
+  });
+}
+
+function isDocumentBasedForm(formDef) {
+  return formDef?.[':type'] === 'sheet' && formDef?.data;
+}
+
+async function createFormForAuthoring(formDef) {
+  const form = document.createElement('form');
+  await generateFormRendition(formDef, form, formDef.id, (container) => {
+    if (container[':itemsOrder'] && container[':items']) {
+      return container[':itemsOrder'].map((itemKey) => container[':items'][itemKey]);
+    }
+    return [];
+  });
+  return form;
+}
+
+export async function createForm(formDef, data, source = 'aem') {
+  const { action: formPath } = formDef;
+  const form = document.createElement('form');
+  form.dataset.action = formPath;
+  form.dataset.source = source;
+  form.noValidate = true;
+  if (formDef.appliedCssClassNames) {
+    form.className = formDef.appliedCssClassNames;
+  }
+  const formId = extractIdFromUrl(formPath); // formDef.id returns $form after getState()
+  await generateFormRendition(formDef, form, formId);
+
+  let captcha;
+  if (captchaField) {
+    let config = captchaField?.properties?.['fd:captcha']?.config;
+    if (!config) {
+      config = {
+        siteKey: captchaField?.value,
+        uri: captchaField?.uri,
+        version: captchaField?.version,
+      };
+    }
+    const pageName = getSitePageName(captchaField?.properties?.['fd:path']);
+    captcha = new GoogleReCaptcha(config, captchaField.id, captchaField.name, pageName);
+    captcha.loadCaptcha(form);
+  }
+
+  // Only enable DOM validation for doc-based forms; edge forms use the model.
+  if (source === 'sheet') {
+    enableValidation(form);
+  }
+  transferRepeatableDOM(form, formDef, form, formId);
+
+  if (afModule && typeof Worker === 'undefined') {
+    window.setTimeout(async () => {
+      afModule.loadRuleEngine(formDef, form, captcha, generateFormRendition, data);
+    }, DELAY_MS);
+  }
+
+  form.addEventListener('reset', async () => {
+    const currentSource = form.dataset.source || 'aem';
+    const response = await createForm(formDef, undefined, currentSource);
+    if (response?.form) {
+      document.querySelector(`[data-action="${form?.dataset?.action}"]`)?.replaceWith(response?.form);
     }
   });
 
-  el.append(form, status);
+  form.addEventListener('submit', (e) => {
+    handleSubmit(e, form, captcha);
+  });
 
-  if (bridge) {
-    bridge.reportSize(el.offsetWidth, el.offsetHeight);
-    const ro = new ResizeObserver(() => bridge.reportSize(el.offsetWidth, el.offsetHeight));
-    ro.observe(el);
+  return {
+    form,
+    captcha,
+    generateFormRendition,
+    data,
+  };
+}
+
+function cleanUp(content) {
+  const formDef = content.replaceAll('^(([^<>()\\\\[\\\\]\\\\\\\\.,;:\\\\s@\\"]+(\\\\.[^<>()\\\\[\\\\]\\\\\\\\.,;:\\\\s@\\"]+)*)|(\\".+\\"))@((\\\\[[0-9]{1,3}\\\\.[0-9]{1,3}\\\\.[0-9]{1,3}\\\\.[0-9]{1,3}])|(([a-zA-Z\\\\-0-9]+\\\\.)\\+[a-zA-Z]{2,}))$', '');
+  return formDef?.replace(/\x83\n|\n|\s\s+/g, '');
+}
+/*
+  Newer Clean up - Replace backslashes that are not followed by valid json escape characters
+  function cleanUp(content) {
+    return content.replace(/\\/g, (match, offset, string) => {
+      const prevChar = string[offset - 1];
+      const nextChar = string[offset + 1];
+      const validEscapeChars = ['b', 'f', 'n', 'r', 't', '"', '\\'];
+      if (validEscapeChars.includes(nextChar) || prevChar === '\\') {
+        return match;
+      }
+      return '';
+    });
   }
+*/
+
+function decode(rawContent) {
+  const content = rawContent.trim();
+  if (content.startsWith('"') && content.endsWith('"')) {
+    // In the new 'jsonString' context, Server side code comes as a string with escaped characters,
+    // hence the double parse
+    return JSON.parse(JSON.parse(content));
+  }
+  return JSON.parse(cleanUp(content));
+}
+
+function extractFormDefinition(block) {
+  let formDef;
+  const container = block.querySelector('pre');
+  const codeEl = container?.querySelector('code');
+  const content = codeEl?.textContent;
+  if (content) {
+    formDef = decode(content);
+  }
+  return { container, formDef };
+}
+
+export async function fetchForm(pathname) {
+  // get the main form
+  let data;
+  let path = pathname;
+  if (path.startsWith(window.location.origin) && !path.includes('.json')) {
+    if (path.endsWith('.html')) {
+      path = path.substring(0, path.lastIndexOf('.html'));
+    }
+    path += '/jcr:content/root/section/form.html';
+  }
+  let resp = await fetch(path);
+
+  if (resp?.headers?.get('Content-Type')?.includes('application/json')) {
+    data = await resp.json();
+  } else if (resp?.headers?.get('Content-Type')?.includes('text/html')) {
+    resp = await fetch(path);
+    data = await resp.text().then((html) => {
+      try {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        if (doc) {
+          return extractFormDefinition(doc.body).formDef;
+        }
+        return doc;
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error('Unable to fetch form definition for path', pathname, path);
+        return null;
+      }
+    });
+  }
+  return data;
+}
+
+function addRequestContextToForm(formDef) {
+  if (formDef && typeof formDef === 'object') {
+    formDef.properties = formDef.properties || {};
+
+    // Add URL parameters
+    try {
+      const urlParams = new URLSearchParams(window?.location?.search || '');
+      if (!formDef.properties.queryParams) {
+        formDef.properties.queryParams = {};
+      }
+      urlParams?.forEach((value, key) => {
+        formDef.properties.queryParams[key?.toLowerCase()] = value;
+      });
+    } catch (e) {
+      console.warn('Error reading URL parameters:', e);
+    }
+
+    // Add cookies
+    try {
+      const cookies = document?.cookie.split(';');
+      formDef.properties.cookies = {};
+      cookies?.forEach((cookie) => {
+        if (cookie.trim()) {
+          const [key, value] = cookie.trim().split('=');
+          formDef.properties.cookies[key.trim()] = value || '';
+        }
+      });
+    } catch (e) {
+      console.warn('Error reading cookies:', e);
+    }
+  }
+}
+
+function loadFormCustomStyles(formDef) {
+  const { style } = formDef?.properties || {};
+  if (style) {
+    try {
+      const base = (window.hlx?.codeBasePath || '').replace(/\/$/, '');
+      const stylePath = style.startsWith('/') ? style : `/${style}`;
+      loadCSS(`${base}${stylePath}`);
+    } catch (error) {
+      console.error('Failed to load form CSS:', error);
+    }
+  }
+}
+
+async function setupForm(formDef, { pathname, block, editMode = false } = {}) {
+  const submitProps = formDef?.properties?.['fd:submit'];
+  const actionType = submitProps?.actionName || formDef?.properties?.actionType;
+  const spreadsheetUrl = submitProps?.spreadsheet?.spreadsheetUrl
+    || formDef?.properties?.spreadsheetUrl;
+  if (actionType === 'spreadsheet' && spreadsheetUrl) {
+    // Check if we're in an iframe and use parent window path if available
+    const iframePath = window.frameElement ? window.parent.location.pathname
+      : window.location.pathname;
+    formDef.action = SUBMISSION_SERVICE + btoa(pathname || iframePath);
+  } else {
+    formDef.action = getSubmitBaseUrl() + (formDef.action || '');
+  }
+
+  let def = formDef;
+  let form;
+  let afbForm;
+
+  if (isDocumentBasedForm(formDef)) {
+    def = new DocBasedFormToAF().transform(formDef, { block });
+    loadFormCustomStyles(def);
+    form = (await createForm(def, null, 'sheet'))?.form;
+    const docRuleEngine = await import('./rules-doc/index.js');
+    docRuleEngine.default(def, form);
+    form.dataset.source = 'sheet';
+    form.dataset.rules = false;
+  } else {
+    loadFormCustomStyles(formDef);
+    afModule = await import('./rules/index.js');
+    addRequestContextToForm(formDef);
+    if (afModule && afModule.initAdaptiveForm && !editMode) {
+      ({ form, afbForm } = await afModule.initAdaptiveForm(formDef, createForm));
+    } else {
+      form = await createFormForAuthoring(formDef);
+    }
+    form.dataset.source = 'aem';
+    form.dataset.rules = true;
+    if (def.properties && def.properties['fd:path']) {
+      form.dataset.formpath = def.properties['fd:path'];
+    }
+  }
+
+  form.dataset.redirectUrl = def.redirectUrl || '';
+  form.dataset.thankYouMsg = def.thankYouMsg || '';
+  form.dataset.action = def.action || pathname?.split('.json')[0];
+  form.dataset.id = def.id;
+  return { form, afbForm };
+}
+
+export async function renderForm(formDef, element) {
+  const { form, afbForm } = await setupForm(formDef);
+  element.appendChild(form);
+  return { form, afbForm };
+}
+
+export default async function decorate(block) {
+  let container = block.querySelector('a[href]');
+  let formDef;
+  let pathname;
+  if (container) {
+    ({ pathname } = new URL(container.href));
+    formDef = await fetchForm(container.href);
+  } else {
+    ({ container, formDef } = extractFormDefinition(block));
+  }
+  let form;
+  let afbForm;
+  if (formDef) {
+    ({ form, afbForm } = await setupForm(formDef, {
+      pathname,
+      block,
+      editMode: block.classList.contains('edit-mode'),
+    }));
+    container.replaceWith(form);
+  }
+  return { form, afbForm };
 }

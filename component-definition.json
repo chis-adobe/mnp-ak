@@ -225,10 +225,9 @@
             "da": {
               "name": "form",
               "rows": 1,
-              "columns": 2,
+              "columns": 1,
               "fields": [
-                { "name": "label", "selector": "div:nth-child(1)" },
-                { "name": "type", "selector": "div:nth-child(2)" }
+                { "name": "source", "selector": "a[href]" }
               ]
             }
           }
