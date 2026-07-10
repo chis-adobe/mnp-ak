@@ -442,11 +442,25 @@ export async function fetchForm(pathname) {
     }
     path += '/jcr:content/root/section/form.html';
   }
-  let resp = await fetch(path);
+  let resp;
+  try {
+    resp = await fetch(path);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error(`[forms] Could not fetch "${path}" — likely a CORS or network error:`, err.message);
+    return null;
+  }
 
-  if (resp?.headers?.get('Content-Type')?.includes('application/json')) {
+  if (!resp.ok) {
+    // eslint-disable-next-line no-console
+    console.error(`[forms] "${path}" returned HTTP ${resp.status} ${resp.statusText}`);
+    return null;
+  }
+
+  const contentType = resp.headers.get('Content-Type') || '';
+  if (contentType.includes('application/json')) {
     data = await resp.json();
-  } else if (resp?.headers?.get('Content-Type')?.includes('text/html')) {
+  } else if (contentType.includes('text/html')) {
     resp = await fetch(path);
     data = await resp.text().then((html) => {
       try {
@@ -461,6 +475,9 @@ export async function fetchForm(pathname) {
         return null;
       }
     });
+  } else {
+    // eslint-disable-next-line no-console
+    console.warn(`[forms] "${path}" returned unexpected Content-Type: "${contentType}" (status ${resp.status})`);
   }
   return data;
 }
