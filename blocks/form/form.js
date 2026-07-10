@@ -567,6 +567,12 @@ export async function renderForm(formDef, element) {
 }
 
 export default async function decorate(block) {
+  // Ensure window.hlx.codeBasePath is set — this project uses ak.js, not standard EDS,
+  // so the CDN may not inject it. The rules engine Worker URL depends on it.
+  window.hlx = window.hlx || {};
+  window.hlx.codeBasePath = window.hlx.codeBasePath
+    ?? new URL(import.meta.url).pathname.split('/blocks/')[0];
+
   let container = block.querySelector('a[href]');
   let formDef;
   let pathname;
@@ -584,7 +590,7 @@ export default async function decorate(block) {
       block,
       editMode: block.classList.contains('edit-mode'),
     }));
-    container.replaceWith(form);
+    if (form) container.replaceWith(form);
   }
   return { form, afbForm };
 }

@@ -470,6 +470,11 @@ async function initializeRuleEngineWorker(formDef, renderHTMLForm) {
       captcha,
       data,
       generateFormRendition;
+    myWorker.onerror = (e) => {
+      // eslint-disable-next-line no-console
+      console.error('[forms] RuleEngineWorker failed to load:', e.message || e);
+      resolve({ form: null, afbForm: null });
+    };
     myWorker.addEventListener('message', async (e) => {
       // main thread starts html rendering
       if (e.data.name === 'renderForm') {
