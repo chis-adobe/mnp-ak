@@ -1,3 +1,32 @@
+const ASSET_LINK = /(delivery-p\d+-e\d+\.adobeaemcloud\.com.*urn:aaid:aem:)|\.pdf($|[?#])/i;
+
+function isAssetLink(a) {
+  const href = a.getAttribute('href') || '';
+  return ASSET_LINK.test(href);
+}
+
+// Pull dc:title / dc:description from the DAM and use them as the link text and
+// hover/label. Falls back to the authored text if metadata is missing or fails.
+async function enrichAssetLink(a) {
+  try {
+    const resp = await fetch(`/.assets/metadata?url=${encodeURIComponent(a.href)}`);
+    if (!resp.ok) return;
+    const { title, description } = await resp.json();
+    if (title) a.textContent = title;
+    if (description) {
+      a.title = description;
+      a.setAttribute('aria-label', description);
+    }
+  } catch {
+    // Keep the authored link text/href on any failure.
+  }
+}
+
+function enrichAssetLinks(root) {
+  const assetLinks = [...root.querySelectorAll('a')].filter(isAssetLink);
+  return Promise.all(assetLinks.map(enrichAssetLink));
+}
+
 function buildFlyout(row) {
   const cols = [...row.querySelectorAll(':scope > div')];
   if (cols.length < 2) return null;
@@ -157,6 +186,8 @@ export default async function init(el) {
   mainBar.append(mainBarInner);
   header.append(topBar, mainBar, searchFlyout);
   el.append(header);
+
+  enrichAssetLinks(header);
 
   // Close flyouts on outside click
   document.addEventListener('click', (e) => {

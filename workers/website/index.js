@@ -12,8 +12,14 @@
 
 import { fetchSchedule, fetchFromAem } from './handlers/aem.js';
 import fetchDaSc from './handlers/dasc.js';
+import fetchAssetMetadata from './handlers/asset-metadata.js';
 
 const ROUTES = [
+  // Proxy AEM Assets metadata (title/description) for DAM asset links
+  {
+    match: (path) => path === '/.assets/metadata',
+    handler: fetchAssetMetadata,
+  },
   // Handle schedule manifests
   {
     match: (path) => path.includes('/schedules/') && path.endsWith('json'),
