@@ -1,17 +1,28 @@
-const ASSET_LINK = /(delivery-p\d+-e\d+\.adobeaemcloud\.com.*urn:aaid:aem:)|\.pdf($|[?#])/i;
+// AEM Assets delivery links carry the asset id, so we can look up DAM metadata.
+const ASSET_LINK = /^(https:\/\/delivery-p\d+-e\d+\.adobeaemcloud\.com)\/adobe\/assets\/(urn:aaid:aem:[0-9a-f-]+)/i;
 
-function isAssetLink(a) {
-  const href = a.getAttribute('href') || '';
-  return ASSET_LINK.test(href);
+// Metadata values can be plain strings, arrays, or localized objects; flatten to text.
+function toText(value) {
+  if (!value) return '';
+  if (typeof value === 'string') return value;
+  if (Array.isArray(value)) return toText(value[0]);
+  if (typeof value === 'object') return toText(value.value ?? value['@value']);
+  return String(value);
 }
 
-// Pull dc:title / dc:description from the DAM and use them as the link text and
-// hover/label. Falls back to the authored text if metadata is missing or fails.
+// Pull dc:title / dc:description from the DAM (CORS-enabled delivery endpoint) and
+// use them as the link text and hover/label. Falls back to the authored text on failure.
 async function enrichAssetLink(a) {
+  const match = a.getAttribute('href')?.match(ASSET_LINK);
+  if (!match) return;
+  const [, origin, assetId] = match;
   try {
-    const resp = await fetch(`/.assets/metadata?url=${encodeURIComponent(a.href)}`);
+    const resp = await fetch(`${origin}/adobe/assets/${assetId}/metadata`);
     if (!resp.ok) return;
-    const { title, description } = await resp.json();
+    const json = await resp.json();
+    const md = { ...json.repositoryMetadata, ...json.assetMetadata };
+    const title = toText(md['dc:title']);
+    const description = toText(md['dc:description']);
     if (title) a.textContent = title;
     if (description) {
       a.title = description;
@@ -23,7 +34,7 @@ async function enrichAssetLink(a) {
 }
 
 function enrichAssetLinks(root) {
-  const assetLinks = [...root.querySelectorAll('a')].filter(isAssetLink);
+  const assetLinks = [...root.querySelectorAll('a')].filter((a) => ASSET_LINK.test(a.getAttribute('href') || ''));
   return Promise.all(assetLinks.map(enrichAssetLink));
 }
 
