@@ -1,0 +1,4 @@
+/* Element Value is populated from the surrounding page and is authored hidden. */
+.field-wrapper.element-value-field[data-visible="false"] {
+  display: none;
+}
