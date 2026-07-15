@@ -68,8 +68,8 @@ npm run dev        # wrangler dev, defaults to http://localhost:8787
 | Route | What you get |
 | --- | --- |
 | `GET /` | Index of demo offices + inspection links |
-| `GET /en/offices/:slug` | Office page HTML **with JSON-LD injected** — use **View Source** |
-| `GET /db/offices/:slug.json` | Raw mock-DB record (the "data source" layer on its own) |
+| `GET /offices/:slug` | Real AEM page HTML (fetched from `ORIGIN`) **with JSON-LD injected** — use **View Source** |
+| `GET /db/offices/:slug.json` | Raw DB record (the "data source" layer on its own) |
 | `GET /schema/offices/:slug.json` | The assembled JSON-LD only (paste into a validator) |
 
 Available slugs: `abbotsford`, `vancouver`, `calgary`.
@@ -78,9 +78,9 @@ Available slugs: `abbotsford`, `vancouver`, `calgary`.
 
 ```bash
 # Schema is already in the HTML — no JS run:
-curl -s http://localhost:8787/en/offices/abbotsford | grep -A40 'application/ld+json'
+curl -s http://localhost:8787/offices/abbotsford | grep -A40 'application/ld+json'
 
-# The raw third-party record:
+# The raw DB record:
 curl -s http://localhost:8787/db/offices/abbotsford.json
 
 # Just the JSON-LD, for Google's Rich Results Test / schema.org validator:
@@ -89,32 +89,47 @@ curl -s http://localhost:8787/schema/offices/abbotsford.json
 
 ## How the injection works
 
-`src/index.js` streams the page HTML through Cloudflare's `HTMLRewriter`:
+For a `/offices/:slug` request, `src/index.js`:
 
-1. Handlers on `<title>` and the breadcrumb list **capture page-derived fields**
-   as the HTML streams past.
-2. A handler on `<body>`'s end tag builds the JSON-LD (page fields + DB record
-   via `src/schema.js`) and injects a `<script type="application/ld+json">`
-   right before `</body>`.
+1. Looks up the office record in the DB (`data/offices.js`).
+2. `fetch()`es the **real page HTML** from the AEM origin (`ORIGIN`) at the same path.
+3. Streams that HTML through Cloudflare's `HTMLRewriter`, which passes every byte
+   through verbatim while it:
+   - captures the page-derived `<title>` from `<head>`, and
+   - at `<body>`'s end tag, builds the JSON-LD (`src/schema.js`) from the DB
+     record + page context and injects a `<script type="application/ld+json">`
+     right before `</body>`.
 
-Injecting at end-of-body means the page-derived fields (which appear in the
-body) are already known by the time we write the script. The position is valid
-for JSON-LD; crawlers read it anywhere in the document.
+### Where each field comes from
+
+| Field | Source | Why |
+| --- | --- | --- |
+| `<title>` → `WebPage.name` | scraped from origin `<head>` | present in server HTML |
+| Canonical / `@id` URLs | request path + `SITE_ORIGIN` | must be this site's public URL |
+| Breadcrumb | **built deterministically** from path + DB | see note below |
+| Address, geo, hours, services, `sameAs` | DB record | the system of record |
+
+> **EDS note:** the breadcrumb is *not* scraped. In EDS the breadcrumb is a
+> client-hydrated block — the origin HTML only contains an empty
+> `<div class="breadcrumb">` placeholder, filled in by block JS in the browser.
+> So its content isn't available at the edge; we build the trail from the path
+> and DB instead. Generally, only `<head>` metadata (title, meta tags) is safe
+> to read at the edge — block *body* content is unhydrated.
 
 ## Files
 
 ```
 data/offices.js   Supabase data source (getOffice / listOffices, snake_case->camelCase)
-src/schema.js     buildOfficeSchema(record, pageContext) -> JSON-LD @graph
-src/page.js       renders the "origin" office HTML (stands in for AEM)
-src/index.js      the worker: routing + HTMLRewriter enrichment
+src/schema.js     buildOfficeSchema(record, pageContext, siteOrigin) -> JSON-LD @graph
+src/index.js      the worker: routing + real-origin fetch + HTMLRewriter enrichment
 ```
 
 ## Adapting to production
 
-- Replace `renderOfficePage()` with `fetch()` of the real AEM office page.
+- Add caching (Cache API or KV, keyed by slug) so every request doesn't hit the
+  DB and re-fetch the origin.
 - Point `SUPABASE_URL`/`SUPABASE_KEY` at the real office data source (or swap
-  `data/offices.js` for whatever the system of record is), and add caching —
-  Cache API or KV, keyed by slug — so every request doesn't hit the DB.
-- Fold the `/en/offices/:slug` handling into `workers/website/index.js` as a new
-  route in the `ROUTES` table, before the default AEM handler.
+  `data/offices.js` for whatever the system of record is).
+- Fold the `/offices/:slug` handling into `workers/website/index.js` as a new
+  route in the `ROUTES` table, before the default AEM handler, so it serves on
+  the real domain.

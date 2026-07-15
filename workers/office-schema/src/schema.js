@@ -10,13 +10,14 @@
  * page typically emits.
  */
 
-const SITE_ORIGIN = 'https://www.mnp.ca';
-const ORG_ID = `${SITE_ORIGIN}/#organization`;
+// Fallback used only when the worker env doesn't provide SITE_ORIGIN.
+const DEFAULT_SITE_ORIGIN = 'https://main--mnp-ak--chis-adobe.aem.live';
 
-function abs(url) {
+// Resolve a path or absolute URL against this site's public origin.
+const makeAbs = (siteOrigin) => (url) => {
   if (!url) return undefined;
-  return url.startsWith('http') ? url : `${SITE_ORIGIN}${url}`;
-}
+  return url.startsWith('http') ? url : `${siteOrigin}${url}`;
+};
 
 function buildOpeningHours(openingHours = []) {
   return openingHours.map((slot) => ({
@@ -27,7 +28,7 @@ function buildOpeningHours(openingHours = []) {
   }));
 }
 
-function buildBreadcrumb(breadcrumb = []) {
+function buildBreadcrumb(breadcrumb = [], abs) {
   if (!breadcrumb.length) return null;
   return {
     '@type': 'BreadcrumbList',
@@ -41,10 +42,13 @@ function buildBreadcrumb(breadcrumb = []) {
 }
 
 /**
- * @param {object} record  office record from the mock DB (third-party source)
- * @param {object} page     page-derived context { url, title, breadcrumb: [{name,url}] }
+ * @param {object} record      office record from the data source
+ * @param {object} page        page-derived context { url, title, breadcrumb: [{name,url}] }
+ * @param {string} siteOrigin  this site's public origin, for canonical/@id URLs
  */
-export function buildOfficeSchema(record, page = {}) {
+export function buildOfficeSchema(record, page = {}, siteOrigin = DEFAULT_SITE_ORIGIN) {
+  const abs = makeAbs(siteOrigin);
+  const ORG_ID = `${siteOrigin}/#organization`;
   const pageUrl = abs(page.url || record.url);
   const businessId = `${pageUrl}#localbusiness`;
   const webPageId = `${pageUrl}#webpage`;
@@ -53,8 +57,8 @@ export function buildOfficeSchema(record, page = {}) {
     '@type': 'Organization',
     '@id': ORG_ID,
     name: record.legalName || 'MNP LLP',
-    url: SITE_ORIGIN,
-    logo: `${SITE_ORIGIN}/img/logos/site.svg`,
+    url: siteOrigin,
+    logo: `${siteOrigin}/img/logos/site.svg`,
     sameAs: record.sameAs,
   };
 
@@ -105,10 +109,10 @@ export function buildOfficeSchema(record, page = {}) {
     // Page-derived: falls back to the DB name if the page has no <title>.
     name: page.title || record.name,
     about: { '@id': businessId },
-    isPartOf: { '@id': `${SITE_ORIGIN}/#website` },
+    isPartOf: { '@id': `${siteOrigin}/#website` },
   };
 
-  const breadcrumb = buildBreadcrumb(page.breadcrumb);
+  const breadcrumb = buildBreadcrumb(page.breadcrumb, abs);
   if (breadcrumb) webPage.breadcrumb = { '@id': `${pageUrl}#breadcrumb` };
 
   const graph = [organization, localBusiness, webPage];
