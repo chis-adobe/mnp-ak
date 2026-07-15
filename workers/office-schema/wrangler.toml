@@ -1,0 +1,5 @@
+name = "office-schema-poc"
+main = "src/index.js"
+compatibility_date = "2024-09-23"
+
+# POC only — no routes/zones bound. Run locally with `npm run dev`.

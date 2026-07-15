@@ -1,0 +1,14 @@
+{
+  "name": "office-schema-poc",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "POC: edge worker that injects office LocalBusiness JSON-LD from a mock DB",
+  "scripts": {
+    "dev": "wrangler dev",
+    "start": "wrangler dev"
+  },
+  "devDependencies": {
+    "wrangler": "^4.40.0"
+  }
+}
