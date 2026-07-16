@@ -11,3 +11,9 @@ helix-importer-ui
 .claude
 
 .cursor
+
+# Local secrets for the office importer (DA token, etc.)
+.env
+tools/importer/.env
+# Generated import output
+tools/importer/out/

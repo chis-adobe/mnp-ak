@@ -77,5 +77,20 @@ export default defineConfig([
       'no-underscore-dangle': 0,
       'no-unused-expressions': 0,
     },
+  },
+  {
+    // Node CLI importer: node globals + idiomatic CLI patterns.
+    files: ['tools/importer/**/*.js'],
+    languageOptions: {
+      globals: { ...globals.node },
+    },
+    rules: {
+      'no-console': 'off',
+      'no-plusplus': 'off',
+      'no-continue': 'off',
+      'no-use-before-define': ['error', { functions: false }],
+      'max-statements-per-line': ['error', { max: 3 }],
+      'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+    },
   }
 ]);
