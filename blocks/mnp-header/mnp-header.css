@@ -1,11 +1,6 @@
 .mnp-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  background: transparent;
-  transition: transform 0.3s ease;
+  position: relative;
+  background: var(--color-mnp-dark-teal);
 }
 
 .mnp-header .mnp-header-wrapper {
@@ -24,33 +19,10 @@
   justify-content: space-between;
 }
 
-/* Static header (office pages) - not fixed, pushes content down */
-.mnp-header.mnp-header-static {
-  position: relative;
-  background: var(--color-mnp-dark-teal);
-}
-
-.mnp-header.mnp-header-static .mnp-header-top {
-  background: transparent;
-}
-
-.mnp-header.mnp-header-static .mnp-header-main {
-  background: transparent;
-}
-
-/* Scrolled state: hide utility row, show sticky main nav with solid bg */
-.mnp-header.is-scrolled .mnp-header-top {
-  display: none;
-}
-
-.mnp-header.is-scrolled .mnp-header-main {
-  background: var(--color-mnp-dark-teal);
-}
-
 /* Row 1: Top bar - full width bg */
 .mnp-header .mnp-header-top {
   width: 100%;
-  background: rgb(0 0 0 / 11%);
+  background: transparent;
   border-bottom: 1px solid #fff;
   padding: 20px 24px;
   min-height: 71px;
@@ -109,7 +81,7 @@
 /* Row 2: Main nav - full width bg */
 .mnp-header .mnp-header-main {
   width: 100%;
-  background: rgb(0 0 0 / 11%);
+  background: transparent;
   padding: 0 16px;
   min-height: 80px;
   box-sizing: border-box;
@@ -273,8 +245,8 @@
   .mnp-header .mnp-header-flyout {
     left: 0;
     right: 0;
-    position: fixed;
-    top: auto;
+    position: absolute;
+    top: 100%;
   }
 
   .mnp-header .mnp-header-flyout-columns {

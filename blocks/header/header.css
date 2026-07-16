@@ -1,14 +1,5 @@
 header {
   display: block;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  background: transparent;
-}
-
-header:has(.mnp-header-static) {
   position: relative;
   background: var(--color-mnp-dark-teal);
 }

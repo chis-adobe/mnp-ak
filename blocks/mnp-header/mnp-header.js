@@ -71,11 +71,6 @@ function buildFlyout(row) {
 }
 
 export default async function init(el) {
-  const headerStyle = document.querySelector('meta[name="header-style"]')?.content;
-  if (headerStyle === 'static') {
-    el.classList.add('mnp-header-static');
-  }
-
   const rows = [...el.querySelectorAll(':scope > div')];
   el.innerHTML = '';
 
@@ -208,15 +203,6 @@ export default async function init(el) {
         open.querySelector('a')?.setAttribute('aria-expanded', 'false');
       });
       searchFlyout.classList.remove('is-open');
-    }
-  });
-
-  // Scroll behavior: hide utility nav, show sticky main nav with solid bg
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 80) {
-      el.classList.add('is-scrolled');
-    } else {
-      el.classList.remove('is-scrolled');
     }
   });
 }
