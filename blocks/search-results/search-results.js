@@ -34,6 +34,50 @@ function getParams() {
   };
 }
 
+function buildSearchField(container, p) {
+  const form = document.createElement('form');
+  form.className = 'search-results-searchbar';
+  form.setAttribute('role', 'search');
+
+  const info = document.createElement('div');
+  info.className = 'search-results-searchbar-info';
+  info.innerHTML = p.query
+    ? '<h2 class="search-results-searchbar-title">Displaying results for:</h2>'
+    : '<h2 class="search-results-searchbar-title">Search</h2>';
+
+  const group = document.createElement('div');
+  group.className = 'search-results-searchbar-group';
+
+  const input = document.createElement('input');
+  input.className = 'search-results-search-input';
+  input.type = 'search';
+  input.name = 'query';
+  input.id = 'query';
+  input.placeholder = 'Search...';
+  input.value = p.query || '';
+  input.setAttribute('aria-label', 'Search');
+
+  const btn = document.createElement('button');
+  btn.className = 'search-results-search-btn';
+  btn.type = 'submit';
+  btn.innerHTML = '<span class="sr-only">Submit</span><span aria-hidden="true">Search</span>';
+
+  group.append(input, btn);
+  form.append(info, group);
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    // Preserve any active filters so the keyword is added constructively.
+    const params = new URLSearchParams(window.location.search);
+    const q = input.value.trim();
+    if (q) params.set('query', q);
+    else params.delete('query');
+    window.location.search = params.toString();
+  });
+
+  container.append(form);
+}
+
 function buildFilterPills(container, p) {
   const pills = document.createElement('ul');
   pills.className = 'search-results-pills';
@@ -159,10 +203,18 @@ function buildFilterPanel(container, taxonomy) {
   applyBtn.textContent = 'Apply Filters';
   applyBtn.addEventListener('click', () => {
     const params = new URLSearchParams();
+    // Keep the current keyword so filters stack on top of it constructively.
+    const searchInput = document.querySelector('.search-results-search-input');
+    const q = (searchInput ? searchInput.value : p.query || '').trim();
+    if (q) params.set('query', q);
+    let hasFilter = false;
     form.querySelectorAll('select').forEach((sel) => {
-      if (sel.value) params.set(sel.dataset.param, sel.value);
+      if (sel.value) {
+        params.set(sel.dataset.param, sel.value);
+        hasFilter = true;
+      }
     });
-    if (params.toString()) params.set('filter', 'insights');
+    if (hasFilter) params.set('filter', 'insights');
     window.location.search = params.toString();
   });
   form.append(applyBtn);
@@ -243,6 +295,7 @@ export default async function init(el) {
     isFilterMode ? Promise.resolve([]) : fetchAllPages(),
   ]);
 
+  buildSearchField(wrapper, p);
   buildFilterPanel(wrapper, taxonomy);
   buildFilterPills(wrapper, p);
 
