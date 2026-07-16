@@ -2,6 +2,23 @@ const PIN_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
 const PHONE_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.15 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>';
 const FILTER_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 5h18v2H3zm4 6h10v2H7zm3 6h4v2h-4z"/></svg>';
 
+// Maps the 2-letter province codes stored in the index to full display names.
+const PROVINCE_NAMES = {
+  AB: 'Alberta',
+  BC: 'British Columbia',
+  MB: 'Manitoba',
+  NB: 'New Brunswick',
+  NL: 'Newfoundland and Labrador',
+  NS: 'Nova Scotia',
+  NT: 'Northwest Territories',
+  NU: 'Nunavut',
+  ON: 'Ontario',
+  PE: 'Prince Edward Island',
+  QC: 'Quebec',
+  SK: 'Saskatchewan',
+  YT: 'Yukon',
+};
+
 async function fetchIndex(url) {
   const resp = await fetch(url);
   if (!resp.ok) return [];
@@ -283,6 +300,40 @@ async function renderWidget(block, bridge) {
   ro.observe(block);
 }
 
+// (Re)builds the alphabet quick-nav for the given list.
+function renderAlpha(alphaEl, list, config, wrapper) {
+  alphaEl.innerHTML = '';
+  const letters = [...new Set(list.map((i) => config.sortKey(i).charAt(0).toUpperCase()))].sort();
+  letters.forEach((letter) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = letter;
+    btn.addEventListener('click', () => {
+      const target = wrapper.querySelector(`[data-letter="${letter}"]`);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    alphaEl.append(btn);
+  });
+}
+
+// (Re)builds the card grid with letter section markers for the given list.
+function renderGrid(gridEl, list, config) {
+  gridEl.innerHTML = '';
+  let currentLetter = '';
+  list.forEach((item) => {
+    const firstLetter = config.sortKey(item).charAt(0).toUpperCase();
+    if (firstLetter !== currentLetter) {
+      currentLetter = firstLetter;
+      const marker = document.createElement('div');
+      marker.className = 'directory-list-letter';
+      marker.dataset.letter = currentLetter;
+      marker.textContent = currentLetter;
+      gridEl.append(marker);
+    }
+    gridEl.append(config.render(item));
+  });
+}
+
 export default async function init(block, bridge) {
   if (bridge) {
     await renderWidget(block, bridge);
@@ -332,47 +383,98 @@ export default async function init(block, bridge) {
   header.append(headerText, searchBar);
   wrapper.append(header);
 
-  const letters = [...new Set(items.map((i) => config.sortKey(i).charAt(0).toUpperCase()))].sort();
-
   const alphabetNav = document.createElement('div');
   alphabetNav.className = 'directory-list-alpha';
-  letters.forEach((letter) => {
-    const btn = document.createElement('button');
-    btn.textContent = letter;
-    btn.addEventListener('click', () => {
-      const target = wrapper.querySelector(`[data-letter="${letter}"]`);
-      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-    alphabetNav.append(btn);
-  });
   wrapper.append(alphabetNav);
-
-  const filterBar = document.createElement('div');
-  filterBar.className = 'directory-list-filter-bar';
-  const filterBtn = document.createElement('button');
-  filterBtn.className = 'directory-list-filter-btn';
-  filterBtn.innerHTML = `Filter by <span class="directory-list-filter-icon">${FILTER_ICON}</span>`;
-  filterBar.append(filterBtn);
-  wrapper.append(filterBar);
 
   const grid = document.createElement('div');
   grid.className = `directory-list-grid directory-list-grid-${type}`;
 
-  let currentLetter = '';
-  items.forEach((item) => {
-    const firstLetter = config.sortKey(item).charAt(0).toUpperCase();
-    if (firstLetter !== currentLetter) {
-      currentLetter = firstLetter;
-      const marker = document.createElement('div');
-      marker.className = 'directory-list-letter';
-      marker.dataset.letter = currentLetter;
-      marker.textContent = currentLetter;
-      grid.append(marker);
-    }
-    grid.append(config.render(item));
-  });
+  const count = headerText.querySelector('.directory-list-header-count');
+
+  // Re-renders the list (grid + alpha nav + count) for the current selection.
+  const applyFilter = (code) => {
+    const list = code
+      ? items.filter((i) => (i.province || '').toUpperCase() === code)
+      : items;
+    renderGrid(grid, list, config);
+    renderAlpha(alphabetNav, list, config, wrapper);
+    count.textContent = `Showing ${list.length} ${config.resultLabel}`;
+  };
+
+  // The region filter is province-based, so it only applies to offices.
+  const provinceCodes = [...new Set(items
+    .map((i) => (i.province || '').toUpperCase())
+    .filter((code) => PROVINCE_NAMES[code]))]
+    .sort((a, b) => PROVINCE_NAMES[a].localeCompare(PROVINCE_NAMES[b]));
+
+  if (type === 'offices' && provinceCodes.length > 0) {
+    const filterBar = document.createElement('div');
+    filterBar.className = 'directory-list-filter-bar';
+
+    const filterBtn = document.createElement('button');
+    filterBtn.type = 'button';
+    filterBtn.className = 'directory-list-filter-btn';
+    filterBtn.setAttribute('aria-expanded', 'false');
+    filterBtn.setAttribute('aria-controls', 'directory-list-filter-panel');
+    filterBtn.innerHTML = `Filter by <span class="directory-list-filter-icon">${FILTER_ICON}</span>`;
+    filterBar.append(filterBtn);
+
+    const options = ['<option value="">Regions</option>']
+      .concat(provinceCodes.map((c) => `<option value="${c}">${PROVINCE_NAMES[c] || c}</option>`))
+      .join('');
+
+    const panel = document.createElement('div');
+    panel.className = 'directory-list-filter-panel';
+    panel.id = 'directory-list-filter-panel';
+    panel.hidden = true;
+    panel.innerHTML = `
+      <section class="directory-list-filter-tabs">
+        <ul class="directory-list-filter-nav" role="tablist">
+          <li><button type="button" class="directory-list-filter-tab active" role="tab" aria-selected="true">Offices</button></li>
+        </ul>
+        <div class="directory-list-filter-content">
+          <div class="directory-list-filter-pane" role="tabpanel">
+            <h3 class="directory-list-filter-heading">Offices</h3>
+            <div class="directory-list-filter-field">
+              <div class="directory-list-select">
+                <select id="directory-list-regions" name="regions" aria-label="Filter by region">${options}</select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="directory-list-filter-actions">
+          <button type="button" class="directory-list-filter-cancel">Cancel</button>
+          <button type="button" class="directory-list-filter-apply">Apply filters</button>
+        </div>
+      </section>
+    `;
+
+    const select = panel.querySelector('#directory-list-regions');
+    let appliedValue = '';
+
+    const setPanelOpen = (open) => {
+      panel.hidden = !open;
+      filterBtn.setAttribute('aria-expanded', String(open));
+    };
+
+    filterBtn.addEventListener('click', () => setPanelOpen(panel.hidden));
+    panel.querySelector('.directory-list-filter-cancel').addEventListener('click', () => {
+      select.value = appliedValue; // discard unapplied changes
+      setPanelOpen(false);
+    });
+    panel.querySelector('.directory-list-filter-apply').addEventListener('click', () => {
+      appliedValue = select.value;
+      applyFilter(appliedValue);
+      setPanelOpen(false);
+    });
+
+    filterBar.append(panel);
+    wrapper.append(filterBar);
+  }
 
   wrapper.append(grid);
+  applyFilter('');
 
   // Offices mode: surface the 3 closest offices to the user at the very top.
   if (type === 'offices') {

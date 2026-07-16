@@ -121,6 +121,95 @@
   align-items: center;
 }
 
+/* Filter panel */
+.directory-list .directory-list-filter-panel {
+  margin-top: var(--spacing-m);
+  border: 1px solid var(--color-mnp-border);
+  background: var(--color-mnp-light-gray, #f5f5f5);
+}
+
+.directory-list .directory-list-filter-panel[hidden] {
+  display: none;
+}
+
+.directory-list .directory-list-filter-nav {
+  list-style: none;
+  display: flex;
+  gap: var(--spacing-xs);
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--color-mnp-border);
+}
+
+.directory-list .directory-list-filter-tab {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: var(--spacing-m) var(--spacing-l);
+  font-size: var(--body-font-size-m);
+  font-weight: 600;
+  color: var(--color-mnp-body-text);
+  cursor: pointer;
+}
+
+.directory-list .directory-list-filter-tab.active {
+  color: var(--color-mnp-heading-teal);
+  border-bottom-color: var(--color-mnp-accent);
+}
+
+.directory-list .directory-list-filter-pane {
+  padding: var(--spacing-l);
+}
+
+.directory-list .directory-list-filter-heading {
+  font-size: var(--heading-font-size-m);
+  color: var(--color-mnp-heading-teal);
+  margin: 0 0 var(--spacing-m);
+}
+
+.directory-list .directory-list-filter-field {
+  max-width: 320px;
+}
+
+.directory-list .directory-list-select select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--color-mnp-border);
+  background: #fff;
+  font-size: var(--body-font-size-m);
+  font-family: inherit;
+  color: var(--color-mnp-body-text);
+  cursor: pointer;
+}
+
+.directory-list .directory-list-filter-actions {
+  display: flex;
+  gap: var(--spacing-m);
+  padding: var(--spacing-l);
+  border-top: 1px solid var(--color-mnp-border);
+}
+
+.directory-list .directory-list-filter-cancel,
+.directory-list .directory-list-filter-apply {
+  padding: 10px 20px;
+  font-size: var(--body-font-size-m);
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.directory-list .directory-list-filter-cancel {
+  background: none;
+  border: 1px solid var(--color-mnp-dark-teal);
+  color: var(--color-mnp-dark-teal);
+}
+
+.directory-list .directory-list-filter-apply {
+  background: var(--color-mnp-dark-teal);
+  border: 1px solid var(--color-mnp-dark-teal);
+  color: #fff;
+}
+
 /* Grid */
 .directory-list .directory-list-grid {
   display: grid;
