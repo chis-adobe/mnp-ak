@@ -169,7 +169,14 @@ export default {
         return enrichWithSchema(originResp, record, { canonicalUrl, siteOrigin, breadcrumb });
       }
 
-      return html('<h1>404</h1>', 404);
+      // Everything else (CSS, JS, fonts, images, nav/footer fragments,
+      // query-index, .plain.html, …) proxies straight to the origin so the page
+      // renders exactly like the live site — only /offices/:slug gets enriched.
+      const origin = (env.ORIGIN || DEFAULT_ORIGIN).replace(/\/+$/, '');
+      return fetch(`${origin}${pathname}${url.search}`, {
+        method: req.method,
+        headers: { accept: req.headers.get('accept') || '*/*' },
+      });
     } catch (err) {
       return json({ error: 'data source error', detail: String(err.message || err) }, 502);
     }
