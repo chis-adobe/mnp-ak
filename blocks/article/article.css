@@ -141,6 +141,14 @@
   font-weight: 600;
   padding: 4px 12px;
   border-radius: 2px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.article .article-tag:hover {
+  background: var(--color-mnp-heading-teal);
+  color: #fff;
 }
 
 .article .article-main {

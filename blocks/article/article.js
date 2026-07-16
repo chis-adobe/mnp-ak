@@ -125,18 +125,52 @@ async function buildAuthors(authorPaths) {
   return section;
 }
 
-function buildTags() {
+let taxonomyCache;
+
+async function loadTaxonomy() {
+  if (taxonomyCache) return taxonomyCache;
+  try {
+    const resp = await fetch('/taxonomy.json');
+    if (!resp.ok) return [];
+    const json = await resp.json();
+    taxonomyCache = json.data || [];
+  } catch {
+    taxonomyCache = [];
+  }
+  return taxonomyCache;
+}
+
+function buildTagHref(tag, category) {
+  const catMap = {
+    Service: 'service',
+    Industry: 'industry',
+    Theme: 'theme',
+    'Content Type': 'type',
+  };
+  const param = catMap[category];
+  if (param) {
+    return `/search?filter=insights&${param}=${encodeURIComponent(tag)}`;
+  }
+  return `/search?filter=insights&query=${encodeURIComponent(tag)}`;
+}
+
+async function buildTags() {
   const tags = getMetadata('insights');
   if (!tags) return null;
+
+  const taxonomy = await loadTaxonomy();
 
   const section = document.createElement('div');
   section.className = 'article-tags';
 
-  tags.split(',').forEach((tag) => {
-    const btn = document.createElement('span');
-    btn.className = 'article-tag';
-    btn.textContent = tag.trim();
-    section.append(btn);
+  tags.split(',').map((t) => t.trim()).filter(Boolean).forEach((tag) => {
+    const entry = taxonomy.find((t) => t.Tag && t.Tag.toLowerCase() === tag.toLowerCase());
+    const link = document.createElement('a');
+    link.className = 'article-tag';
+    link.textContent = tag;
+    link.href = entry ? buildTagHref(entry.Tag, entry.Category) : buildTagHref(tag, '');
+    if (entry?.Category) link.dataset.category = entry.Category.toLowerCase().replace(/\s+/g, '-');
+    section.append(link);
   });
 
   return section;
@@ -311,7 +345,7 @@ export default async function init(el) {
 
   const tagsCol = document.createElement('div');
   tagsCol.className = 'article-tags-col';
-  const tags = buildTags();
+  const tags = await buildTags();
   if (tags) tagsCol.append(tags);
 
   const main = document.createElement('div');
