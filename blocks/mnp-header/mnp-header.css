@@ -1,5 +1,35 @@
+/* Default (regular) header: in flow, solid teal, scrolls away with the page.
+   Used when the page's first block has no full-bleed image (e.g. mini-hero). */
 .mnp-header {
   position: relative;
+  background: var(--color-mnp-dark-teal);
+}
+
+/* Sticky header: floats over a full-bleed hero image that bleeds up behind
+   the nav. Applied when the page's first block is a hero-type block. */
+.mnp-header.mnp-header-sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: transparent;
+  transition: transform 0.3s ease;
+}
+
+/* Subtle darkening over the hero image for text legibility (sticky only). */
+.mnp-header.mnp-header-sticky .mnp-header-top,
+.mnp-header.mnp-header-sticky .mnp-header-main {
+  background: rgb(0 0 0 / 11%);
+}
+
+/* Once scrolled past the hero, drop the utility row and give the main nav a
+   solid background so white text stays readable over page content. */
+.mnp-header.mnp-header-sticky.is-scrolled .mnp-header-top {
+  display: none;
+}
+
+.mnp-header.mnp-header-sticky.is-scrolled .mnp-header-main {
   background: var(--color-mnp-dark-teal);
 }
 

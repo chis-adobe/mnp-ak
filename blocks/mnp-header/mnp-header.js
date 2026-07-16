@@ -70,7 +70,21 @@ function buildFlyout(row) {
   return flyout;
 }
 
+// Hero-type first blocks render a full-bleed background image that bleeds up
+// behind the nav, so the header floats over them (fixed + transparent). Other
+// first blocks (e.g. mini-hero, which has a solid background) get the regular
+// in-flow header that occupies its own space.
+const BLEED_HERO_BLOCKS = ['hero', 'article-hero', 'event-hero'];
+
+function isBleedHeroPage() {
+  const firstBlock = document.querySelector('main .block-content > div[class]');
+  return BLEED_HERO_BLOCKS.includes(firstBlock?.classList[0]);
+}
+
 export default async function init(el) {
+  const sticky = isBleedHeroPage();
+  if (sticky) el.classList.add('mnp-header-sticky');
+
   const rows = [...el.querySelectorAll(':scope > div')];
   el.innerHTML = '';
 
@@ -205,4 +219,11 @@ export default async function init(el) {
       searchFlyout.classList.remove('is-open');
     }
   });
+
+  // Sticky header: once scrolled off the hero, switch to the solid, compact nav.
+  if (sticky) {
+    window.addEventListener('scroll', () => {
+      el.classList.toggle('is-scrolled', window.scrollY > 80);
+    });
+  }
 }
