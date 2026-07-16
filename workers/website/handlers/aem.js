@@ -1,3 +1,5 @@
+import { tryLanguageFallback } from './langfallback.js';
+
 const getRedirect = (resp, savedSearch) => {
   if (!(resp.status === 301 && savedSearch)) return;
   const location = resp.headers.get('location');
@@ -30,7 +32,7 @@ const formatSchedule = async (response) => {
   return schedule2Response({ ...json, data });
 };
 
-export const fetchFromAem = async ({ request, cache, savedSearch }) => {
+export const fetchFromAem = async ({ url, request, cache, savedSearch }) => {
   let resp = await fetch(request, { method: request.method, cf: { cacheEverything: cache } });
 
   // Recreate a mutable response
@@ -39,6 +41,12 @@ export const fetchFromAem = async ({ request, cache, savedSearch }) => {
   // Handle redirects
   const redirectResp = getRedirect(resp, savedSearch);
   if (redirectResp) return redirectResp;
+
+  // On a page 404, offer the page in another published language instead.
+  if (resp.status === 404) {
+    const fallback = await tryLanguageFallback({ url, request });
+    if (fallback) return fallback;
+  }
 
   // 304 Not Modified - remove CSP header
   if (resp.status === 304) resp.headers.delete('Content-Security-Policy');
@@ -49,8 +57,8 @@ export const fetchFromAem = async ({ request, cache, savedSearch }) => {
   return resp;
 };
 
-export async function fetchSchedule({ request, cache, savedSearch }) {
-  const resp = await fetchFromAem({ request, cache, savedSearch });
+export async function fetchSchedule({ url, request, cache, savedSearch }) {
+  const resp = await fetchFromAem({ url, request, cache, savedSearch });
 
   if (resp.status === 301 || resp.status === 304) return resp;
 
