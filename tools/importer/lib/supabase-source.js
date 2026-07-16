@@ -21,6 +21,7 @@ export function mapRow(row) {
     province: addr.addressRegion || '',
     postalCode: addr.postalCode || '',
     phone: row.telephone || '',
+    fax: row.fax || '',
     email: row.email || '',
     metaDescription: row.description || '',
     description: row.description ? [row.description] : [],
